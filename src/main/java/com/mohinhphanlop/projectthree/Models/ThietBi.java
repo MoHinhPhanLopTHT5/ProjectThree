@@ -20,12 +20,15 @@ import lombok.Data;
 public class ThietBi {
     @Id
     private Integer MaTB;
-    
+
     private String TenTB;
-    
-    @Column(name="motatb")
+
+    @Column(name = "motatb")
     private String MoTaTB;
-    
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "thietbi")
     private Set<ThongTinSD> DS_ThongTinSD;
+
+    @Transient
+    private boolean occupied;
 }

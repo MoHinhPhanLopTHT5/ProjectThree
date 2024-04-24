@@ -60,7 +60,7 @@ public class ThanhVienService {
         return thanhVienRepository.save(tv);
     }
 
-    public Iterable<ThanhVien> GetThanhViens() {
+    public Iterable<ThanhVien> GetList() {
         return thanhVienRepository.findAll();
     }
 }

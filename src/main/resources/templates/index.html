@@ -5,32 +5,59 @@
     <header th:replace="~{fragments/general.html :: header}"></header>
     <main class="container">
         <div class="col">
-            <h1>Hello, world!</h1>
-            <table border="1">
+            <h1>Danh sách thiết bị</h1>
+            <table class="table">
                 <thead>
-                    <tr>
-                        <th>STT</th>
-                        <th>Mã thành viên</th>
-                        <th>Họ tên</th>
-                        <th>Email</th>
-                        <th>Khoa</th>
-                        <th>Ngành</th>
-                        <th>SĐT</th>
-                    </tr>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Mã thiết bị</th>
+                    <th scope="col">Tên thiết bị</th>
+                    <th scope="col">Mô tả thiết bị</th>
+                    <th scope="col">Tình trạng</th>
+                  </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="row, state: ${data}">
-                        <td th:utext="${state.count}"></td>
-                        <td th:utext="${row.MaTV}"></td>
-                        <td th:utext="${row.HoTen}"></td>
-                        <td th:utext="${row.Email}"></td>
-                        <td th:utext="${row.Khoa}"></td>
-                        <td th:utext="${row.Nganh}"></td>
-                        <td th:utext="${row.SDT}"></td>
-                    </tr>
+                  <tr th:each="row, state: ${data}">
+                    <th scope="row" th:utext="${state.count}"></th>
+                    <td th:utext="${row.MaTB}"></td>
+                    <td th:utext="${row.TenTB}"></td>
+                    <td th:utext="${row.MoTaTB}"></td>
+                    <td>
+                        <span th:if="${row.occupied == 'true'}" class="badge text-bg-danger">Đã được mượn/đặt chỗ</span>
+                        <div th:unless="${row.occupied == 'true'}">
+                            <span class="badge text-bg-success">Trống</span>
+                            <a th:href="@{/datcho/{id}(id=${row.MaTB})}" class="btn btn-primary">Đặt chỗ</a>
+                        </div>
+                    </td>
+                  </tr>
                 </tbody>
-            </table>
+              </table>
         </div>
+
+        <!-- <table border="1">
+            <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Mã thành viên</th>
+                    <th>Họ tên</th>
+                    <th>Email</th>
+                    <th>Khoa</th>
+                    <th>Ngành</th>
+                    <th>SĐT</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="row, state: ${data}">
+                    <td th:utext="${state.count}"></td>
+                    <td th:utext="${row.MaTV}"></td>
+                    <td th:utext="${row.HoTen}"></td>
+                    <td th:utext="${row.Email}"></td>
+                    <td th:utext="${row.Khoa}"></td>
+                    <td th:utext="${row.Nganh}"></td>
+                    <td th:utext="${row.SDT}"></td>
+                </tr>
+            </tbody>
+        </table> -->
     </main>
     <footer th:insert="~{fragments/general.html :: footer}"></footer>
     <div th:insert="~{fragments/general.html :: scripts}"></div>

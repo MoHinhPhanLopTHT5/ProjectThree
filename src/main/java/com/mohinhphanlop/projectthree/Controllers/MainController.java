@@ -5,8 +5,11 @@
 package com.mohinhphanlop.projectthree.Controllers;
 
 import com.mohinhphanlop.projectthree.Models.ThanhVien;
+import com.mohinhphanlop.projectthree.Models.ThietBi;
 import com.mohinhphanlop.projectthree.Repositories.ThanhVienRepository;
+import com.mohinhphanlop.projectthree.Repositories.ThietBiRepository;
 import com.mohinhphanlop.projectthree.Services.ThanhVienService;
+import com.mohinhphanlop.projectthree.Services.ThietBiService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,13 +29,14 @@ public class MainController {
 
     @Autowired
     private ThanhVienService tvService;
+    @Autowired
+    private ThietBiService tbService;
 
     @GetMapping("/")
     public String homepage(Model model) {
-        Iterable<ThanhVien> list = tvService.GetThanhViens();
-        for (ThanhVien tv : list) {
-            System.out.println(tv.getHoTen());
-        }
+        Iterable<ThietBi> list = tbService.GetList();
+        // for (ThietBi tb : list) {
+        // }
         model.addAttribute("data", list);
         return "index";
     }
