@@ -1,6 +1,7 @@
 package com.mohinhphanlop.projectthree.Repositories;
 
-import com.mohinhphanlop.projectthree.Models.ThanhVien;
+import com.mohinhphanlop.projectthree.Models.XuLy;
+
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -9,6 +10,6 @@ import org.springframework.stereotype.Repository;
  * @author Admin
  */
 @Repository
-public interface ThanhVienRepository extends CrudRepository<ThanhVien, Integer> {
+public interface XuLyRepository extends CrudRepository<XuLy, Integer> {
 
 }
