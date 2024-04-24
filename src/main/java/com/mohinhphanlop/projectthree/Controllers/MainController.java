@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -116,6 +117,15 @@ public class MainController {
         return "register";
     }
 
+    // Khu vực đặt chỗ
+
+    @GetMapping("/datcho/{id}")
+    public String getDatCho(@PathVariable("id") ThietBi thietBi, Model model) {
+        model.addAttribute("thietBi", thietBi);
+        return "reservation";
+    }
+
+    // Mẫu
     @RequestMapping("/url")
     public String page(Model model) {
         model.addAttribute("attribute", "value");

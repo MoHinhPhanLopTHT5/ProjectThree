@@ -1,0 +1,34 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:insert="~{fragments/general.html :: head}"></head>
+  <body>
+    <header th:replace="~{fragments/general.html :: header}"></header>
+    <main class="container">
+        <div class="col">
+            <h1>Xác nhận đặt chỗ</h1>
+            <form th:action="@{/dangnhap}" method="post">
+                <!-- Bootstrap alert element -->
+                <div th:if="${error}" class="alert alert-danger mb-3" role="alert">
+                    <span th:text="${error}"></span>
+                </div>
+                <div class="mb-3">
+                    <label for="MaTB" class="form-label">Mã thiết bị</label>
+                    <input th:value="${thietBi.MaTB} ?: ''" type="text" class="form-control readonly" id="MaTB" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="TenTB" class="form-label">Tên thiết bị</label>
+                    <input th:value="${thietBi.TenTB} ?: ''" type="text" class="form-control readonly" id="TenTB" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="MoTaTB" class="form-label">Mô tả thiết bị</label>
+                    <input th:value="${thietBi.MoTaTB} ?: ''" type="text" class="form-control readonly" id="MoTaTB" readonly>
+                </div>
+                <button type="submit" class="btn btn-success">Xác nhận</button>
+                <span>Tìm thiết bị khác? <a class="btn btn-primary" th:href="@{/}">Quay về trang chủ</a></span>
+            </form>
+        </div>
+    </main>
+    <footer th:insert="~{fragments/general.html :: footer}"></footer>
+    <div th:insert="~{fragments/general.html :: scripts}"></div>
+  </body>
+</html>
