@@ -1,0 +1,38 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:insert="~{fragments/general.html :: head}"></head>
+  <body>
+    <header th:replace="~{fragments/general.html :: header}"></header>
+    <main class="container">
+        <div class="col">
+            <h1>Đăng ký tài khoản</h1>
+            <form th:action="@{/dangky}" method="post">
+                <!-- Bootstrap alert element -->
+                <div th:if="${error}" class="alert alert-danger mb-3" role="alert">
+                    <span th:text="${error}"></span>
+                </div>
+                <div class="mb-3">
+                    <label for="username" class="form-label">Mã thành viên</label>
+                    <input th:value="${username} ?: ''" type="text" class="form-control" id="username" name="username" required>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input th:value="${email} ?: ''" type="email" class="form-control" id="email" name="email" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Mật khẩu</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+                <div class="mb-3">
+                    <label for="c_password" class="form-label">Xác nhận mật khẩu</label>
+                    <input type="password" class="form-control" id="c_password" name="confirm_password" required>
+                </div>
+                <button type="submit" class="btn btn-success">Đăng ký</button>
+                <span>Đã đăng ký thành viên? <a class="btn btn-primary" th:href="@{/dangnhap}">Đăng nhập</a></span>
+            </form>
+        </div>
+    </main>
+    <footer th:insert="~{fragments/general.html :: footer}"></footer>
+    <div th:insert="~{fragments/general.html :: scripts}"></div>
+  </body>
+</html>

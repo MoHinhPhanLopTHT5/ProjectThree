@@ -6,11 +6,15 @@ package com.mohinhphanlop.projectthree.Controllers;
 
 import com.mohinhphanlop.projectthree.Models.ThanhVien;
 import com.mohinhphanlop.projectthree.Repositories.ThanhVienRepository;
+import com.mohinhphanlop.projectthree.Services.ThanhVienService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
@@ -21,11 +25,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class MainController {
 
     @Autowired
-    private ThanhVienRepository thanhVienRepository;
+    private ThanhVienService tvService;
 
     @GetMapping("/")
     public String homepage(Model model) {
-        Iterable<ThanhVien> list = thanhVienRepository.findAll();
+        Iterable<ThanhVien> list = tvService.GetThanhViens();
         for (ThanhVien tv : list) {
             System.out.println(tv.getHoTen());
         }
@@ -41,8 +45,71 @@ public class MainController {
     }
 
     @PostMapping("/dangnhap")
-    public String postDangNhap() {
-        return "redirect:/";
+    public String postDangNhap(@RequestBody MultiValueMap<String, String> formData, Model model) {
+        // Get post data from form
+        String requestedUsernameOrEmail = formData.getFirst("usernameOrEmail");
+
+        model.addAttribute("usernameOrEmail", requestedUsernameOrEmail);
+
+        String password = formData.getFirst("password");
+
+        if (tvService.CheckLogin(requestedUsernameOrEmail, password))
+            return "redirect:/";
+        else
+            model.addAttribute("error", "Tên đăng nhập hoặc mật khẩu không hợp lệ.");
+
+        return "login";
+    }
+
+    // Khu vực đăng ký
+
+    @GetMapping("/dangky")
+    public String getDangKy() {
+        return "register";
+    }
+
+    @PostMapping("/dangky")
+    public String postDangKy(@RequestBody MultiValueMap<String, String> formData, Model model) {
+        // Get post data from form
+        String requestedUsername = formData.getFirst("username");
+        String email = formData.getFirst("email");
+
+        model.addAttribute("username", requestedUsername);
+        model.addAttribute("email", email);
+
+        String password = formData.getFirst("password");
+        String confirm_password = formData.getFirst("confirm_password");
+
+        boolean check = true;
+        if (tvService.CheckUsername(requestedUsername)) {
+            // Mã thành viên cần đăng ký được tìm thấy
+            if (tvService.CheckEmailExists(email)) {
+                // Email đã được sử dụng
+                model.addAttribute("error", "Email đã tồn tại trong cơ sở dữ liệu, hãy sử dụng email khác.");
+                check = false;
+            }
+
+            if (tvService.CheckUsernameIsRegistered(requestedUsername)) {
+                // Thành viên đã đăng ký tài khoản
+                model.addAttribute("error", "Thành viên này đã đăng ký tài khoản rồi.");
+                check = false;
+            }
+
+            if (!password.equals(confirm_password)) {
+                model.addAttribute("error", "Mật khẩu xác nhận không khớp với mật khẩu đã nhập.");
+                check = false;
+            }
+
+            if (check) {
+                // Thoả mọi điều kiện đặt ra
+                if (tvService.UpdateThanhVien(requestedUsername, email, password) != null)
+                    return "redirect:/";
+                model.addAttribute("error", "Lưu thông tin thất bại.");
+            }
+        } else
+            model.addAttribute("error", "Không tìm thấy mã thành viên để đăng ký tài khoản.");
+
+        return "register";
     }
 
     @RequestMapping("/url")

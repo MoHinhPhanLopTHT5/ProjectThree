@@ -16,21 +16,21 @@ public class ThanhVien {
 
     @Id
     private Integer MaTV;
-    
+
     @Column(name = "hoten")
     private String HoTen;
-    
+
     private String Khoa;
-    
+
     @Column(nullable = true)
     private String Nganh;
-    
+
     @Column(nullable = true)
     private String SDT;
-    
+
     @Column(nullable = false)
     private String Password;
-    
+
     @Column(nullable = true)
     private String Email;
 
