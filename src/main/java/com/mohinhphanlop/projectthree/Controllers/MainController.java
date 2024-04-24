@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
@@ -18,24 +19,36 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 public class MainController {
-    
+
     @Autowired
     private ThanhVienRepository thanhVienRepository;
-    
+
     @GetMapping("/")
     public String homepage(Model model) {
         Iterable<ThanhVien> list = thanhVienRepository.findAll();
-        for(ThanhVien tv: list) {
+        for (ThanhVien tv : list) {
             System.out.println(tv.getHoTen());
         }
         model.addAttribute("data", list);
         return "index";
     }
-    
+
+    // Khu vực đăng nhập
+
+    @GetMapping("/dangnhap")
+    public String getDangNhap() {
+        return "login";
+    }
+
+    @PostMapping("/dangnhap")
+    public String postDangNhap() {
+        return "redirect:/";
+    }
+
     @RequestMapping("/url")
     public String page(Model model) {
         model.addAttribute("attribute", "value");
         return "view.name";
     }
-    
+
 }
