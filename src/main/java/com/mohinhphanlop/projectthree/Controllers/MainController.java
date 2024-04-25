@@ -5,10 +5,14 @@
 package com.mohinhphanlop.projectthree.Controllers;
 
 import com.mohinhphanlop.projectthree.Models.ThietBi;
+import com.mohinhphanlop.projectthree.Services.EmailService;
 import com.mohinhphanlop.projectthree.Services.ThanhVienService;
 import com.mohinhphanlop.projectthree.Services.ThietBiService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -85,23 +89,91 @@ public class MainController {
         return "login";
     }
 
+    @Autowired
+    private EmailService emailService;
+
     @GetMapping("/quenmatkhau")
-    public String getQuenMatKhau() {
+    public String getQuenMatKhau(@RequestParam("code") Optional<String> code, HttpSession session, Model model) {
+        if (code.isPresent()) {
+            // Nếu có code
+            String email_uuid = session.getAttribute("email_uuid") == null ? ""
+                    : session.getAttribute("email_uuid").toString();
+            if (email_uuid.equals(code.get())) {
+                model.addAttribute("code", true);
+                model.addAttribute("codeValue", email_uuid);
+            } else {
+                model.addAttribute("code", false);
+                model.addAttribute("error", "Mã xác thực không hợp lệ!");
+            }
+        }
         return "forgot_password";
     }
 
-    @PostMapping("/quanmatkhau")
+    /**
+     * Phương thức xử lý yêu cầu thay đổi mật khẩu từ phía người dùng.
+     *
+     * @param code     Mã xác thực gửi từ email.
+     * @param formData Dữ liệu từ form.
+     * @param model    Model.
+     * @param request  HttpServletRequest.
+     * @param session  HttpSession.
+     * @return Trang web.
+     */
+    @PostMapping("/quenmatkhau")
     public String postQuenMatKhau(@RequestBody MultiValueMap<String, String> formData,
-            Model model) {
+            Model model, HttpServletRequest request, HttpSession session) {
 
-        String requestedUsername = formData.getFirst("username");
+        String code = formData.getFirst("code") == null ? "" : formData.getFirst("code");
+        System.out.println(code);
+        if (!code.isEmpty()) { // Nếu có code
+            String email_uuid = session.getAttribute("email_uuid") == null ? ""
+                    : session.getAttribute("email_uuid").toString(); // Lấy email_uuid từ HttpSession
+            if (email_uuid.equals(code)) { // Kiểm tra đúng với mã xác thực trong email
 
-        if (tvService.CheckUsernameIsRegistered(requestedUsername)) {
+                String new_password = formData.getFirst("new_password"); // Lấy mật khẩu mới từ form
+                String confirm_password = formData.getFirst("confirm_password"); // Lấy mật khẩu xác nhận từ form
+                if (new_password.equals(confirm_password)) { // Kiểm tra mật khẩu xác nhận trùng với mật khẩu mới
+                    String requestedUsername = session
+                            .getAttribute("requested_username")
+                            .toString(); // Lấy tên đăng
+                                         // nhập từ
+                                         // HttpSession
+                    if (tvService.UpdateThanhVien(requestedUsername, // Thực hiện cập nhật mật khẩu
+                            tvService.getByUsernameOrEmail(requestedUsername).getEmail(), new_password) != null) {
+                        model.addAttribute("success", "Thay đổi mật khẩu thành công!");
+                        session.removeAttribute("email_uuid");
+                        session.removeAttribute("requested_username");
+                    } else
+                        model.addAttribute("error", "Không thể thay đổi mật khẩu!");
+                } else
+                    model.addAttribute("error", "Mật khẩu xác nhận không khớp!");
 
-        } else {
-            model.addAttribute("error", "Tài khoản này chưa đăng ký thành viên hoặc không tồn tại trong hệ thống.");
+            } else {
+                model.addAttribute("error", "Mã xác thực không hợp lệ!");
+            }
+            return "forgot_password";
+
+        } else { // Nếu không có code
+            String requestedUsername = formData.getFirst("username"); // Lấy tên đăng nhập từ form
+            String email_uuid = session.getAttribute("email_uuid") == null ? ""
+                    : session.getAttribute("email_uuid").toString(); // Lấy email_uuid từ HttpSession
+
+            if (tvService.CheckUsernameIsRegistered(requestedUsername)) { // Kiểm tra tài khoản đã đăng ký
+                if (email_uuid.isEmpty()) { // chỉ gửi nếu email_uuid chưa set
+                    String email = tvService.getByUsernameOrEmail(requestedUsername).getEmail(); // Lấy email từ hệ
+                                                                                                 // thống
+                    String uuid = emailService.GuiEmailQuenMatKhau(email, request); // Gửi email
+                    session.setAttribute("email_uuid", uuid); // Thêm email_uuid vào HttpSession
+                    session.setAttribute("requested_username", requestedUsername); // Thêm tên đăng nhập vào HttpSession
+                    model.addAttribute("success", "Đã gửi email xác thực, hãy kiểm tra hộp thư của bạn!");
+                } else {
+                    model.addAttribute("error", "Đã gửi email xác thực, hãy kiểm tra hộp thư của bạn!");
+                }
+            } else {
+                model.addAttribute("error", "Tài khoản này chưa đăng ký thành viên hoặc không tồn tại trong hệ thống.");
+            }
+            return "forgot_password";
         }
-        return "forgot_password";
     }
 
     // Khu vực đăng ký

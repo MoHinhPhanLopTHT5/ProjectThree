@@ -44,7 +44,7 @@ public class MainFilter implements Filter {
         String pw = session.getAttribute("pw") == null ? "" : session.getAttribute("pw").toString();
 
         boolean onLoginRegisterPages = requestedUri.contains("/dangnhap")
-                || requestedUri.contains("/dangky");
+                || requestedUri.contains("/dangky") || requestedUri.contains("/quenmatkhau");
 
         if ((username.isEmpty()
                 || pw.isEmpty()) && !onLoginRegisterPages) {

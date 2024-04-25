@@ -58,6 +58,12 @@
 	  <artifactId>hibernate-core</artifactId>
           <version>6.4.4.Final</version>
 	 </dependency>
+	 <dependency>
+	  <groupId>org.springframework.boot</groupId>
+	  <artifactId>spring-boot-starter-mail</artifactId>
+	  <type>module</type>
+          <version>3.2.4</version>
+	 </dependency>
 	</dependencies>
 
 	<build>
