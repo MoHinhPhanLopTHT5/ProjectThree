@@ -1,7 +1,6 @@
 package com.mohinhphanlop.projectthree.Services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import com.mohinhphanlop.projectthree.Models.ThanhVien;
@@ -23,6 +22,17 @@ public class ThanhVienService {
                 return true;
         }
         return false;
+    }
+
+    public ThanhVien getByUsernameOrEmail(String usernameOrEmail) {
+        Iterable<ThanhVien> list = thanhVienRepository.findAll();
+        for (ThanhVien tv : list) {
+            String maTV = tv.getMaTV().toString();
+            String email = tv.getEmail() == null ? "-1" : tv.getEmail();
+            if (maTV.equals(usernameOrEmail) || email.equals(usernameOrEmail))
+                return tv;
+        }
+        return null;
     }
 
     public boolean CheckUsername(String username) {
@@ -53,10 +63,26 @@ public class ThanhVienService {
         return false;
     }
 
+    public boolean CheckNotTheSameEmail(ThanhVien tvCurrent, String email) {
+        if (tvCurrent.getEmail().equals(email))
+            return false;
+
+        return true;
+    }
+
     public ThanhVien UpdateThanhVien(String maThanhVien, String email, String password) {
         ThanhVien tv = thanhVienRepository.findById(Long.parseLong(maThanhVien)).get();
         tv.setEmail(email);
         tv.setPassword(password);
+        return thanhVienRepository.save(tv);
+    }
+
+    public ThanhVien CreateThanhVien(String maThanhVien, String email, String password, String fullname) {
+        ThanhVien tv = new ThanhVien();
+        tv.setMaTV(Integer.parseInt(maThanhVien));
+        tv.setEmail(email);
+        tv.setPassword(password);
+        tv.setHoTen(fullname);
         return thanhVienRepository.save(tv);
     }
 

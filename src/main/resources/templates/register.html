@@ -12,9 +12,16 @@
                     <div th:if="${error}" class="alert alert-danger mb-3" role="alert">
                         <span th:text="${error}"></span>
                     </div>
+                    <div th:if="${success}" class="alert alert-success mb-3" role="alert">
+                        <span th:text="${success}"></span>
+                    </div>
                     <div class="mb-3">
                         <label for="username" class="form-label">Mã thành viên</label>
                         <input th:value="${username} ?: ''" type="text" class="form-control" id="username" name="username" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="fullname" class="form-label">Họ tên</label>
+                        <input th:value="${fullname} ?: ''" type="text" class="form-control" id="fullname" name="fullname" required>
                     </div>
                     <div class="mb-3">
                         <label for="email" class="form-label">Email</label>

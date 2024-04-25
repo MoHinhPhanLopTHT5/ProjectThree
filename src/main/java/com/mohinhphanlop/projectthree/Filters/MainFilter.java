@@ -38,7 +38,7 @@ public class MainFilter implements Filter {
             return;
         }
 
-        HttpSession session = req.getSession(false);
+        HttpSession session = req.getSession();
 
         String username = session.getAttribute("username") == null ? "" : session.getAttribute("username").toString();
         String pw = session.getAttribute("pw") == null ? "" : session.getAttribute("pw").toString();
