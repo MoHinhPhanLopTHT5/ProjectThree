@@ -20,8 +20,11 @@
                   <li class="nav-item">
                     <a class="nav-link active" aria-current="page" th:href="@{/}">Trang chủ</a>
                   </li>
-                  <li class="nav-item">
+                  <li th:if="${loggedin == 'true'}" class="nav-item">
                     <a class="nav-link" th:href="@{/dangnhap}">Đăng nhập</a>
+                  </li>
+                  <li th:unless="${loggedin == 'true'}" class="nav-item">
+                    <a class="nav-link" th:href="@{/dangxuat}">Đăng xuất</a>
                   </li>
                 </ul>
               </div>

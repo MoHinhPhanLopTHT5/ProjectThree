@@ -4,12 +4,11 @@
  */
 package com.mohinhphanlop.projectthree.Controllers;
 
-import com.mohinhphanlop.projectthree.Models.ThanhVien;
 import com.mohinhphanlop.projectthree.Models.ThietBi;
-import com.mohinhphanlop.projectthree.Repositories.ThanhVienRepository;
-import com.mohinhphanlop.projectthree.Repositories.ThietBiRepository;
 import com.mohinhphanlop.projectthree.Services.ThanhVienService;
 import com.mohinhphanlop.projectthree.Services.ThietBiService;
+
+import jakarta.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -39,6 +38,7 @@ public class MainController {
         // for (ThietBi tb : list) {
         // }
         model.addAttribute("data", list);
+        model.addAttribute("loggedin", true);
         return "index";
     }
 
@@ -49,8 +49,16 @@ public class MainController {
         return "login";
     }
 
+    @GetMapping("/dangxuat")
+    public String getDangXuat(HttpSession session) {
+        session.removeAttribute("username");
+        session.removeAttribute("pw");
+        return "redirect:/dangnhap";
+    }
+
     @PostMapping("/dangnhap")
-    public String postDangNhap(@RequestBody MultiValueMap<String, String> formData, Model model) {
+    public String postDangNhap(HttpSession session, @RequestBody MultiValueMap<String, String> formData,
+            Model model) {
         // Get post data from form
         String requestedUsernameOrEmail = formData.getFirst("usernameOrEmail");
 
@@ -58,9 +66,11 @@ public class MainController {
 
         String password = formData.getFirst("password");
 
-        if (tvService.CheckLogin(requestedUsernameOrEmail, password))
+        if (tvService.CheckLogin(requestedUsernameOrEmail, password)) {
+            session.setAttribute("username", requestedUsernameOrEmail);
+            session.setAttribute("pw", password);
             return "redirect:/";
-        else
+        } else
             model.addAttribute("error", "Tên đăng nhập hoặc mật khẩu không hợp lệ.");
 
         return "login";
