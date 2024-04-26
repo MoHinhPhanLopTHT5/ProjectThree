@@ -24,11 +24,7 @@
                     <td th:utext="${row.TenTB}"></td>
                     <td th:utext="${row.MoTaTB}"></td>
                     <td>
-                        <span th:if="${row.occupied == true}" class="badge text-bg-danger">Đã được mượn/đặt chỗ</span>
-                        <div th:unless="${row.occupied == true}">
-                            <span class="badge text-bg-success">Trống</span>
-                            <a th:href="@{/datcho/{id}(id=${row.MaTB})}" class="btn btn-primary">Đặt chỗ</a>
-                        </div>
+                      <a th:href="@{/datcho/{id}(id=${row.MaTB})}" class="btn btn-primary">Đặt chỗ</a>
                     </td>
                   </tr>
                 </tbody>
