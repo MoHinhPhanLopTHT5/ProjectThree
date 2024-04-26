@@ -4,10 +4,8 @@
  */
 package com.mohinhphanlop.projectthree.Models;
 
-import java.io.Serializable;
 import java.util.List;
 import jakarta.persistence.*;
-import java.math.BigInteger;
 import lombok.Data;
 
 /**

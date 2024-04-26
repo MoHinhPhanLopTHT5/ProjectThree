@@ -4,12 +4,10 @@
  */
 package com.mohinhphanlop.projectthree.Models;
 
-import java.io.Serializable;
 import java.util.Date;
-import java.util.Set;
 import jakarta.persistence.*;
-import java.math.BigInteger;
 import lombok.Data;
+
 /**
  *
  * @author Admin
@@ -18,23 +16,23 @@ import lombok.Data;
 @Entity(name = "XuLy")
 @Table(name = "xuly")
 public class XuLy {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer MaXL;
-    
-    @Column(name="hinhthucxl")
+
+    @Column(name = "hinhthucxl")
     private String HinhThucXL;
-    
-    @Column(name="sotien")
+
+    @Column(name = "sotien")
     private Integer SoTien;
-    
+
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date NgayXL;
-    
-    @Column(name="trangthaixl")
+
+    @Column(name = "trangthaixl")
     private Integer TrangThaiXL;
-    
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "MaTV", nullable = false)
     private ThanhVien thanhvien;

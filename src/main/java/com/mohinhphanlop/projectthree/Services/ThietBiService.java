@@ -1,12 +1,9 @@
 package com.mohinhphanlop.projectthree.Services;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Date;
 import java.util.List;
 
-import org.hibernate.mapping.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,15 +37,9 @@ public class ThietBiService {
 
                     if (tgDatCho.plusHours(1).isBefore(now)) {
                         // Hết thời gian đặt chỗ
-                        thietBi.setOccupied(false);
                         thongTinSDRepository.delete(ttsd);
-                    } else
-                        thietBi.setOccupied(true);
-                } else // trường hợp không có đặt chỗ
-                    thietBi.setOccupied(false);
-
-                if (ttsd.getTGMuon() != null && ttsd.getTGTra() == null)
-                    thietBi.setOccupied(true);
+                    }
+                }
             }
         }
         return list;
