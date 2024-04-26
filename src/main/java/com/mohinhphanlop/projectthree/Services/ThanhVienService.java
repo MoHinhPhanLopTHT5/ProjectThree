@@ -1,9 +1,14 @@
 package com.mohinhphanlop.projectthree.Services;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mohinhphanlop.projectthree.Models.ThanhVien;
+import com.mohinhphanlop.projectthree.Models.ThongTinSD;
+import com.mohinhphanlop.projectthree.Models.XuLy;
 import com.mohinhphanlop.projectthree.Repositories.ThanhVienRepository;
 
 @Service
@@ -88,5 +93,41 @@ public class ThanhVienService {
 
     public Iterable<ThanhVien> GetList() {
         return thanhVienRepository.findAll();
+    }
+
+    public Iterable<XuLy> GetListXuLyFrom(String maThanhVien) {
+        ThanhVien tv = thanhVienRepository.findById(Long.parseLong(maThanhVien)).get();
+        return tv.getDS_XuLy();
+    }
+
+    public Iterable<ThongTinSD> GetListThongTinSDFrom(String maThanhVien) {
+        ThanhVien tv = thanhVienRepository.findById(Long.parseLong(maThanhVien)).get();
+        return tv.getDS_ThongTinSD();
+    }
+
+    public Iterable<ThongTinSD> GetListThongTinSDDangMuonFrom(String maThanhVien) {
+        ThanhVien tv = thanhVienRepository.findById(Long.parseLong(maThanhVien)).get();
+
+        Iterable<ThongTinSD> listTemp = tv.getDS_ThongTinSD();
+        ArrayList<ThongTinSD> list = new ArrayList<ThongTinSD>();
+
+        for (ThongTinSD thongTinSD : listTemp) {
+            if (thongTinSD.getTGMuon() != null)
+                list.add(thongTinSD);
+        }
+        return list;
+    }
+
+    public Iterable<ThongTinSD> GetListThongTinSDDatchoFrom(String maThanhVien) {
+        ThanhVien tv = thanhVienRepository.findById(Long.parseLong(maThanhVien)).get();
+
+        Iterable<ThongTinSD> listTemp = tv.getDS_ThongTinSD();
+        ArrayList<ThongTinSD> list = new ArrayList<ThongTinSD>();
+
+        for (ThongTinSD thongTinSD : listTemp) {
+            if (thongTinSD.getTGDatcho() != null)
+                list.add(thongTinSD);
+        }
+        return list;
     }
 }

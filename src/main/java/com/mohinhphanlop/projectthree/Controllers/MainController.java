@@ -51,7 +51,6 @@ public class MainController {
         // for (ThietBi tb : list) {
         // }
         model.addAttribute("data", list);
-        model.addAttribute("loggedin", true);
         return "index";
     }
 

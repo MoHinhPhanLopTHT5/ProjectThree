@@ -14,12 +14,18 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/hoso")
 public class HoSoController {
     @Autowired
     private ThanhVienService tvService;
+
+    @GetMapping("")
+    public String get() {
+        return "redirect:/hoso/";
+    }
 
     @GetMapping("/")
     public String getCapNhat(Model model, HttpServletRequest request) {
@@ -90,6 +96,27 @@ public class HoSoController {
         // Hiển thị thông tin thành viên vừa cập nhật
         model.addAttribute("ThanhVien", tvService.getByUsernameOrEmail(username));
         return "user";
+    }
+
+    @GetMapping("/trangthaivipham")
+    public String getTrangThaiViPham(HttpSession session, Model model) {
+        String username = session.getAttribute("username").toString();
+        model.addAttribute("listXuLy", tvService.GetListXuLyFrom(username));
+        return "user_violations";
+    }
+
+    @GetMapping("/thietbidatcho")
+    public String getThietBiDatCho(HttpSession session, Model model) {
+        String username = session.getAttribute("username").toString();
+        model.addAttribute("listThongTinSD", tvService.GetListThongTinSDDatchoFrom(username));
+        return "user_reservations";
+    }
+
+    @GetMapping("/thietbidangmuon")
+    public String getThietBiDangMuon(HttpSession session, Model model) {
+        String username = session.getAttribute("username").toString();
+        model.addAttribute("listThongTinSD", tvService.GetListThongTinSDDangMuonFrom(username));
+        return "user_borrowing";
     }
 
 }

@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:insert="~{fragments/general.html :: head}"></head>
+  <body>
+    <header th:replace="~{fragments/general.html :: header}"></header>
+    <main class="container">
+        <div class="row">
+            <div class="col">
+                <h2>Danh sách vi phạm <span><a th:href="@{/hoso}" class="btn btn-primary">Quay về trang hồ sơ</a></span></h2>
+                <!-- Bootstrap alert -->
+                <div th:unless="${listXuLy.size() > 0}" class="alert alert-success mb-3" role="alert">
+                  Chúc mừng, bạn không có vi phạm nào!
+                </div>
+                <table th:if="${listXuLy.size() > 0}" class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Hình thức xử lý</th>
+                        <th scope="col">Số tiền</th>
+                        <th scope="col">Ngày xử lý</th>
+                        <th scope="col">Tình trạng</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr th:each="row, state: ${listXuLy}">
+                        <th scope="row" th:utext="${state.count}"></th>
+                        <td th:utext="${row.HinhThucXL}"></td>
+                        <td th:utext="${row.SoTien}"></td>
+                        <td th:utext="${row.NgayXL}"></td>
+                        <td>
+                            <span th:if="${row.TrangThaiXL == 1}" class="badge text-bg-danger">Đang xử lý</span>
+                            <div th:if="${row.TrangThaiXL == 0}">
+                                <span class="badge text-bg-success">Đã xử lý</span>
+                            </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+            </div>
+        </div>
+    </main>
+    <footer th:insert="~{fragments/general.html :: footer}"></footer>
+    <div th:insert="~{fragments/general.html :: scripts}"></div>
+  </body>
+</html>

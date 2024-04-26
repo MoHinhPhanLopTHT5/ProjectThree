@@ -1,0 +1,38 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:insert="~{fragments/general.html :: head}"></head>
+  <body>
+    <header th:replace="~{fragments/general.html :: header}"></header>
+    <main class="container">
+        <div class="row">
+            <div class="col">
+                <h2>Danh sách đặt chỗ</h2>
+                <!-- Bootstrap alert -->
+                <div th:unless="${listThongTinSD.size() > 0}" class="alert alert-info mb-3" role="alert">
+                  Bạn chưa đặt chỗ thiết bị nào!
+                </div>
+                <table class="table" th:if="${listThongTinSD.size() > 0}">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Mã thiết bị</th>
+                        <th scope="col">Tên thiết bị</th>
+                        <th scope="col">Thời gian đặt chỗ</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr th:each="row, state: ${listThongTinSD}">
+                        <th scope="row" th:utext="${state.count}"></th>
+                        <td th:utext="${row.thietbi.MaTB}"></td>
+                        <td th:utext="${row.thietbi.TenTB}"></td>
+                        <td th:utext="${row.TGDatcho}"></td>
+                      </tr>
+                    </tbody>
+                  </table>
+            </div>
+        </div>
+    </main>
+    <footer th:insert="~{fragments/general.html :: footer}"></footer>
+    <div th:insert="~{fragments/general.html :: scripts}"></div>
+  </body>
+</html>
