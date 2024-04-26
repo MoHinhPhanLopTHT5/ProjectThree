@@ -18,20 +18,19 @@ import lombok.Data;
 public class XuLy {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer MaXL;
+    private Integer maXL;
 
     @Column(name = "hinhthucxl")
-    private String HinhThucXL;
+    private String hinhThucXL;
 
     @Column(name = "sotien")
-    private Integer SoTien;
+    private Integer soTien;
 
     @Temporal(value = TemporalType.TIMESTAMP)
-    private Date NgayXL;
+    private Date ngayXL;
 
     @Column(name = "trangthaixl")
-    private Integer TrangThaiXL;
+    private Integer trangThaiXL;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "MaTV", nullable = false)

@@ -18,24 +18,23 @@ import lombok.Data;
 public class ThongTinSD {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer MaTT;
+    private Integer maTT;
 
     @Column(nullable = true)
     @Temporal(value = TemporalType.TIMESTAMP)
-    private Date TGVao;
+    private Date tGVao;
 
     @Column(nullable = true)
     @Temporal(value = TemporalType.TIMESTAMP)
-    private Date TGMuon;
+    private Date tGMuon;
 
     @Column(nullable = true)
     @Temporal(value = TemporalType.TIMESTAMP)
-    private Date TGTra;
+    private Date tGTra;
 
     @Column(nullable = true)
     @Temporal(value = TemporalType.TIMESTAMP)
-    private Date TGDatcho;
+    private Date tGDatcho;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "MaTV", nullable = false)

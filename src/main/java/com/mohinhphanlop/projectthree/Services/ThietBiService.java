@@ -19,29 +19,13 @@ public class ThietBiService {
     @Autowired
     private ThongTinSDRepository thongTinSDRepository;
 
+    public ThietBi GetByID(String id) {
+        return thietBiRepository.findById(Integer.parseInt(id)).get();
+    }
+
     public Iterable<ThietBi> GetList() {
         // Lấy danh sách thiết bị
         Iterable<ThietBi> list = thietBiRepository.findAll();
-        for (ThietBi thietBi : list) {
-
-            // Lấy danh sách thông tin sử dụng ứng với thiết bị
-            List<ThongTinSD> listTTSD = thietBi.getDS_ThongTinSD();
-            for (ThongTinSD ttsd : listTTSD) {
-                // Chuyển Date sang LocalDate
-                if (ttsd.getTGDatcho() != null) {
-                    LocalDateTime tgDatCho = ttsd.getTGDatcho()
-                            .toInstant()
-                            .atZone(ZoneId.of("Asia/Ho_Chi_Minh"))
-                            .toLocalDateTime();
-                    LocalDateTime now = LocalDateTime.now().atZone(ZoneId.of("Asia/Ho_Chi_Minh")).toLocalDateTime();
-
-                    if (tgDatCho.plusHours(1).isBefore(now)) {
-                        // Hết thời gian đặt chỗ
-                        thongTinSDRepository.delete(ttsd);
-                    }
-                }
-            }
-        }
         return list;
     }
 }

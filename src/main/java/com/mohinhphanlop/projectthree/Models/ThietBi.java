@@ -17,12 +17,12 @@ import lombok.Data;
 @Table(name = "thietbi")
 public class ThietBi {
     @Id
-    private Integer MaTB;
+    private Integer maTB;
 
-    private String TenTB;
+    private String tenTB;
 
     @Column(name = "motatb")
-    private String MoTaTB;
+    private String moTaTB;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "thietbi")
     private List<ThongTinSD> DS_ThongTinSD;

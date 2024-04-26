@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.mohinhphanlop.projectthree.Services.ThanhVienService;
+import com.mohinhphanlop.projectthree.Services.ThongTinSDService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -20,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class HoSoController {
     @Autowired
     private ThanhVienService tvService;
+    @Autowired
+    private ThongTinSDService ttSDService;
 
     @GetMapping("")
     public String get() {
@@ -100,12 +103,14 @@ public class HoSoController {
     @GetMapping("/trangthaivipham")
     public String getTrangThaiViPham(HttpSession session, Model model) {
         String username = session.getAttribute("username").toString();
+        System.out.println(tvService.GetListXuLyFrom(username));
         model.addAttribute("listXuLy", tvService.GetListXuLyFrom(username));
         return "user_violations";
     }
 
     @GetMapping("/thietbidatcho")
     public String getThietBiDatCho(HttpSession session, Model model) {
+        ttSDService.RemoveAllTGDatchoOver1Hour();
         String username = session.getAttribute("username").toString();
         model.addAttribute("listThongTinSD", tvService.GetListThongTinSDDatchoFrom(username));
         return "user_reservations";

@@ -5,11 +5,14 @@
     <header th:replace="~{fragments/general.html :: header}"></header>
     <main class="container">
         <div class="col">
-            <h1>Xác nhận đặt chỗ</h1>
-            <form th:action="@{/dangnhap}" method="post">
+            <h1>Xác nhận đặt chỗ mượn</h1>
+            <form th:action="@{/datcho/{MaTB}(MaTB=${thietBi.MaTB})}" method="post">
                 <!-- Bootstrap alert element -->
                 <div th:if="${error}" class="alert alert-danger mb-3" role="alert">
                     <span th:text="${error}"></span>
+                </div>
+                <div th:if="${success}" class="alert alert-success mb-3" role="alert">
+                    <span th:text="${success}"></span>
                 </div>
                 <div class="mb-3">
                     <label for="MaTB" class="form-label">Mã thiết bị</label>
@@ -22,6 +25,10 @@
                 <div class="mb-3">
                     <label for="MoTaTB" class="form-label">Mô tả thiết bị</label>
                     <input th:value="${thietBi.MoTaTB} ?: ''" type="text" class="form-control readonly" id="MoTaTB" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="MoTaTB" class="form-label">Ngày đặt chỗ</label>
+                    <input  type="datetime-local" class="form-control" name="date" id="MoTaTB" required>
                 </div>
                 <button type="submit" class="btn btn-success">Xác nhận</button>
                 <span>Tìm thiết bị khác? <a class="btn btn-primary" th:href="@{/}">Quay về trang chủ</a></span>

@@ -14,24 +14,24 @@ import lombok.Data;
 public class ThanhVien {
 
     @Id
-    private Integer MaTV;
+    private Integer maTV;
 
     @Column(name = "hoten")
-    private String HoTen;
+    private String hoTen;
 
-    private String Khoa;
-
-    @Column(nullable = true)
-    private String Nganh;
+    private String khoa;
 
     @Column(nullable = true)
-    private String SDT;
+    private String nganh;
+
+    @Column(nullable = true)
+    private String sDT;
 
     @Column(nullable = false)
-    private String Password;
+    private String password;
 
     @Column(nullable = true)
-    private String Email;
+    private String email;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "thanhvien")
     private List<ThongTinSD> DS_ThongTinSD;

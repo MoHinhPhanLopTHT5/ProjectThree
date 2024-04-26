@@ -8,6 +8,7 @@ import com.mohinhphanlop.projectthree.Models.ThietBi;
 import com.mohinhphanlop.projectthree.Services.EmailService;
 import com.mohinhphanlop.projectthree.Services.ThanhVienService;
 import com.mohinhphanlop.projectthree.Services.ThietBiService;
+import com.mohinhphanlop.projectthree.Services.ThongTinSDService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -36,6 +37,8 @@ public class MainController {
     private ThanhVienService tvService;
     @Autowired
     private ThietBiService tbService;
+    @Autowired
+    private ThongTinSDService ttSDService;
 
     public static Integer TryParseInt(String txt) {
         try {
@@ -249,6 +252,32 @@ public class MainController {
 
     @GetMapping("/datcho/{id}")
     public String getDatCho(@PathVariable("id") ThietBi thietBi, Model model) {
+        ttSDService.RemoveAllTGDatchoOver1Hour();
+        model.addAttribute("thietBi", thietBi);
+        return "reservation";
+    }
+
+    @PostMapping("/datcho/{id}")
+    public String postDatCho(HttpSession session, @PathVariable("id") ThietBi thietBi,
+            @RequestBody MultiValueMap<String, String> formData,
+            Model model) {
+
+        String date = formData.getFirst("date");
+        String MaTV = (String) session.getAttribute("username");
+        boolean check = true;
+        if (!ttSDService.CheckTrangThaiDatCho(thietBi.getMaTB().toString(), date)) {
+            model.addAttribute("error",
+                    "Ngày đã nhập là ngày trong quá khứ hoặc thiết bị này đã được đặt chỗ vào ngày bạn nhập, hãy chọn một ngày khác!");
+            check = false;
+        }
+
+        if (check) {
+            if (ttSDService.CreateThoiGianDatCho(MaTV, thietBi.getMaTB().toString(), date) != null)
+                model.addAttribute("success", "Đặt chỗ mượn thành công!");
+            else
+                model.addAttribute("error", "Đặt chỗ mượn thất bại do lỗi phía máy chủ!");
+        }
+
         model.addAttribute("thietBi", thietBi);
         return "reservation";
     }
