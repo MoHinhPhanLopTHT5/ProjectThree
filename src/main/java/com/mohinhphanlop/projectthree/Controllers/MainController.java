@@ -48,8 +48,6 @@ public class MainController {
     @GetMapping("/")
     public String homepage(Model model) {
         Iterable<ThietBi> list = tbService.GetList();
-        // for (ThietBi tb : list) {
-        // }
         model.addAttribute("data", list);
         return "index";
     }

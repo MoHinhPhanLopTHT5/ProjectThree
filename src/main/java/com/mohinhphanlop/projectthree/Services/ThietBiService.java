@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.List;
 
 import org.hibernate.mapping.Set;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +28,9 @@ public class ThietBiService {
         for (ThietBi thietBi : list) {
 
             // Lấy danh sách thông tin sử dụng ứng với thiết bị
-            Iterable<ThongTinSD> listTTSD = thietBi.getDS_ThongTinSD();
+            List<ThongTinSD> listTTSD = thietBi.getDS_ThongTinSD();
             for (ThongTinSD ttsd : listTTSD) {
                 // Chuyển Date sang LocalDate
-
                 if (ttsd.getTGDatcho() != null) {
                     LocalDateTime tgDatCho = ttsd.getTGDatcho()
                             .toInstant()
@@ -46,6 +46,9 @@ public class ThietBiService {
                         thietBi.setOccupied(true);
                 } else // trường hợp không có đặt chỗ
                     thietBi.setOccupied(false);
+
+                if (ttsd.getTGMuon() != null && ttsd.getTGTra() == null)
+                    thietBi.setOccupied(true);
             }
         }
         return list;

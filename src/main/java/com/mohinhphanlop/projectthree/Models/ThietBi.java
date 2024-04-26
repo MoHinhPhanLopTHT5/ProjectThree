@@ -5,7 +5,7 @@
 package com.mohinhphanlop.projectthree.Models;
 
 import java.io.Serializable;
-import java.util.Set;
+import java.util.List;
 import jakarta.persistence.*;
 import java.math.BigInteger;
 import lombok.Data;
@@ -27,7 +27,7 @@ public class ThietBi {
     private String MoTaTB;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "thietbi")
-    private Set<ThongTinSD> DS_ThongTinSD;
+    private List<ThongTinSD> DS_ThongTinSD;
 
     @Transient
     private boolean occupied;
