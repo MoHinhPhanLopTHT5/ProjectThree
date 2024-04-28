@@ -13,13 +13,13 @@ import com.mohinhphanlop.projectthree.Repositories.ThanhVienRepository;
 @Service
 public class ThanhVienService {
     @Autowired
-    private ThanhVienRepository thanhVienRepository; // class của Spring boot cho các thao tác mặc định của framework
+    private ThanhVienRepository tvRepository; // class của Spring boot cho các thao tác mặc định của framework
     // bao gồm thêm sửa xoá bằng method .save(), findAll để tìm kiếm
     // xoá bằng hàm deleteById() hoặc delete(ThanhVien tv) (tham số để xoá, có thể
     // là ThietBi)
 
     public boolean CheckLogin(String usernameOrEmail, String password) {
-        Iterable<ThanhVien> list = thanhVienRepository.findAll();
+        Iterable<ThanhVien> list = tvRepository.findAll();
         for (ThanhVien tv : list) {
             String maTV = tv.getMaTV().toString();
             String email = tv.getEmail() == null ? "-1" : tv.getEmail();
@@ -32,7 +32,7 @@ public class ThanhVienService {
     }
 
     public ThanhVien getByUsernameOrEmail(String usernameOrEmail) {
-        Iterable<ThanhVien> list = thanhVienRepository.findAll();
+        Iterable<ThanhVien> list = tvRepository.findAll();
         for (ThanhVien tv : list) {
             String maTV = tv.getMaTV().toString();
             String email = tv.getEmail() == null ? "-1" : tv.getEmail();
@@ -43,7 +43,7 @@ public class ThanhVienService {
     }
 
     public boolean CheckUsername(String username) {
-        Iterable<ThanhVien> list = thanhVienRepository.findAll();
+        Iterable<ThanhVien> list = tvRepository.findAll();
         for (ThanhVien tv : list) {
             if (tv.getMaTV().toString().equals(username))
                 return true;
@@ -52,7 +52,7 @@ public class ThanhVienService {
     }
 
     public boolean CheckUsernameIsRegistered(String username) {
-        Iterable<ThanhVien> list = thanhVienRepository.findAll();
+        Iterable<ThanhVien> list = tvRepository.findAll();
         for (ThanhVien tv : list) {
             if (tv.getMaTV().toString().equals(username) && tv.getEmail() != null)
                 return true;
@@ -61,7 +61,7 @@ public class ThanhVienService {
     }
 
     public boolean CheckEmailExists(String email) {
-        Iterable<ThanhVien> list = thanhVienRepository.findAll();
+        Iterable<ThanhVien> list = tvRepository.findAll();
         for (ThanhVien tv : list) {
             String emailTV = tv.getEmail() == null ? "-1" : tv.getEmail();
             if (emailTV.equals(email))
@@ -78,10 +78,10 @@ public class ThanhVienService {
     }
 
     public ThanhVien UpdateThanhVien(String maThanhVien, String email, String password) {
-        ThanhVien tv = thanhVienRepository.findById(Long.parseLong(maThanhVien)).get();
+        ThanhVien tv = tvRepository.findById(Long.parseLong(maThanhVien)).get();
         tv.setEmail(email);
         tv.setPassword(password);
-        return thanhVienRepository.save(tv);
+        return tvRepository.save(tv);
     }
 
     public ThanhVien CreateThanhVien(String maThanhVien, String email, String password, String fullname) {
@@ -90,25 +90,25 @@ public class ThanhVienService {
         tv.setEmail(email);
         tv.setPassword(password);
         tv.setHoTen(fullname);
-        return thanhVienRepository.save(tv);
+        return tvRepository.save(tv);
     }
 
     public Iterable<ThanhVien> GetList() {
-        return thanhVienRepository.findAll();
+        return tvRepository.findAll();
     }
 
     public Iterable<XuLy> GetListXuLyFrom(String maThanhVien) {
-        ThanhVien tv = thanhVienRepository.findById(Long.parseLong(maThanhVien)).get();
+        ThanhVien tv = tvRepository.findById(Long.parseLong(maThanhVien)).get();
         return tv.getDS_XuLy();
     }
 
     public Iterable<ThongTinSD> GetListThongTinSDFrom(String maThanhVien) {
-        ThanhVien tv = thanhVienRepository.findById(Long.parseLong(maThanhVien)).get();
+        ThanhVien tv = tvRepository.findById(Long.parseLong(maThanhVien)).get();
         return tv.getDS_ThongTinSD();
     }
 
     public Iterable<ThongTinSD> GetListThongTinSDDangMuonFrom(String maThanhVien) {
-        ThanhVien tv = thanhVienRepository.findById(Long.parseLong(maThanhVien)).get();
+        ThanhVien tv = tvRepository.findById(Long.parseLong(maThanhVien)).get();
 
         Iterable<ThongTinSD> listTemp = tv.getDS_ThongTinSD();
         ArrayList<ThongTinSD> list = new ArrayList<ThongTinSD>();
@@ -121,7 +121,7 @@ public class ThanhVienService {
     }
 
     public Iterable<ThongTinSD> GetListThongTinSDDatchoFrom(String maThanhVien) {
-        ThanhVien tv = thanhVienRepository.findById(Long.parseLong(maThanhVien)).get();
+        ThanhVien tv = tvRepository.findById(Long.parseLong(maThanhVien)).get();
 
         Iterable<ThongTinSD> listTemp = tv.getDS_ThongTinSD();
         ArrayList<ThongTinSD> list = new ArrayList<ThongTinSD>();
