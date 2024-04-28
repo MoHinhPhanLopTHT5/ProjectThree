@@ -15,17 +15,17 @@ import com.mohinhphanlop.projectthree.Repositories.ThongTinSDRepository;
 @Service
 public class ThietBiService {
     @Autowired
-    private ThietBiRepository thietBiRepository;
+    private ThietBiRepository tbRepository;
     @Autowired
-    private ThongTinSDRepository thongTinSDRepository;
+    private ThongTinSDRepository ttsdRepository;
 
     public ThietBi GetByID(String id) {
-        return thietBiRepository.findById(Integer.parseInt(id)).get();
+        return tbRepository.findById(Integer.parseInt(id)).get();
     }
 
     public Iterable<ThietBi> GetList() {
         // Lấy danh sách thiết bị
-        Iterable<ThietBi> list = thietBiRepository.findAll();
+        Iterable<ThietBi> list = tbRepository.findAll();
         return list;
     }
 }

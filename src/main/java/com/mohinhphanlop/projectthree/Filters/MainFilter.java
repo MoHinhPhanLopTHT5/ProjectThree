@@ -25,7 +25,8 @@ public class MainFilter implements Filter {
     private ThanhVienService tvService;
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain)
+    public void doFilter(ServletRequest request, ServletResponse response,
+            FilterChain filterChain)
             throws IOException, ServletException {
         // TODO Auto-generated method stub
 
@@ -44,7 +45,8 @@ public class MainFilter implements Filter {
         String pw = session.getAttribute("pw") == null ? "" : session.getAttribute("pw").toString();
 
         boolean onLoginRegisterPages = requestedUri.contains("/dangnhap")
-                || requestedUri.contains("/dangky") || requestedUri.contains("/quenmatkhau");
+                || requestedUri.contains("/dangky") || requestedUri.contains("/quenmatkhau")
+                || requestedUri.contains("/quantri");
 
         if ((username.isEmpty()
                 || pw.isEmpty()) && !onLoginRegisterPages) {

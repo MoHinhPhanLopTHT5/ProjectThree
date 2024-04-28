@@ -13,7 +13,10 @@ import com.mohinhphanlop.projectthree.Repositories.ThanhVienRepository;
 @Service
 public class ThanhVienService {
     @Autowired
-    private ThanhVienRepository thanhVienRepository;
+    private ThanhVienRepository thanhVienRepository; // class của Spring boot cho các thao tác mặc định của framework
+    // bao gồm thêm sửa xoá bằng method .save(), findAll để tìm kiếm
+    // xoá bằng hàm deleteById() hoặc delete(ThanhVien tv) (tham số để xoá, có thể
+    // là ThietBi)
 
     public boolean CheckLogin(String usernameOrEmail, String password) {
         Iterable<ThanhVien> list = thanhVienRepository.findAll();
