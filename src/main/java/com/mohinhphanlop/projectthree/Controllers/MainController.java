@@ -69,6 +69,8 @@ public class MainController {
             model.addAttribute("pageNumbers", pageNumbers);
         }
 
+        model.addAttribute("TenTB", TenTB);
+
         return "index";
         // return "index2";
     }
