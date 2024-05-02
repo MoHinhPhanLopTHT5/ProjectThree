@@ -14,8 +14,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
@@ -44,11 +47,30 @@ public class MainController {
         }
     }
 
+    // url parameters
     @GetMapping("/")
-    public String homepage(Model model) {
-        Iterable<ThietBi> list = tbService.GetList();
+    public String homepage(Model model, @RequestParam("page") Optional<Integer> page,
+            @RequestParam("tenTB") Optional<String> tenTB,
+            Pageable pageable) {
+
+        String TenTB = tenTB.orElse("");
+        Page<ThietBi> list = tbService.GetList(TenTB, pageable);
         model.addAttribute("data", list);
+
+        // Add total pages
+
+        int totalPages = list.getTotalPages();
+        if (totalPages > 0) {
+            int[] pageNumbers = new int[totalPages];
+            for (int i = 0; i < totalPages; i++) {
+                pageNumbers[i] = i + 1;
+            }
+            model.addAttribute("totalPages", totalPages);
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+
         return "index";
+        // return "index2";
     }
 
     // Khu vực đăng nhập
@@ -245,6 +267,11 @@ public class MainController {
     }
 
     // Khu vực đặt chỗ
+
+    @GetMapping("/datcho")
+    public String getDatChoIndex(Model model) {
+        return "redirect:/";
+    }
 
     @GetMapping("/datcho/{id}")
     public String getDatCho(@PathVariable("id") ThietBi thietBi, Model model) {

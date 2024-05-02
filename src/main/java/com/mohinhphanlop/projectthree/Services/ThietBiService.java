@@ -1,14 +1,11 @@
 package com.mohinhphanlop.projectthree.Services;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.mohinhphanlop.projectthree.Models.ThietBi;
-import com.mohinhphanlop.projectthree.Models.ThongTinSD;
 import com.mohinhphanlop.projectthree.Repositories.ThietBiRepository;
 import com.mohinhphanlop.projectthree.Repositories.ThongTinSDRepository;
 
@@ -16,16 +13,20 @@ import com.mohinhphanlop.projectthree.Repositories.ThongTinSDRepository;
 public class ThietBiService {
     @Autowired
     private ThietBiRepository tbRepository;
-    @Autowired
-    private ThongTinSDRepository ttsdRepository;
+    // @Autowired
+    // private ThongTinSDRepository ttsdRepository;
 
     public ThietBi GetByID(String id) {
         return tbRepository.findById(Integer.parseInt(id)).get();
     }
 
-    public Iterable<ThietBi> GetList() {
+    public Page<ThietBi> GetList(String tenTB, Pageable pageable) {
         // Lấy danh sách thiết bị
-        Iterable<ThietBi> list = tbRepository.findAll();
+        Page<ThietBi> list;
+        if (tenTB.isEmpty())
+            list = tbRepository.findAll(pageable);
+        else
+            list = tbRepository.findAllByTenTB(tenTB, pageable);
         return list;
     }
 }

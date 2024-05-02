@@ -14,7 +14,7 @@
                     <th scope="col">Mã thiết bị</th>
                     <th scope="col">Tên thiết bị</th>
                     <th scope="col">Mô tả thiết bị</th>
-                    <th scope="col">Tình trạng</th>
+                    <th scope="col">Hành động</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -29,33 +29,17 @@
                   </tr>
                 </tbody>
               </table>
+              <nav th:if="${totalPages > 0}" aria-label="Page navigation">
+                <ul class="pagination">
+                  <li class="page-item" th:if="${data.hasPrevious()}"><a class="page-link" href="#">Previous</a></li>
+                  <div th:each="pageNumber : ${pageNumbers}">
+                    <li class="page-item"><a class="page-link" th:href="@{/(page=${pageNumber-1})}" th:text=${pageNumber}></a></li>
+                  </div>
+                  <li class="page-item"  th:if="${data.hasNext()}"><a class="page-link" href="#">Next</a></li>
+                </ul>
+              </nav>
             </div>
         </div>
-
-        <!-- <table border="1">
-            <thead>
-                <tr>
-                    <th>STT</th>
-                    <th>Mã thành viên</th>
-                    <th>Họ tên</th>
-                    <th>Email</th>
-                    <th>Khoa</th>
-                    <th>Ngành</th>
-                    <th>SĐT</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="row, state: ${data}">
-                    <td th:utext="${state.count}"></td>
-                    <td th:utext="${row.MaTV}"></td>
-                    <td th:utext="${row.HoTen}"></td>
-                    <td th:utext="${row.Email}"></td>
-                    <td th:utext="${row.Khoa}"></td>
-                    <td th:utext="${row.Nganh}"></td>
-                    <td th:utext="${row.SDT}"></td>
-                </tr>
-            </tbody>
-        </table> -->
     </main>
     <footer th:insert="~{fragments/general.html :: footer}"></footer>
     <div th:insert="~{fragments/general.html :: scripts}"></div>
