@@ -100,7 +100,8 @@ public class MainController {
         String password = formData.getFirst("password");
 
         if (tvService.CheckLogin(requestedUsernameOrEmail, password)) {
-            session.setAttribute("username", requestedUsernameOrEmail);
+            Integer username = tvService.getByUsernameOrEmail(requestedUsernameOrEmail).getMaTV();
+            session.setAttribute("username", username);
             session.setAttribute("pw", password);
             return "redirect:/";
         } else
