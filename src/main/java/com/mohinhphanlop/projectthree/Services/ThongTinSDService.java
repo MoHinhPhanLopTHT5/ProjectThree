@@ -1,9 +1,11 @@
 package com.mohinhphanlop.projectthree.Services;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -13,6 +15,11 @@ import org.springframework.stereotype.Service;
 import com.mohinhphanlop.projectthree.Models.ThietBi;
 import com.mohinhphanlop.projectthree.Models.ThongTinSD;
 import com.mohinhphanlop.projectthree.Repositories.ThongTinSDRepository;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @Service
 public class ThongTinSDService {
@@ -104,5 +111,35 @@ public class ThongTinSDService {
 
         }
         return null;
+    }
+    
+    public Page<ThongTinSD> findAllBytGVaoNotNull(Pageable pageable) {
+        return ttSDRepository.findAllBytGVaoNotNull(pageable);
+    }
+
+    public Page<ThongTinSD> findAllBytGVaoNotNull(Pageable pageable, String khoa, String nganh, String tgvao) {        
+        Page<ThongTinSD> list = ttSDRepository.findAllBytGVaoNotNull(pageable);
+        ArrayList <ThongTinSD> listTemp = new ArrayList<ThongTinSD>();
+        
+        // Parse TGVao with format yyyy-MM-DD
+        LocalDate TGVaoTemp = LocalDate.parse(tgvao, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        // LocalDate to Date
+        Date TGVao = Date.from(TGVaoTemp.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+        for (ThongTinSD ttsd : list) {
+            if (ttsd.getThanhvien().getKhoa().toLowerCase().contains(khoa.toLowerCase()) 
+            || ttsd.getThanhvien().getNganh().toLowerCase().contains(nganh.toLowerCase()) ||
+            ttsd.getTGVao().equals(TGVao)) {
+                listTemp.add(ttsd);
+            }
+        }
+
+        // Get PageRequest from Pageable
+        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
+
+        int start = (int) pageRequest.getOffset();
+        int end = Math.min((start + pageRequest.getPageSize()), listTemp.size());
+
+        return new PageImpl<>(listTemp.subList(start, end), pageRequest, listTemp.size());
     }
 }

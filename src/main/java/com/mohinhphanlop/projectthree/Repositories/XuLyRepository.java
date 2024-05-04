@@ -2,6 +2,7 @@ package com.mohinhphanlop.projectthree.Repositories;
 
 import com.mohinhphanlop.projectthree.Models.XuLy;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -10,6 +11,5 @@ import org.springframework.stereotype.Repository;
  * @author Admin
  */
 @Repository
-public interface XuLyRepository extends CrudRepository<XuLy, Integer> {
-
+public interface XuLyRepository extends CrudRepository<XuLy, Integer>, JpaRepository<XuLy, Integer> {
 }

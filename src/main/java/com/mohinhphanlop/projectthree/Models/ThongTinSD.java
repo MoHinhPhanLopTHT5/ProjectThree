@@ -20,19 +20,19 @@ public class ThongTinSD {
     @Id
     private Integer maTT;
 
-    @Column(nullable = true)
+    @Column(nullable = true, name = "tgvao")
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date tGVao;
 
-    @Column(nullable = true)
+    @Column(nullable = true, name = "tgmuon")
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date tGMuon;
 
-    @Column(nullable = true)
+    @Column(nullable = true, name = "tgtra")
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date tGTra;
 
-    @Column(nullable = true)
+    @Column(nullable = true, name = "tgdatcho")
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date tGDatcho;
 
