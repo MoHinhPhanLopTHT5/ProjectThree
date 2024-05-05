@@ -1,3 +1,7 @@
 main {
     padding: 2rem 0 5rem 0;
 }
+
+tr:hover td {
+    background: #FEFEFE
+}

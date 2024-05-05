@@ -13,6 +13,10 @@ import org.springframework.stereotype.Service;
 import com.mohinhphanlop.projectthree.Models.ThietBi;
 import com.mohinhphanlop.projectthree.Models.ThongTinSD;
 import com.mohinhphanlop.projectthree.Repositories.ThongTinSDRepository;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Service
 public class ThongTinSDService {
@@ -104,5 +108,19 @@ public class ThongTinSDService {
 
         }
         return null;
+    }
+    
+    public ThongTinSD CreateNewInfo(long maTV) {
+        ThongTinSD ttsd = new ThongTinSD();
+        Date dateNow = new Date();
+        SimpleDateFormat sdfDateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String dateTimeNow = sdfDateTime.format(dateNow);
+        try {
+            ttsd.setTGVao(sdfDateTime.parse(dateTimeNow));
+        } catch (ParseException ex) {
+            Logger.getLogger(ThongTinSDService.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        ttsd.setThanhvien(tvService.FindThanhVienById(maTV).get());
+        return ttSDRepository.save(ttsd);
     }
 }

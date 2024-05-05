@@ -4,6 +4,8 @@
  */
 package com.mohinhphanlop.projectthree.Models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.util.List;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -37,5 +39,6 @@ public class ThanhVien {
     private List<ThongTinSD> DS_ThongTinSD;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "thanhvien")
+    @JsonManagedReference
     private List<XuLy> DS_XuLy;
 }

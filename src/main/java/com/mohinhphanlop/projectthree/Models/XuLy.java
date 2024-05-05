@@ -4,6 +4,8 @@
  */
 package com.mohinhphanlop.projectthree.Models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.util.Date;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -34,5 +36,6 @@ public class XuLy {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "MaTV", nullable = false)
+    @JsonBackReference
     private ThanhVien thanhvien;
 }

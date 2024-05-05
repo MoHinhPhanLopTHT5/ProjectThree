@@ -1,5 +1,7 @@
 package com.mohinhphanlop.projectthree.Controllers.Admin;
 
+import com.mohinhphanlop.projectthree.Models.ThanhVien;
+import com.mohinhphanlop.projectthree.Models.XuLy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -7,22 +9,29 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.mohinhphanlop.projectthree.Services.ThanhVienService;
+import com.mohinhphanlop.projectthree.Services.ThongTinSDService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/quantri")
 public class AdminController {
+    
     @GetMapping("")
     public String getIndex() {
         return "admin/index";
     }
-
+    
     @GetMapping("/tenpath")
     public String getIndexWithModel(Model model) {
         model.addAttribute("tenModel", "Gia tri model");
@@ -30,9 +39,12 @@ public class AdminController {
         // có thể truyền giá trị của một object là model của một bảng, ví dụ ThanhVien
         return "admin/index";
     }
-
+    
     @Autowired
     private ThanhVienService tvService; // trỏ đến class chứa code BLL (lớp nghiệp vụ)
+
+    @Autowired
+    private ThongTinSDService ttsdService;
 
     // Hàm post mẫu, xử lý thành công thì return template
     // gửi thông báo thành công thì là success
@@ -57,5 +69,35 @@ public class AdminController {
         model.addAttribute("ThanhVien", tvService.getByUsernameOrEmail(username));
         return "user";
     }
-
+    
+    @PostMapping("/vaokhuhoctap")
+    public ResponseEntity<?> VaoKhuHocTap(@RequestBody MultiValueMap<String, String> maTV_JSON) {
+        int id;
+        try {
+            id = Integer.parseInt(maTV_JSON.getFirst("id"));
+            Optional<ThanhVien> tv = tvService.FindThanhVienById(id);
+            if (tv.isPresent()) {
+                List<XuLy> listXuLy = tv.get().getDS_XuLy();
+                System.out.println(listXuLy.size());
+                listXuLy = listXuLy
+                        .stream()
+                        .filter(item -> item.getTrangThaiXL() == 0)
+                        .collect(Collectors.toList());
+                int tongXuLy = listXuLy.size();
+                if (tongXuLy == 0) {
+                    if (ttsdService.CreateNewInfo(id) != null) {
+                        return ResponseEntity.ok("Vào khu học tập thành công");
+                    } else {
+                        return ResponseEntity.status(502).body("Vào khu học tập không thành công");
+                    }
+                } else {
+                    return ResponseEntity.status(502).body(listXuLy);
+                }
+            } else {
+                return ResponseEntity.status(404).body("Mã thành viên không tồn tại");
+            }
+        } catch (NumberFormatException ex) {
+            return ResponseEntity.status(500).body("Vui lòng nhập dữ liệu hợp lệ");
+        }
+    }
 }

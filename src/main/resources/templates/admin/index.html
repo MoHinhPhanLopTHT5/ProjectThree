@@ -1,18 +1,78 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head th:insert="~{fragments/general.html :: head}"></head>
-  <body>
-    <header th:replace="~{fragments/general.html :: header}"></header>
-    <main class="container">
-        <div class="row">
-            <div class="col">
-              <h1>Trang quản lý thành viên</h1>
-              <!-- Trang này có thể chứa các mục như project 2 -->
-              <!-- Ví dụ như: nhập mã thành viên khi vào khu học liệu -->
+    <head th:insert="~{fragments/general.html :: head}"></head>
+    <body>
+        <header th:replace="~{fragments/general.html :: header_admin}"></header>
+        <main class="container">
+            <div class="row align-items-center py-2 bg-light mx-1">
+                <div class="col-8">
+                    <p class="fs-6 fw-bold mb-0">Vào khu học tập</p>
+                </div>
+            </div>
+            <div class="row py-2 mx-1">
+                <div class="col-3 px-0">
+                    <form id="vaoKhuHocTap">
+                        <div class="mb-0">
+                            <label for="maTV" class="form-label d-flex justify-content-around">Nhập mã thành viên tại đây</label>
+                            <input type="text" name="maTV" class="form-control" id="maTV" placeholder="Mã thành viên">
+                        </div>
+                        <div th:if="${error}" class="alert alert-danger my-3 py-1 d-flex justify-content-around" role="alert">
+                            <span th:text="${error}"></span>
+                        </div>
+                    </form>
+                </div>
+                <div class="col px-0 px-2 ms-2 content-xuLy">
+
+                </div>
             </div>
         </div>
     </main>
     <footer th:insert="~{fragments/general.html :: footer}"></footer>
     <div th:insert="~{fragments/general.html :: scripts}"></div>
-  </body>
+    <script th:src="@{/assets/js/member.js}"></script>
+    <script>
+        maTV = document.getElementById('maTV');
+        var content_xuLy = document.querySelector('.content-xuLy');
+        
+        $('#vaoKhuHocTap').submit(function (event) {
+            event.preventDefault();
+            var data = {
+                id: $('#maTV').val()
+            };
+            $.ajax({
+                type: 'POST',
+                url: '/quantri/vaokhuhoctap',
+                data: data,
+                success: function (response) {
+                    maTV.value = "";
+                    content_xuLy.innerHTML = '';
+                    new swal("Thành công!", response, "success");
+                },
+                error: function (error) {
+                    try {
+                        var object = JSON.parse(error.responseText);
+                        var s = `<div>Danh sách vi phạm của thành viên</div>
+                                    <div class="content d-flex gap-4 mt-2 mb-2" style="flex-wrap: wrap"">`;
+                        for (var i = 0; i < object.length; i++) {
+                            s +=
+                                    `<div class="bg-danger card text-white col-6" style="max-width: 18rem;">
+                                <div class="card-header">Mã xử lí: ${object[i].maXL}</div>
+                                    <ul class="list-group list-group-flush">
+<li class="list-group-item">Hình thức xử lí: ${object[i].hinhThucXL}</li>
+                                            <li class="list-group-item">Số tiền: ${object[i].soTien}</li>
+                                            <li class="list-group-item">Ngày xử lí: ${object[i].ngayXL}</li>
+                                            <li class="list-group-item">Trạng thái xử lí: ${object[i].trangThaiXL}</li>
+                                    </ul>
+                                </div>`;
+                        }
+                        s += "</div>";
+                        content_xuLy.innerHTML = s;
+                    } catch (e) {
+                        new swal("Không thành công!", error.responseText, "error");
+                    }
+                }
+            });
+        });
+    </script>
+</body>
 </html>

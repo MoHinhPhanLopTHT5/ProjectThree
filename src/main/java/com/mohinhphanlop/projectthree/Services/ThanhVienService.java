@@ -9,9 +9,14 @@ import com.mohinhphanlop.projectthree.Models.ThanhVien;
 import com.mohinhphanlop.projectthree.Models.ThongTinSD;
 import com.mohinhphanlop.projectthree.Models.XuLy;
 import com.mohinhphanlop.projectthree.Repositories.ThanhVienRepository;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ThanhVienService {
+
     @Autowired
     private ThanhVienRepository tvRepository; // class của Spring boot cho các thao tác mặc định của framework
     // bao gồm thêm sửa xoá bằng method .save(), findAll để tìm kiếm
@@ -25,8 +30,9 @@ public class ThanhVienService {
             String email = tv.getEmail() == null ? "-1" : tv.getEmail();
             String pw = tv.getPassword();
             if ((maTV.equals(usernameOrEmail) || email.equals(usernameOrEmail))
-                    && pw.equals(password))
+                    && pw.equals(password)) {
                 return true;
+            }
         }
         return false;
     }
@@ -36,8 +42,9 @@ public class ThanhVienService {
         for (ThanhVien tv : list) {
             String maTV = tv.getMaTV().toString();
             String email = tv.getEmail() == null ? "-1" : tv.getEmail();
-            if (maTV.equals(usernameOrEmail) || email.equals(usernameOrEmail))
+            if (maTV.equals(usernameOrEmail) || email.equals(usernameOrEmail)) {
                 return tv;
+            }
         }
         return null;
     }
@@ -45,8 +52,9 @@ public class ThanhVienService {
     public boolean CheckUsername(String username) {
         Iterable<ThanhVien> list = tvRepository.findAll();
         for (ThanhVien tv : list) {
-            if (tv.getMaTV().toString().equals(username))
+            if (tv.getMaTV().toString().equals(username)) {
                 return true;
+            }
         }
         return false;
     }
@@ -54,8 +62,9 @@ public class ThanhVienService {
     public boolean CheckUsernameIsRegistered(String username) {
         Iterable<ThanhVien> list = tvRepository.findAll();
         for (ThanhVien tv : list) {
-            if (tv.getMaTV().toString().equals(username) && tv.getEmail() != null)
+            if (tv.getMaTV().toString().equals(username) && tv.getEmail() != null) {
                 return true;
+            }
         }
         return false;
     }
@@ -64,15 +73,17 @@ public class ThanhVienService {
         Iterable<ThanhVien> list = tvRepository.findAll();
         for (ThanhVien tv : list) {
             String emailTV = tv.getEmail() == null ? "-1" : tv.getEmail();
-            if (emailTV.equals(email))
+            if (emailTV.equals(email)) {
                 return true;
+            }
         }
         return false;
     }
 
     public boolean CheckNotTheSameEmail(ThanhVien tvCurrent, String email) {
-        if (tvCurrent.getEmail().equals(email))
+        if (tvCurrent.getEmail().equals(email)) {
             return false;
+        }
 
         return true;
     }
@@ -91,6 +102,34 @@ public class ThanhVienService {
         tv.setPassword(password);
         tv.setHoTen(fullname);
         return tvRepository.save(tv);
+    }
+
+    public boolean SaveThanhVien(ThanhVien tv) {
+        try {
+            int id;
+            Date now = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("yy");
+            List<ThanhVien> listTv = tvRepository.GetListThanhVienTheoNam(sdf.format(now));
+            if (listTv.isEmpty()) {
+                id = 0;
+            } else {
+                id = Integer.parseInt(listTv.get(0).getMaTV().toString().substring(listTv.get(0).getMaTV().toString().length() - 4));
+            }
+            tv.setMaTV(tv.getMaTV() + id + 1);
+            tvRepository.save(tv);
+            return true;
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
+        return false;
+    }
+
+    public Optional<ThanhVien> FindThanhVienById(long id) {
+        return tvRepository.findById(id);
+    }
+    
+    public void Delete(long id) {
+        tvRepository.deleteById(id);
     }
 
     public Iterable<ThanhVien> GetList() {
@@ -114,8 +153,9 @@ public class ThanhVienService {
         ArrayList<ThongTinSD> list = new ArrayList<ThongTinSD>();
 
         for (ThongTinSD thongTinSD : listTemp) {
-            if (thongTinSD.getTGMuon() != null)
+            if (thongTinSD.getTGMuon() != null) {
                 list.add(thongTinSD);
+            }
         }
         return list;
     }
@@ -127,9 +167,14 @@ public class ThanhVienService {
         ArrayList<ThongTinSD> list = new ArrayList<ThongTinSD>();
 
         for (ThongTinSD thongTinSD : listTemp) {
-            if (thongTinSD.getTGDatcho() != null)
+            if (thongTinSD.getTGDatcho() != null) {
                 list.add(thongTinSD);
+            }
         }
         return list;
+    }
+
+    public List<XuLy> GetListXuLyFromMember(long id) {
+        return tvRepository.findById(id).get().getDS_XuLy();
     }
 }
