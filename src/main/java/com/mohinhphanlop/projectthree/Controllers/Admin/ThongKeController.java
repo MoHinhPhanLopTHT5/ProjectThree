@@ -31,7 +31,7 @@ public class ThongKeController {
         model.addAttribute("tgvao", tgvao.orElse(""));
 
         Page<ThongTinSD> list;
-        if (khoa.isPresent() && nganh.isPresent() && !tgvao.orElse("").equals(""))
+        if (!khoa.orElse("").isEmpty() || !nganh.orElse("").isEmpty() || !tgvao.orElse("").isEmpty())
             list = ttSDService.findAllBytGVaoNotNull(pageable, khoa.orElse(""), nganh.orElse(""), tgvao.orElse(""));
         else
             list = ttSDService.findAllBytGVaoNotNull(pageable);
@@ -53,19 +53,19 @@ public class ThongKeController {
         return "admin/thongke/index";
     }
 
-    @GetMapping("/thietbimuon")
-    public String getTBMuon(Model model, Pageable pageable, @RequestParam("page") Optional<Integer> page,
-    @RequestParam("khoa") Optional<String> khoa, @RequestParam("nganh") Optional<String> nganh, @RequestParam("tgvao") Optional<String> tgvao) {
-
-        model.addAttribute("khoa", khoa.orElse(""));
-        model.addAttribute("nganh", nganh.orElse(""));
-        model.addAttribute("tgvao", tgvao.orElse(""));
+    @GetMapping("/thietbi")
+    public String getThietBi(Model model, Pageable pageable, @RequestParam("page") Optional<Integer> page,
+    @RequestParam("tentb") Optional<String> tentb, @RequestParam("ngaymuon") Optional<String> ngaymuon, @RequestParam("ngaytra") Optional<String> ngaytra) {
+        // copy code
+        model.addAttribute("tentb", tentb.orElse(""));
+        model.addAttribute("ngaymuon", ngaymuon.orElse(""));
+        model.addAttribute("ngaytra", ngaytra.orElse(""));
 
         Page<ThongTinSD> list;
-        if (khoa.isPresent() && nganh.isPresent() && !tgvao.orElse("").equals(""))
-            list = ttSDService.findAllBytGVaoNotNull(pageable, khoa.orElse(""), nganh.orElse(""), tgvao.orElse(""));
+        if (!tentb.orElse("").isEmpty() || !ngaymuon.orElse("").isEmpty() || !ngaytra.orElse("").isEmpty())
+            list = ttSDService.findAllBytGMuonNotNull(pageable, tentb.orElse(""), ngaymuon.orElse(""), ngaytra.orElse(""));
         else
-            list = ttSDService.findAllBytGVaoNotNull(pageable);
+            list = ttSDService.findAllBytGMuonNotNull(pageable);
 
         model.addAttribute("data", list);
 
@@ -80,38 +80,19 @@ public class ThongKeController {
             model.addAttribute("totalPages", totalPages);
             model.addAttribute("pageNumbers", pageNumbers);
         }
-
-        return "admin/thongke/index";
+        
+        return "admin/thongke/thietbi";
     }
 
-    @GetMapping("/xuly")
-    public String getXuLy(Model model, Pageable pageable, @RequestParam("page") Optional<Integer> page,
-    @RequestParam("khoa") Optional<String> khoa, @RequestParam("nganh") Optional<String> nganh, @RequestParam("tgvao") Optional<String> tgvao) {
+    @GetMapping("/datcho")
+    public String getDatCho() {
+        // copy code
+        return "admin/thongke/datcho";
+    }
 
-        model.addAttribute("khoa", khoa.orElse(""));
-        model.addAttribute("nganh", nganh.orElse(""));
-        model.addAttribute("tgvao", tgvao.orElse(""));
-
-        Page<ThongTinSD> list;
-        if (khoa.isPresent() && nganh.isPresent() && !tgvao.orElse("").equals(""))
-            list = ttSDService.findAllBytGVaoNotNull(pageable, khoa.orElse(""), nganh.orElse(""), tgvao.orElse(""));
-        else
-            list = ttSDService.findAllBytGVaoNotNull(pageable);
-
-        model.addAttribute("data", list);
-
-        // Add total pages
-
-        int totalPages = list.getTotalPages();
-        if (totalPages > 0) {
-            int[] pageNumbers = new int[totalPages];
-            for (int i = 0; i < totalPages; i++) {
-                pageNumbers[i] = i + 1;
-            }
-            model.addAttribute("totalPages", totalPages);
-            model.addAttribute("pageNumbers", pageNumbers);
-        }
-
-        return "admin/thongke/index";
+    @GetMapping("/vipham")
+    public String getVipham() {
+        // copy code
+        return "admin/thongke/vipham";
     }
 }

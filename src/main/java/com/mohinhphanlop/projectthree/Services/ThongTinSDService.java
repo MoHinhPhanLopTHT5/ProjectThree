@@ -1,24 +1,21 @@
 package com.mohinhphanlop.projectthree.Services;
 
-import java.time.Instant;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import com.mohinhphanlop.projectthree.Models.ThietBi;
 import com.mohinhphanlop.projectthree.Models.ThongTinSD;
 import com.mohinhphanlop.projectthree.Repositories.ThongTinSDRepository;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 @Service
@@ -117,29 +114,35 @@ public class ThongTinSDService {
         return ttSDRepository.findAllBytGVaoNotNull(pageable);
     }
 
-    public Page<ThongTinSD> findAllBytGVaoNotNull(Pageable pageable, String khoa, String nganh, String tgvao) {        
-        Page<ThongTinSD> list = ttSDRepository.findAllBytGVaoNotNull(pageable);
-        ArrayList <ThongTinSD> listTemp = new ArrayList<ThongTinSD>();
+    public Page<ThongTinSD> findAllBytGVaoNotNull(Pageable pageable, String khoa, String nganh, String tgvao) {
+        // tgvao string to Date
         
-        // Parse TGVao with format yyyy-MM-DD
-        LocalDate TGVaoTemp = LocalDate.parse(tgvao, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        // LocalDate to Date
-        Date TGVao = Date.from(TGVaoTemp.atStartOfDay(ZoneId.systemDefault()).toInstant());
-
-        for (ThongTinSD ttsd : list) {
-            if (ttsd.getThanhvien().getKhoa().toLowerCase().contains(khoa.toLowerCase()) 
-            || ttsd.getThanhvien().getNganh().toLowerCase().contains(nganh.toLowerCase()) ||
-            ttsd.getTGVao().equals(TGVao)) {
-                listTemp.add(ttsd);
-            }
+        try {
+            Date date = new SimpleDateFormat("yyyy-MM-dd").parse(tgvao);
+            return ttSDRepository.findAllBytGVaoNotNull(pageable, khoa, nganh, date);
+        } catch (java.text.ParseException e) {
+            return ttSDRepository.findAllBytGVaoNotNull(pageable, khoa, nganh);
         }
-
-        // Get PageRequest from Pageable
-        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
-
-        int start = (int) pageRequest.getOffset();
-        int end = Math.min((start + pageRequest.getPageSize()), listTemp.size());
-
-        return new PageImpl<>(listTemp.subList(start, end), pageRequest, listTemp.size());
     }
+
+    // Thống kê thiết bị
+    public Page<ThongTinSD> findAllBytGMuonNotNull(Pageable pageable) {
+        return ttSDRepository.findAllBytGMuonNotNull(pageable);
+    }
+    public Page<ThongTinSD> findAllBytGMuonNotNull(Pageable pageable, String tentb, String tgmuon, String tgtra) {
+        // tgvao string to Date
+        
+        try {
+            Date datemuon = new SimpleDateFormat("yyyy-MM-dd").parse(tgmuon);
+            Date datetra = new SimpleDateFormat("yyyy-MM-dd").parse(tgtra);
+
+            return ttSDRepository.findAllBytGMuonNotNull(pageable, tentb, datemuon, datetra);
+        } catch (java.text.ParseException e) {
+            // return ttSDRepository.findAllBytGVaoNotNull(pageable, , nganh);
+            return ttSDRepository.findAllBytGMuonNotNull(pageable, tentb);
+        }
+    }
+
+
+    // đặt chỗ nếu được
 }

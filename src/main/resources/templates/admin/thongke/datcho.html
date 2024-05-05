@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:insert="~{fragments/general.html :: head}"></head>
+  <body>
+    <header th:replace="~{fragments/general.html :: header_admin}"></header>
+    <main class="container">
+      <div class="row">
+        <div class="col">
+          <h2>Thống kê</h2>
+          <!-- Bootstrap form with 2 fields -->
+          <form action="" method="get">
+            <div class="row">
+              <div class="col">
+                <label for="khoa" class="form-label">Khoa</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="khoa"
+                  name="khoa"
+                  th:value="${khoa}"
+                />
+              </div>
+              <div class="col">
+                <label for="nganh" class="form-label">Ngành</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="nganh"
+                  name="nganh"
+                  th:value="${nganh}"
+                />
+              </div>
+              <div class="col">
+                <label for="tgvao" class="form-label">Thời gian vào</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  id="tgvao"
+                  name="tgvao"
+                  th:value="${tgvao}"
+                />
+              </div>
+            </div>
+            <button type="submit" class="btn btn-success mt-3">Tìm</button>
+          </form>
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Mã thành viên</th>
+                <th scope="col">Tên thành viên</th>
+                <th scope="col">Khoa</th>
+                <th scope="col">Ngành</th>
+                <th scope="col">Thời gian vào</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="row, state: ${data}">
+                <th scope="row" th:utext="${state.count}"></th>
+                <td th:utext="${row.thanhvien.MaTV}"></td>
+                <td th:utext="${row.thanhvien.HoTen}"></td>
+                <td th:utext="${row.thanhvien.Khoa}"></td>
+                <td th:utext="${row.thanhvien.Nganh}"></td>
+                <td th:utext="${row.TGVao}"></td>
+              </tr>
+            </tbody>
+          </table>
+          <nav th:if="${totalPages > 0}" aria-label="Page navigation">
+            <ul class="pagination">
+              <li class="page-item" th:if="${data.hasPrevious()}">
+                <a class="page-link" href="#">Previous</a>
+              </li>
+              <div th:each="pageNumber : ${pageNumbers}">
+                <li class="page-item">
+                  <a
+                    class="page-link"
+                    th:href="@{/quantri/thongke(page=${pageNumber-1},khoa=${khoa},nganh=${nganh},tgvao=${tgvao})}"
+                    th:text="${pageNumber}"
+                  ></a>
+                </li>
+              </div>
+              <li class="page-item" th:if="${data.hasNext()}">
+                <a class="page-link" href="#">Next</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </main>
+    <footer th:insert="~{fragments/general.html :: footer}"></footer>
+    <div th:insert="~{fragments/general.html :: scripts}"></div>
+  </body>
+</html>
