@@ -5,7 +5,10 @@ import com.mohinhphanlop.projectthree.Models.XuLy;
 import com.mohinhphanlop.projectthree.Repositories.XuLyRepository;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import org.springframework.stereotype.Service;
 
@@ -55,6 +58,16 @@ public class XuLyService {
     
     public List<XuLy> getByKeyWord(String keyword) {
         return xuLyRepository.findByKeyword(keyword);
+    }
+    
+    public Page<XuLy> getListXuLy(String hinhThucXL, Pageable pageable) {
+        Page<XuLy> list;
+        if (hinhThucXL.isEmpty())
+            list = xuLyRepository.findAll(pageable);
+        else
+            list = xuLyRepository.findAllByHinhThucXL(hinhThucXL, pageable);
+        
+        return list;
     }
 
 }
