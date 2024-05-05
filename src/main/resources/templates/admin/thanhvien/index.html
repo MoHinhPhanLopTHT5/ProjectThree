@@ -65,7 +65,7 @@
                                             <i class="fa fa-pencil-square" aria-hidden="true"></i>
                                         </button>
                                     </a>
-                                    <a th:href="@{/quantri/thanhvien/}+${member.MaTV}+'/delete'">
+                                    <a class="delete-member-btn" th:data-MaTV="${member.MaTV}">
                                         <button class="btn btn-sm btn-outline-danger px-2">
                                             <i class="fa fa-trash" aria-hidden="true"></i>
                                         </button>
@@ -83,5 +83,31 @@
         <footer th:insert="~{fragments/general.html :: footer}"></footer>
         <div th:insert="~{fragments/general.html :: scripts}"></div>
         <script th:src="@{/assets/js/member.js}"></script>
+        <script>
+            $(".delete-member-btn").click(function (e) {
+                var memberId = $(this).data('matv');
+                Swal.fire({
+                    title: 'Bạn có chắc chắn muốn xóa thành viên này không?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes',
+                    cancelButtonText: 'No'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: "POST",
+                            url: "/quantri/thanhvien/" + memberId + "/xoa",
+                            success: function (response) {
+                                new Swal('Thành công', response, "success");
+                                window.location.reload();
+                            },
+                            error: function (error) {
+                                new Swal('Xóa không thành công', error.responseText, "error");
+                            }
+                        });
+                    }
+                });
+            });
+        </script>
     </body>
 </html>

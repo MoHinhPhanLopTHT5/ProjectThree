@@ -84,7 +84,6 @@ public class ThanhVienService {
         if (tvCurrent.getEmail().equals(email)) {
             return false;
         }
-
         return true;
     }
 
@@ -102,34 +101,6 @@ public class ThanhVienService {
         tv.setPassword(password);
         tv.setHoTen(fullname);
         return tvRepository.save(tv);
-    }
-
-    public boolean SaveThanhVien(ThanhVien tv) {
-        try {
-            int id;
-            Date now = new Date();
-            SimpleDateFormat sdf = new SimpleDateFormat("yy");
-            List<ThanhVien> listTv = tvRepository.GetListThanhVienTheoNam(sdf.format(now));
-            if (listTv.isEmpty()) {
-                id = 0;
-            } else {
-                id = Integer.parseInt(listTv.get(0).getMaTV().toString().substring(listTv.get(0).getMaTV().toString().length() - 4));
-            }
-            tv.setMaTV(tv.getMaTV() + id + 1);
-            tvRepository.save(tv);
-            return true;
-        } catch(Exception ex) {
-            ex.printStackTrace();
-        }
-        return false;
-    }
-
-    public Optional<ThanhVien> FindThanhVienById(long id) {
-        return tvRepository.findById(id);
-    }
-    
-    public void Delete(long id) {
-        tvRepository.deleteById(id);
     }
 
     public Iterable<ThanhVien> GetList() {
@@ -176,5 +147,73 @@ public class ThanhVienService {
 
     public List<XuLy> GetListXuLyFromMember(long id) {
         return tvRepository.findById(id).get().getDS_XuLy();
+    }
+
+    public String SaveThanhVien(ThanhVien tv) {
+        if (CheckEmailExists(tv.getEmail())) {
+            return "Email tồn tại";
+        }
+        try {
+            int id;
+            Date now = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("yy");
+            List<ThanhVien> listTv = tvRepository.GetListThanhVienTheoNam(sdf.format(now));
+            if (listTv.isEmpty()) {
+                id = 0;
+            } else {
+                id = Integer.parseInt(listTv.get(0).getMaTV().toString().substring(listTv.get(0).getMaTV().toString().length() - 4));
+            }
+            tv.setMaTV(tv.getMaTV() + id + 1);
+            tvRepository.save(tv);
+            return "Thêm thành công";
+        } catch (NumberFormatException ex) {
+        }
+        return "Thêm không thành công";
+    }
+
+    public boolean UpdateThanhVien(ThanhVien tv) {
+        try {
+            tvRepository.save(tv);
+            return true;
+        } catch (Exception ex) {
+        }
+        return false;
+    }
+
+    public Optional<ThanhVien> FindThanhVienById(long id) {
+        return tvRepository.findById(id);
+    }
+
+    public String Delete(long id) {
+        String result = "Xóa không thành công thành viên này";
+        try {
+            // Check isProcess
+            List<XuLy> processList = tvRepository.findById(id).get().getDS_XuLy();
+            int count = processList
+                    .stream()
+                    .filter(item -> item.getTrangThaiXL() == 0)
+                    .toList()
+                    .size();
+            if (count > 0) {
+                result = "Thành viên này chưa được xử lý";
+            } else {
+                count = 0;
+                // Check equipment has not been returned
+                List<ThongTinSD> usageList = tvRepository.findById(id).get().getDS_ThongTinSD();
+                count = usageList
+                        .stream()
+                        .filter(item -> item.getTGMuon() != null && item.getTGTra() == null)
+                        .toList()
+                        .size();
+                if (count > 0) {
+                    result = "Thành viên này chưa trả thiết bị";
+                } else {
+                    tvRepository.deleteById(id);
+                    result = "Xóa thành viên này thành công!";
+                }
+            }
+        } catch (Exception ex) {
+        }
+        return result;
     }
 }

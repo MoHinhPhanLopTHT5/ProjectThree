@@ -21,34 +21,25 @@
                 <div class="mb-0">
                     <label for="hoTen" class="form-label">Họ và tên <span style="color: red">(*)</span></label>
                     <input type="text" class="form-control" id="hoTen" name="hoTen" th:field="*{hoTen}" placeholder="Họ và tên" required>
-                    <p th:if="${errorHoTen}" class="error my-1 px-1" style="font-size: 12px; color: red">
-                        <span th:text="${errorHoTen}"></span>
-                    </p>
                 </div>
                 <div class="row">
                     <div class="col-6 mb-0">
-                        <label for="khoa" class="form-label">Khoa <span style="color: red">(*)</span></label>
+                        <label for="khoa" class="form-label">Khoa</label>
                         <input type="text" class="form-control" id="khoa" name="khoa" th:field="*{khoa}" placeholder="Khoa" readonly>
-                        <p th:if="${errorKhoa}" class="error my-1 px-1" style="font-size: 12px; color: red">Vui lòng chọn khoa</p>
                     </div>
                     <div class="col-6 mb-0">
-                        <label for="nganh" class="form-label">Ngành <span style="color: red">(*)</span></label>
+                        <label for="nganh" class="form-label">Ngành</label>
                         <input type="text" class="form-control" id="nganh" name="nganh" th:field="*{nganh}" placeholder="Ngành" readonly>
-                        <p th:if="${errorNganh}" class="error my-1 px-1" style="font-size: 12px; color: red">Vui lòng chọn ngành</p>
                     </div>
                 </div>
 
                 <div class="mb-0">
                     <label for="sDT" class="form-label">Số điện thoại <span style="color: red">(*)</span></label>
                     <input type="tel" class="form-control" id="sDT" name="sDT" placeholder="Số điện thoại" th:field="*{sDT}" pattern="(03|09)\d{8}" title="Vui lòng nhập số điện thoại" required>
-                    <p th:if="${errorSDT}" class="error my-1 px-1" style="font-size: 12px; color: red">
-                        <span th:text="${errorSDT}"></span>
-                    </p>
                 </div>
                 <div class="mb-0">
-                    <label for="email" class="form-label">Email <span style="color: red">(*)</span></label>
+                    <label for="email" class="form-label">Email</label>
                     <input type="email" class="form-control" id="email" name="email" th:field="*{email}" placeholder="Email" readonly>
-                    <p th:if="${errorEmail}" class="error my-1 px-1" style="font-size: 12px; color: red">Vui lòng nhập đúng định dạng email</p>
                 </div>
                 <div class="btn-bottom mt-2">
                     <a th:href="@{/quantri/thanhvien}"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Trở về</button></a>

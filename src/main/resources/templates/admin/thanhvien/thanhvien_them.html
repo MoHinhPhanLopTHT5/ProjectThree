@@ -46,6 +46,9 @@
                     <button type="submit" class="btn btn-primary ms-2">Thêm mới</button>
                 </div>
             </form>
+            <div th:if="${error}" class="alert alert-danger my-3 py-1 d-flex justify-content-around" role="alert">
+                <span th:text="${error}"></span>
+            </div>
         </div>
     </body>
     <script>

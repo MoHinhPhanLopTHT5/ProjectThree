@@ -35,10 +35,10 @@ public class ThanhVien {
     @Column(nullable = true)
     private String email;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "thanhvien")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "thanhvien", cascade = CascadeType.REMOVE)
     private List<ThongTinSD> DS_ThongTinSD;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "thanhvien")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "thanhvien", cascade = CascadeType.REMOVE)
     @JsonManagedReference
     private List<XuLy> DS_XuLy;
 }

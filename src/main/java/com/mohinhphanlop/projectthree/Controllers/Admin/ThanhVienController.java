@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
@@ -19,7 +20,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/quantri/thanhvien")
@@ -44,21 +44,22 @@ public class ThanhVienController {
         model.addAttribute("member", thanhVien);
         return "admin/thanhvien/thanhvien_them";
     }
-    
+
     @PostMapping("/them")
     public String ThemThanhVien(Model model, @ModelAttribute("member") ThanhVien thanhVien) {
         Date now = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yy");
-        String maTV = "11" + sdf.format(now)+thanhVien.getNganh().split(": ")[1]+"0000";
+        String maTV = "11" + sdf.format(now) + thanhVien.getNganh().split(": ")[1] + "0000";
         thanhVien.setNganh(thanhVien.getNganh().split(": ")[0]);
         thanhVien.setMaTV(Integer.parseInt(maTV));
         thanhVien.setPassword(thanhVien.getSDT());
-        if(tvService.SaveThanhVien(thanhVien)) {
+        String result = tvService.SaveThanhVien(thanhVien);
+        if (result.equalsIgnoreCase("Thêm thành công")) {
             return "redirect:/quantri/thanhvien";
         }
+        model.addAttribute("error", result);
         return "admin/thanhvien/thanhvien_them";
     }
-    
 
     @GetMapping("/{id}/xem")
     public String XemThanhVien(Model model, @PathVariable("id") long id) {
@@ -82,22 +83,13 @@ public class ThanhVienController {
 
     @PostMapping("/capnhat")
     public String SuaThanhVien(Model model, @ModelAttribute("member") ThanhVien thanhVien, @RequestBody MultiValueMap<String, String> formData) {
-
-//        String hoTen = formData.getFirst("hoTen");
-//        String khoa = formData.getFirst("khoa");
-//        String nganh = formData.getFirst("nganh");
-//        String sDT = formData.getFirst("sDT");
-//        String email = formData.getFirst("email");
-//        System.out.println(formData);
-//        System.out.println(thanhVien.toString());
-//        thanhVien.setHoTen(hoTen);
-//        thanhVien.setKhoa(khoa);
-//        thanhVien.setNganh(nganh);
-//        thanhVien.setSDT(sDT);
-//        thanhVien.setEmail(email);
-//        thanhVien.setPassword(thanhVien.getPassword());
-        tvService.SaveThanhVien(thanhVien);
-        return "redirect:/quantri/thanhvien";
+        Optional<ThanhVien> tv = tvService.FindThanhVienById(thanhVien.getMaTV());
+        if (tv.isPresent()) {
+            thanhVien.setPassword(tv.get().getPassword());
+            tvService.UpdateThanhVien(thanhVien);
+            return "redirect:/quantri/thanhvien";
+        }
+        return "/admin/thanhvien/thanhvien_sua";
     }
 
     @PostMapping("/timkiem")
@@ -117,8 +109,12 @@ public class ThanhVienController {
         return "admin/thanhvien/index";
     }
 
-    @PostMapping("/{id}/delete")
-    public String deleteThanhVien(Model model, @PathVariable("id") long id) {
-        return "admin/thanhvien/index";
+    @PostMapping("/{id}/xoa")
+    public ResponseEntity<String> deleteThanhVien(Model model, @PathVariable("id") long id) {
+        String result = tvService.Delete(id);
+        if (result.equals("Xóa thành viên này thành công!")) {
+            return ResponseEntity.ok(result);
+        }
+        return ResponseEntity.status(500).body(result);
     }
 }
