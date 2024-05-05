@@ -13,7 +13,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.mohinhphanlop.projectthree.Models.ThongTinSD;
+import com.mohinhphanlop.projectthree.Models.XuLy;
 import com.mohinhphanlop.projectthree.Services.ThongTinSDService;
+import com.mohinhphanlop.projectthree.Services.XuLyService;
 
 @Controller
 @RequestMapping("/quantri/thongke")
@@ -21,10 +23,13 @@ public class ThongKeController {
 
     @Autowired
     private ThongTinSDService ttSDService;
+    @Autowired
+    private XuLyService xuLyService;
 
     @GetMapping("")
     public String getIndex(Model model, Pageable pageable, @RequestParam("page") Optional<Integer> page,
-    @RequestParam("khoa") Optional<String> khoa, @RequestParam("nganh") Optional<String> nganh, @RequestParam("tgvao") Optional<String> tgvao) {
+            @RequestParam("khoa") Optional<String> khoa, @RequestParam("nganh") Optional<String> nganh,
+            @RequestParam("tgvao") Optional<String> tgvao) {
 
         model.addAttribute("khoa", khoa.orElse(""));
         model.addAttribute("nganh", nganh.orElse(""));
@@ -55,15 +60,16 @@ public class ThongKeController {
 
     @GetMapping("/thietbi")
     public String getThietBi(Model model, Pageable pageable, @RequestParam("page") Optional<Integer> page,
-    @RequestParam("tentb") Optional<String> tentb, @RequestParam("ngaymuon") Optional<String> ngaymuon, @RequestParam("ngaytra") Optional<String> ngaytra) {
-        // copy code
+            @RequestParam("tentb") Optional<String> tentb, @RequestParam("tgmuon") Optional<String> tgmuon,
+            @RequestParam("tgtra") Optional<String> tgtra) {
+
         model.addAttribute("tentb", tentb.orElse(""));
-        model.addAttribute("ngaymuon", ngaymuon.orElse(""));
-        model.addAttribute("ngaytra", ngaytra.orElse(""));
+        model.addAttribute("tgmuon", tgmuon.orElse(""));
+        model.addAttribute("tgtra", tgtra.orElse(""));
 
         Page<ThongTinSD> list;
-        if (!tentb.orElse("").isEmpty() || !ngaymuon.orElse("").isEmpty() || !ngaytra.orElse("").isEmpty())
-            list = ttSDService.findAllBytGMuonNotNull(pageable, tentb.orElse(""), ngaymuon.orElse(""), ngaytra.orElse(""));
+        if (!tentb.orElse("").isEmpty() || !tgmuon.orElse("").isEmpty() || !tgtra.orElse("").isEmpty())
+            list = ttSDService.findAllBytGMuonNotNull(pageable, tentb.orElse(""), tgmuon.orElse(""), tgtra.orElse(""));
         else
             list = ttSDService.findAllBytGMuonNotNull(pageable);
 
@@ -80,19 +86,81 @@ public class ThongKeController {
             model.addAttribute("totalPages", totalPages);
             model.addAttribute("pageNumbers", pageNumbers);
         }
-        
+
         return "admin/thongke/thietbi";
     }
 
     @GetMapping("/datcho")
-    public String getDatCho() {
-        // copy code
+    public String getDatCho(Model model, Pageable pageable, @RequestParam("page") Optional<Integer> page,
+            @RequestParam("matb") Optional<String> matb, @RequestParam("tentb") Optional<String> tentb,
+            @RequestParam("matv") Optional<String> matv, @RequestParam("hoten") Optional<String> hoten,
+            @RequestParam("tgdatcho") Optional<String> tgdatcho) {
+
+        model.addAttribute("matb", matb.orElse(""));
+        model.addAttribute("tentb", tentb.orElse(""));
+        model.addAttribute("matv", matv.orElse(""));
+        model.addAttribute("hoten", hoten.orElse(""));
+        model.addAttribute("tgdatcho", tgdatcho.orElse(""));
+
+        Page<ThongTinSD> list;
+        if (!matb.orElse("").isEmpty() || !tentb.orElse("").isEmpty() || !matv.orElse("").isEmpty()
+                || !hoten.orElse("").isEmpty() || !tgdatcho.orElse("").isEmpty())
+            list = ttSDService.findAllBytGDatchoNotNull(pageable, matb.orElse(""), tentb.orElse(""), matv.orElse(""),
+                    hoten.orElse(""), tgdatcho.orElse(""));
+        else
+            list = ttSDService.findAllBytGDatchoNotNull(pageable);
+
+        model.addAttribute("data", list);
+
+        // Add total pages
+
+        int totalPages = list.getTotalPages();
+        if (totalPages > 0) {
+            int[] pageNumbers = new int[totalPages];
+            for (int i = 0; i < totalPages; i++) {
+                pageNumbers[i] = i + 1;
+            }
+            model.addAttribute("totalPages", totalPages);
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+
         return "admin/thongke/datcho";
     }
 
     @GetMapping("/vipham")
-    public String getVipham() {
-        // copy code
+    public String getVipham(Model model, Pageable pageable, @RequestParam("page") Optional<Integer> page,
+            @RequestParam("matv") Optional<String> matv, @RequestParam("hoten") Optional<String> hoten,
+            @RequestParam("hinhthucxl") Optional<String> hinhthucxl, @RequestParam("ngayxl") Optional<String> ngayxl,
+            @RequestParam("sotien") Optional<String> sotien) {
+
+        model.addAttribute("matv", matv.orElse(""));
+        model.addAttribute("hoten", hoten.orElse(""));
+        model.addAttribute("hinhthucxl", hinhthucxl.orElse(""));
+        model.addAttribute("ngayxl", ngayxl.orElse(""));
+        model.addAttribute("sotien", sotien.orElse(""));
+
+        Page<XuLy> list;
+        if (!matv.orElse("").isEmpty() || !hoten.orElse("").isEmpty() || !hinhthucxl.orElse("").isEmpty()
+                || !ngayxl.orElse("").isEmpty() || !sotien.orElse("").isEmpty())
+            list = xuLyService.findAll(pageable, matv.orElse(""), sotien.orElse(""), hoten.orElse(""),
+                    hinhthucxl.orElse(""), ngayxl.orElse(""));
+        else
+            list = xuLyService.findAll(pageable);
+
+        model.addAttribute("data", list);
+
+        // Add total pages
+
+        int totalPages = list.getTotalPages();
+        if (totalPages > 0) {
+            int[] pageNumbers = new int[totalPages];
+            for (int i = 0; i < totalPages; i++) {
+                pageNumbers[i] = i + 1;
+            }
+            model.addAttribute("totalPages", totalPages);
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+
         return "admin/thongke/vipham";
     }
 }
