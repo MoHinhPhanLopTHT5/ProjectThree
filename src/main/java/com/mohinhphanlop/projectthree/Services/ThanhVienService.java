@@ -216,4 +216,15 @@ public class ThanhVienService {
         }
         return result;
     }
+
+    public String DeleteMany(String lastSchoolYear) {
+        String result = "Xóa không thành công";
+        try {
+            List<Long> listMaHopLe = tvRepository.GetIDHopLe(lastSchoolYear);
+            tvRepository.deleteAllById(listMaHopLe);
+            result = "Xóa thành công";
+        } catch (Exception ex) {
+        }
+        return result;
+    }
 }

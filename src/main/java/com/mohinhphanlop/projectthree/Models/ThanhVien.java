@@ -36,6 +36,7 @@ public class ThanhVien {
     private String email;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "thanhvien", cascade = CascadeType.REMOVE)
+    @JsonManagedReference
     private List<ThongTinSD> DS_ThongTinSD;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "thanhvien", cascade = CascadeType.REMOVE)

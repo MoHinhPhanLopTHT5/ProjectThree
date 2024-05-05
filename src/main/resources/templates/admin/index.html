@@ -25,54 +25,77 @@
 
                 </div>
             </div>
-        </div>
-    </main>
-    <footer th:insert="~{fragments/general.html :: footer}"></footer>
-    <div th:insert="~{fragments/general.html :: scripts}"></div>
-    <script th:src="@{/assets/js/member.js}"></script>
-    <script>
-        maTV = document.getElementById('maTV');
-        var content_xuLy = document.querySelector('.content-xuLy');
+        </main>
+        <footer th:insert="~{fragments/general.html :: footer}"></footer>
+        <div th:insert="~{fragments/general.html :: scripts}"></div>
+        <script th:src="@{/assets/js/member.js}"></script>
+        <script>
+            maTV = document.getElementById('maTV');
+            var content_xuLy = document.querySelector('.content-xuLy');
 
-        $('#vaoKhuHocTap').submit(function (event) {
-            event.preventDefault();
-            var data = {
-                id: $('#maTV').val()
-            };
-            $.ajax({
-                type: 'POST',
-                url: '/quantri/vaokhuhoctap',
-                data: data,
-                success: function (response) {
-                    maTV.value = "";
-                    content_xuLy.innerHTML = '';
-                    new swal("Thành công!", response, "success");
-                },
-                error: function (error) {
-                    try {
-                        var object = JSON.parse(error.responseText);
-                        var s = `<div>Danh sách vi phạm của thành viên</div>
-                                    <div class="content d-flex gap-4 mt-2 mb-2" style="flex-wrap: wrap"">`;
-                        for (var i = 0; i < object.length; i++) {
-                            s +=
-                                    `<div class="bg-danger card text-white col-6" style="max-width: 18rem;">
-                                <div class="card-header">Mã xử lí: ${object[i].maXL}</div>
-                                    <ul class="list-group list-group-flush">
-<li class="list-group-item">Hình thức xử lí: ${object[i].hinhThucXL}</li>
+            $('#vaoKhuHocTap').submit(function (event) {
+                event.preventDefault();
+                var data = {
+                    id: $('#maTV').val()
+                };
+                $.ajax({
+                    type: 'POST',
+                    url: '/quantri/vaokhuhoctap',
+                    data: data,
+                    success: function (response) {
+                        maTV.value = "";
+                        content_xuLy.innerHTML = '';
+                        var ttsdTime = new Date(response["ttsd"]);
+                        var day = ("0" + ttsdTime.getDate()).slice(-2);
+                        var month = ("0" + (ttsdTime.getMonth() + 1)).slice(-2);
+                        var year = ttsdTime.getFullYear();
+                        var hours = ("0" + ttsdTime.getHours()).slice(-2);
+                        var minutes = ("0" + ttsdTime.getMinutes()).slice(-2);
+                        var seconds = ("0" + ttsdTime.getSeconds()).slice(-2);
+                        var formattedTtsdTime = day + "-" + month + "-" + year + " " + hours + ":" + minutes + ":" + seconds;
+                        var s = `<div>Thông tin vào khu học tập</div>
+                                <div class="content d-flex gap-4 mt-2 mb-2" style="flex-wrap: wrap"">
+                                    <div class="bg-success card text-white col-6" style="max-width: 18rem;">
+                                        <div class="card-header">Mã thành viên: ${response["tv"]["maTV"]}</div>
+                                            <ul class="list-group list-group-flush">
+                                                <li class="list-group-item">Họ và tên: ${response["tv"]["hoTen"]}</li>
+                                                <li class="list-group-item">Khoa: ${response["tv"]["khoa"]}</li>
+                                                <li class="list-group-item">Ngành: ${response["tv"]["nganh"]}</li>
+                                                <li class="list-group-item">Số điện thoại: ${response["tv"]["sdt"]}</li>
+                                                <li class="list-group-item">Email: ${response["tv"]["email"]}</li>
+                                                <li class="list-group-item">Thời gian vào: ${formattedTtsdTime}</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>`;
+                        content_xuLy.innerHTML = s;
+                        new swal("Thành công!", "Thành công", "success");
+                    },
+                    error: function (error) {
+                        try {
+                            content_xuLy.innerHTML = '';
+                            var object = JSON.parse(error.responseText);
+                            var s = `<div>Danh sách vi phạm của thành viên</div>
+                                        <div class="content d-flex gap-4 mt-2 mb-2" style="flex-wrap: wrap"">`;
+                            for (var i = 0; i < object.length; i++) {
+                                s += `<div class="bg-danger card text-white col-6" style="max-width: 18rem;">
+                                    <div class="card-header">Mã xử lí: ${object[i].maXL}</div>
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item">Hình thức xử lí: ${object[i].hinhThucXL}</li>
                                             <li class="list-group-item">Số tiền: ${object[i].soTien}</li>
                                             <li class="list-group-item">Ngày xử lí: ${object[i].ngayXL}</li>
                                             <li class="list-group-item">Trạng thái xử lí: ${object[i].trangThaiXL}</li>
-                                    </ul>
-                                </div>`;
+                                        </ul>
+                                    </div>`;
+                            }
+                            s += "</div>";
+                            content_xuLy.innerHTML = s;
+                        } catch (e) {
+                            new swal("Không thành công!", error.responseText, "error");
                         }
-                        s += "</div>";
-                        content_xuLy.innerHTML = s;
-                    } catch (e) {
-                        new swal("Không thành công!", error.responseText, "error");
                     }
-                }
+                });
             });
-        });
-    </script>
-</body>
+        </script>
+    </body>
 </html>

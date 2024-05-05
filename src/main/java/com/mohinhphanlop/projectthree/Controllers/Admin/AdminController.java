@@ -1,6 +1,7 @@
 package com.mohinhphanlop.projectthree.Controllers.Admin;
 
 import com.mohinhphanlop.projectthree.Models.ThanhVien;
+import com.mohinhphanlop.projectthree.Models.ThongTinSD;
 import com.mohinhphanlop.projectthree.Models.XuLy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,7 +14,9 @@ import com.mohinhphanlop.projectthree.Services.ThongTinSDService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.http.ResponseEntity;
@@ -26,12 +29,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 @RequestMapping("/quantri")
 public class AdminController {
-    
+
     @GetMapping("")
     public String getIndex() {
         return "admin/index";
     }
-    
+
     @GetMapping("/tenpath")
     public String getIndexWithModel(Model model) {
         model.addAttribute("tenModel", "Gia tri model");
@@ -39,7 +42,7 @@ public class AdminController {
         // có thể truyền giá trị của một object là model của một bảng, ví dụ ThanhVien
         return "admin/index";
     }
-    
+
     @Autowired
     private ThanhVienService tvService; // trỏ đến class chứa code BLL (lớp nghiệp vụ)
 
@@ -69,7 +72,7 @@ public class AdminController {
         model.addAttribute("ThanhVien", tvService.getByUsernameOrEmail(username));
         return "user";
     }
-    
+
     @PostMapping("/vaokhuhoctap")
     public ResponseEntity<?> VaoKhuHocTap(@RequestBody MultiValueMap<String, String> maTV_JSON) {
         int id;
@@ -78,15 +81,18 @@ public class AdminController {
             Optional<ThanhVien> tv = tvService.FindThanhVienById(id);
             if (tv.isPresent()) {
                 List<XuLy> listXuLy = tv.get().getDS_XuLy();
-                System.out.println(listXuLy.size());
                 listXuLy = listXuLy
                         .stream()
                         .filter(item -> item.getTrangThaiXL() == 0)
                         .collect(Collectors.toList());
                 int tongXuLy = listXuLy.size();
                 if (tongXuLy == 0) {
-                    if (ttsdService.CreateNewInfo(id) != null) {
-                        return ResponseEntity.ok("Vào khu học tập thành công");
+                    ThongTinSD ttsd = ttsdService.CreateNewInfo(id);
+                    if (ttsd != null) {
+                        Map<String, Object> responseMap = new HashMap<>();
+                        responseMap.put("ttsd", ttsd.getTGVao());
+                        responseMap.put("tv", tv.get());
+                        return ResponseEntity.ok(responseMap);
                     } else {
                         return ResponseEntity.status(502).body("Vào khu học tập không thành công");
                     }

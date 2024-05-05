@@ -14,4 +14,7 @@ import org.springframework.stereotype.Repository;
 public interface ThanhVienRepository extends CrudRepository<ThanhVien, Long> {
     @Query("SELECT tv FROM ThanhVien tv WHERE SUBSTRING(CAST(tv.maTV AS string), 3, 2) = :year ORDER BY SUBSTRING(CAST(tv.maTV AS string), 7, 4) DESC")
     List<ThanhVien> GetListThanhVienTheoNam(String year);
+    
+    @Query("SELECT TV.maTV FROM ThanhVien TV WHERE TV.maTV NOT IN (SELECT TT.thanhvien.maTV FROM ThongTinSD TT WHERE tGTra IS NULL AND tGVao IS NULL) AND TV.maTV NOT IN (SELECT XL.thanhvien.maTV FROM XuLy XL WHERE trangThaiXL = 0) AND SUBSTRING(CAST(TV.maTV AS string),3,2) = :lastSchoolYear")
+    List<Long> GetIDHopLe(String lastSchoolYear);
 }

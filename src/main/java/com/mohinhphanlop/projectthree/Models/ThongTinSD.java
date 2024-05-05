@@ -1,5 +1,6 @@
 package com.mohinhphanlop.projectthree.Models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.util.Date;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -34,9 +35,11 @@ public class ThongTinSD {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "MaTV", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonBackReference
     private ThanhVien thanhvien;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "MaTB", nullable = true)
+    @JsonBackReference
     private ThietBi thietbi;
 }

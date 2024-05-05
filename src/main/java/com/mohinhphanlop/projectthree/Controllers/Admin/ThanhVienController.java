@@ -117,4 +117,13 @@ public class ThanhVienController {
         }
         return ResponseEntity.status(500).body(result);
     }
+
+    @PostMapping("/xoanhieu")
+    public ResponseEntity<String> deleteNhieuThanhVien(@RequestBody MultiValueMap<String, String> yearJSON) {
+        String result = tvService.DeleteMany(yearJSON.getFirst("year").substring(2));
+        if (result.equals("Xóa thành công")) {
+            return ResponseEntity.ok("Xóa thành công");
+        }
+        return ResponseEntity.status(500).body("Xóa không thành công");
+    }
 }
