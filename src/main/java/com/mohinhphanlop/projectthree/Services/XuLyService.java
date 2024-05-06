@@ -99,4 +99,8 @@ public class XuLyService {
     public Page<XuLy> findAllByThanhVienId(Pageable pageable, String id) {
         return xuLyRepository.findAllByThanhVienId(pageable, MainController.TryParseInt(id));
     }
+
+    public XuLy findById(Integer id) {
+        return xuLyRepository.findById(id).get();
+    }
 }
