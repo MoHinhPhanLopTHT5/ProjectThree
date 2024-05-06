@@ -1,14 +1,9 @@
 package com.mohinhphanlop.projectthree.Services;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mohinhphanlop.projectthree.Models.ThietBi;
-import com.mohinhphanlop.projectthree.Models.ThongTinSD;
 import com.mohinhphanlop.projectthree.Repositories.ThietBiRepository;
 import com.mohinhphanlop.projectthree.Repositories.ThongTinSDRepository;
 

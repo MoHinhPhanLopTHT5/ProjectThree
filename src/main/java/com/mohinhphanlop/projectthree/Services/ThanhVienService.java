@@ -9,10 +9,18 @@ import com.mohinhphanlop.projectthree.Models.ThanhVien;
 import com.mohinhphanlop.projectthree.Models.ThongTinSD;
 import com.mohinhphanlop.projectthree.Models.XuLy;
 import com.mohinhphanlop.projectthree.Repositories.ThanhVienRepository;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class ThanhVienService {
@@ -226,5 +234,250 @@ public class ThanhVienService {
         } catch (Exception ex) {
         }
         return result;
+    }
+
+    private String checkValidTitleOfFile(Sheet sheet, String... titles) {
+        for (int i = 0; i < titles.length; i++) {
+            if (!sheet.getRow(0).getCell(i).getStringCellValue().equals(titles[i])) {
+                return "The title of the " + (i + 1) + " column is not in the correct format (Must be '" + titles[i] + "')";
+            }
+        }
+        return null;
+    }
+
+    private boolean checkLenghtNumeric(Cell cell, int maxLenght) {
+        return ((long) cell.getNumericCellValue() + "").length() <= maxLenght;
+    }
+
+    private boolean checkLenghtString(Cell cell, int maxLenght) {
+        return cell.getStringCellValue().length() <= maxLenght;
+    }
+
+    public String importFileExcelMembers(MultipartFile file) {
+        String message = "";
+        Workbook workbook = null;
+        int success = 0;
+        int error = 0;
+        int all = 0;
+        try {
+            workbook = new XSSFWorkbook(file.getInputStream());
+            Sheet sheet = workbook.getSheetAt(0);
+            for (Row row : sheet) {
+                if (row.getRowNum() == 0) {
+                    String errors = checkValidTitleOfFile(sheet, "MaTV", "HoTen", "Khoa", "Nganh", "SDT", "Password", "Email");
+                    if (errors != null) {
+                        message = errors;
+                        break;
+                    }
+                } else {
+                    boolean isValid = true;
+                    ThanhVien tv = new ThanhVien();
+                    OUTER:
+                    for (int i = 0; i <= 6; i++) {
+                        switch (i) {
+                            case 0 -> {
+                                Cell cell = row.getCell(i, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
+                                all++;
+                                if (cell == null) {
+                                    error++;
+                                    isValid = false;
+                                    break OUTER;
+                                } else {
+                                    if (cell.getCellType() == CellType.NUMERIC) {
+                                        if (checkLenghtNumeric(cell, 10)) {
+                                            if (!tvRepository.findById((long) cell.getNumericCellValue()).isPresent()) {
+                                                tv.setMaTV((int) cell.getNumericCellValue());
+                                            } else {
+                                                error++;
+                                                isValid = false;
+                                                break OUTER;
+                                            }
+                                        } else {
+                                            error++;
+                                            isValid = false;
+                                            break OUTER;
+                                        }
+                                    } else {
+                                        error++;
+                                        isValid = false;
+                                        break OUTER;
+                                    }
+                                }
+                            }
+                            case 1 -> {
+                                Cell cell = row.getCell(i, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
+                                if (cell == null) {
+                                    error++;
+                                    isValid = false;
+                                    break OUTER;
+                                } else {
+                                    if (cell.getCellType() == CellType.STRING) {
+                                        if (checkLenghtString(cell, 100)) {
+                                            tv.setHoTen(cell.getStringCellValue());
+                                        } else {
+                                            error++;
+                                            isValid = false;
+                                            break OUTER;
+                                        }
+                                    } else {
+                                        error++;
+                                        isValid = false;
+                                        break OUTER;
+                                    }
+                                }
+                            }
+                            case 2 -> {
+                                Cell cell = row.getCell(i, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
+                                if (cell == null) {
+                                    error++;
+                                    isValid = false;
+                                    break OUTER;
+                                } else {
+                                    if (cell.getCellType() == CellType.STRING) {
+                                        if (checkLenghtString(cell, 100)) {
+                                            tv.setKhoa(cell.getStringCellValue());
+                                        } else {
+                                            error++;
+                                            isValid = false;
+                                            break OUTER;
+                                        }
+                                    } else {
+                                        error++;
+                                        isValid = false;
+                                        break OUTER;
+                                    }
+                                }
+                            }
+                            case 3 -> {
+                                Cell cell = row.getCell(i, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
+                                if (cell == null) {
+                                    error++;
+                                    isValid = false;
+                                    break OUTER;
+                                } else {
+                                    if (cell.getCellType() == CellType.STRING) {
+                                        if (checkLenghtString(cell, 100)) {
+                                            tv.setNganh(cell.getStringCellValue());
+                                        } else {
+                                            error++;
+                                            isValid = false;
+                                            break OUTER;
+                                        }
+                                    } else {
+                                        error++;
+                                        isValid = false;
+                                        break OUTER;
+                                    }
+                                }
+                            }
+                            case 4 -> {
+                                Cell cell = row.getCell(i, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
+                                if (cell == null) {
+                                    error++;
+                                    isValid = false;
+                                    break OUTER;
+                                } else {
+                                    if (cell.getCellType() == CellType.STRING) {
+                                        if (checkLenghtString(cell, 15)) {
+                                            tv.setSDT(cell.getStringCellValue());
+                                        } else {
+                                            error++;
+                                            isValid = false;
+                                            break OUTER;
+                                        }
+                                    } else {
+                                        error++;
+                                        isValid = false;
+                                        break OUTER;
+                                    }
+                                }
+                            }
+                            case 5 -> {
+                                Cell cell = row.getCell(i, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
+                                if (cell == null) {
+                                    error++;
+                                    isValid = false;
+                                    break OUTER;
+                                } else {
+                                    switch (cell.getCellType()) {
+                                        case STRING -> {
+                                            if (checkLenghtString(cell, 10)) {
+                                                tv.setPassword(cell.getStringCellValue());
+                                            } else {
+                                                error++;
+                                                isValid = false;
+                                                break OUTER;
+                                            }
+                                        }
+                                        case NUMERIC -> {
+                                            if (checkLenghtNumeric(cell, 10)) {
+                                                tv.setPassword((long) cell.getNumericCellValue() + "");
+                                            } else {
+                                                error++;
+                                                isValid = false;
+                                                break OUTER;
+                                            }
+                                        }
+                                        default -> {
+                                            error++;
+                                            isValid = false;
+                                            break OUTER;
+                                        }
+                                    }
+                                }
+                            }
+                            case 6 -> {
+                                Cell cell = row.getCell(i, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
+                                if (cell == null) {
+                                    error++;
+                                    isValid = false;
+                                    break OUTER;
+                                } else {
+                                    if (cell.getCellType() == CellType.STRING) {
+                                        if (checkLenghtString(cell, 25)) {
+                                            tv.setEmail(cell.getStringCellValue());
+                                        } else {
+                                            error++;
+                                            isValid = false;
+                                            break OUTER;
+                                        }
+                                    } else {
+                                        error++;
+                                        isValid = false;
+                                        break OUTER;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    try {
+                        if (isValid) {
+                            tvRepository.save(tv);
+                            success++;
+                        }
+                    } catch (Exception ex) {
+                    }
+                }
+            }
+            System.out.println(all);
+            System.out.println(error);
+            if ((success + error) == all) {
+                if (error == all) {
+                    message = "Không thành công";
+                } else {
+                    message = "Thành công";
+                }
+            } else {
+                message = "Không thành công";
+            }
+            workbook.close();
+        } catch (IOException ex) {
+        } finally {
+            try {
+                workbook.close();
+            } catch (IOException ex) {
+            }
+        }
+        return message;
     }
 }

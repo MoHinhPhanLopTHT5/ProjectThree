@@ -3,13 +3,20 @@ package com.mohinhphanlop.projectthree.Controllers.Admin;
 import com.mohinhphanlop.projectthree.Models.ThanhVien;
 import com.mohinhphanlop.projectthree.Models.XuLy;
 import com.mohinhphanlop.projectthree.Services.ThanhVienService;
+import java.io.File;
+import java.io.FileInputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +27,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RequestMapping("/quantri/thanhvien")
@@ -125,5 +134,17 @@ public class ThanhVienController {
             return ResponseEntity.ok("Xóa thành công");
         }
         return ResponseEntity.status(500).body("Xóa không thành công");
+    }
+
+    @PostMapping("/themnhieu")
+    public ResponseEntity<String> ThemNhieuThanhVien(@RequestParam("file") MultipartFile file) {
+        if (file.isEmpty()) {
+            return ResponseEntity.badRequest().body("Vui lòng chọn một file");
+        }
+        String message = tvService.importFileExcelMembers(file);
+        if (message.equals("Thành công")) {
+            return ResponseEntity.ok(message);
+        }
+        return ResponseEntity.badRequest().body(message);
     }
 }

@@ -39,7 +39,7 @@
                 </div>
                 <div class="mb-0">
                     <label for="email" class="form-label">Email <span style="color: red">(*)</span></label>
-                    <input type="email" class="form-control" id="email" th:field="*{email}" placeholder="Email" required>
+                    <input type="email" class="form-control" id="email" th:field="*{email}" title="Email không được quá 25 ký tự" pattern=".{1,25}" placeholder="Email" required>
                 </div>
                 <div class="btn-bottom mt-2">
                     <a th:href="@{/quantri/thanhvien}"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Trở về</button></a>
