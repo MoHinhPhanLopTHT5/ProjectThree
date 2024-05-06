@@ -99,45 +99,6 @@ public class ThongKeController {
         return "admin/thongke/thietbi";
     }
 
-    @GetMapping("/datcho")
-    public String getDatCho(Model model, Pageable pageable, @RequestParam("page") Optional<Integer> page,
-            @RequestParam("matb") Optional<String> matb, @RequestParam("tentb") Optional<String> tentb,
-            @RequestParam("matv") Optional<String> matv, @RequestParam("hoten") Optional<String> hoten,
-            @RequestParam("tgdatcho") Optional<String> tgdatcho) {
-
-        ttSDService.RemoveAllTGDatchoOver1Hour();
-
-        model.addAttribute("matb", matb.orElse(""));
-        model.addAttribute("tentb", tentb.orElse(""));
-        model.addAttribute("matv", matv.orElse(""));
-        model.addAttribute("hoten", hoten.orElse(""));
-        model.addAttribute("tgdatcho", tgdatcho.orElse(""));
-
-        Page<ThongTinSD> list;
-        if (!matb.orElse("").isEmpty() || !tentb.orElse("").isEmpty() || !matv.orElse("").isEmpty()
-                || !hoten.orElse("").isEmpty() || !tgdatcho.orElse("").isEmpty())
-            list = ttSDService.findAllBytGDatchoNotNull(pageable, matb.orElse(""), tentb.orElse(""), matv.orElse(""),
-                    hoten.orElse(""), tgdatcho.orElse(""));
-        else
-            list = ttSDService.findAllBytGDatchoNotNull(pageable);
-
-        model.addAttribute("data", list);
-
-        // Add total pages
-
-        int totalPages = list.getTotalPages();
-        if (totalPages > 0) {
-            int[] pageNumbers = new int[totalPages];
-            for (int i = 0; i < totalPages; i++) {
-                pageNumbers[i] = i + 1;
-            }
-            model.addAttribute("totalPages", totalPages);
-            model.addAttribute("pageNumbers", pageNumbers);
-        }
-
-        return "admin/thongke/datcho";
-    }
-
     @GetMapping("/vipham")
     public String getVipham(Model model, Pageable pageable, @RequestParam("page") Optional<Integer> page,
             @RequestParam("matv") Optional<String> matv, @RequestParam("hoten") Optional<String> hoten,

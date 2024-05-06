@@ -6,7 +6,7 @@
     <main class="container">
       <div class="row">
         <div class="col">
-          <h2>Thống kê đặt chỗ</h2>
+          <h2>Quản lý đặt chỗ</h2>
           <!-- Bootstrap form with 2 fields -->
           <form action="" method="get">
             <div class="row">
@@ -68,6 +68,7 @@
                 <th scope="col">Mã thành viên</th>
                 <th scope="col">Tên thành viên</th>
                 <th scope="col">Thời gian đặt chỗ</th>
+                <th scope="col">Hành động</th>
               </tr>
             </thead>
             <tbody>
@@ -78,6 +79,13 @@
                 <td th:utext="${row.thanhvien.MaTV}"></td>
                 <td th:utext="${row.thanhvien.HoTen}"></td>
                 <td th:utext="${row.TGDatcho}"></td>
+                <td>
+                  <a
+                    th:href="@{'/quantri/datcho/'+${row.MaTT}+'/xoa'}"
+                    class="btn btn-danger"
+                    >Xoá</a
+                  >
+                </td>
               </tr>
             </tbody>
           </table>
