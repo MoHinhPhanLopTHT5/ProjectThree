@@ -105,6 +105,8 @@ public class ThongKeController {
             @RequestParam("matv") Optional<String> matv, @RequestParam("hoten") Optional<String> hoten,
             @RequestParam("tgdatcho") Optional<String> tgdatcho) {
 
+        ttSDService.RemoveAllTGDatchoOver1Hour();
+
         model.addAttribute("matb", matb.orElse(""));
         model.addAttribute("tentb", tentb.orElse(""));
         model.addAttribute("matv", matv.orElse(""));

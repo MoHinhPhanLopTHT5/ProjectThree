@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.mohinhphanlop.projectthree.Controllers.MainController;
 import com.mohinhphanlop.projectthree.Models.XuLy;
 import com.mohinhphanlop.projectthree.Repositories.XuLyRepository;
 
@@ -48,5 +49,13 @@ public class XuLyService {
         }
 
         return xuLyRepository.findAll(pageable, maTV, soTien, hoten, hinhthucxl);
+    }
+
+    public XuLy findByThanhVienId(Integer id) {
+        return xuLyRepository.findByThanhVienId(id);
+    }
+
+    public Page<XuLy> findAllByThanhVienId(Pageable pageable, String id) {
+        return xuLyRepository.findAllByThanhVienId(pageable, MainController.TryParseInt(id));
     }
 }

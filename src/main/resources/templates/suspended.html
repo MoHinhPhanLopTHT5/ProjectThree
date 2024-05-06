@@ -1,0 +1,23 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:insert="~{fragments/general.html :: head}"></head>
+  <body>
+    <header th:replace="~{fragments/general.html :: header}"></header>
+    <main class="container">
+        <div class="col">
+            <h1>Không thể đặt chỗ</h1>
+            <!-- Bootstrap alert -->
+            <div th:if="${error}" class="alert alert-danger mb-3" role="alert">
+                <span th:text="${error}"></span>
+                <ul class="mb-0">
+                    <li><b>Hình thức xử lý vi phạm: </b><span th:text="${xuLy.HinhThucXL}"></span></li>
+                    <li th:if="${xuLy.SoTien}"><b>Số tiền: </b><span th:text="${xuLy.SoTien}"></span> VND</li>
+                    <li><b>Ngày xử lý: </b><span th:text="${xuLy.NgayXL}"></span></li>
+                </ul>
+            </div>
+        </div>
+    </main>
+    <footer th:insert="~{fragments/general.html :: footer}"></footer>
+    <div th:insert="~{fragments/general.html :: scripts}"></div>
+  </body>
+</html>

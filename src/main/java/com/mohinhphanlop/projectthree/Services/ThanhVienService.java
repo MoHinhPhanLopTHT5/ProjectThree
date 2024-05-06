@@ -78,7 +78,7 @@ public class ThanhVienService {
     }
 
     public ThanhVien UpdateThanhVien(String maThanhVien, String email, String password) {
-        ThanhVien tv = tvRepository.findById(Long.parseLong(maThanhVien)).get();
+        ThanhVien tv = tvRepository.findById(Integer.parseInt(maThanhVien)).get();
         tv.setEmail(email);
         tv.setPassword(password);
         return tvRepository.save(tv);
@@ -98,17 +98,17 @@ public class ThanhVienService {
     }
 
     public Iterable<XuLy> GetListXuLyFrom(String maThanhVien) {
-        ThanhVien tv = tvRepository.findById(Long.parseLong(maThanhVien)).get();
+        ThanhVien tv = tvRepository.findById(Integer.parseInt(maThanhVien)).get();
         return tv.getDS_XuLy();
     }
 
     public Iterable<ThongTinSD> GetListThongTinSDFrom(String maThanhVien) {
-        ThanhVien tv = tvRepository.findById(Long.parseLong(maThanhVien)).get();
+        ThanhVien tv = tvRepository.findById(Integer.parseInt(maThanhVien)).get();
         return tv.getDS_ThongTinSD();
     }
 
     public Iterable<ThongTinSD> GetListThongTinSDDangMuonFrom(String maThanhVien) {
-        ThanhVien tv = tvRepository.findById(Long.parseLong(maThanhVien)).get();
+        ThanhVien tv = tvRepository.findById(Integer.parseInt(maThanhVien)).get();
 
         Iterable<ThongTinSD> listTemp = tv.getDS_ThongTinSD();
         ArrayList<ThongTinSD> list = new ArrayList<ThongTinSD>();
@@ -121,7 +121,7 @@ public class ThanhVienService {
     }
 
     public Iterable<ThongTinSD> GetListThongTinSDDatchoFrom(String maThanhVien) {
-        ThanhVien tv = tvRepository.findById(Long.parseLong(maThanhVien)).get();
+        ThanhVien tv = tvRepository.findById(Integer.parseInt(maThanhVien)).get();
 
         Iterable<ThongTinSD> listTemp = tv.getDS_ThongTinSD();
         ArrayList<ThongTinSD> list = new ArrayList<ThongTinSD>();

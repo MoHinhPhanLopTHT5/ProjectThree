@@ -5,10 +5,12 @@
 package com.mohinhphanlop.projectthree.Controllers;
 
 import com.mohinhphanlop.projectthree.Models.ThietBi;
+import com.mohinhphanlop.projectthree.Models.XuLy;
 import com.mohinhphanlop.projectthree.Services.EmailService;
 import com.mohinhphanlop.projectthree.Services.ThanhVienService;
 import com.mohinhphanlop.projectthree.Services.ThietBiService;
 import com.mohinhphanlop.projectthree.Services.ThongTinSDService;
+import com.mohinhphanlop.projectthree.Services.XuLyService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -38,6 +40,8 @@ public class MainController {
     private ThietBiService tbService;
     @Autowired
     private ThongTinSDService ttSDService;
+    @Autowired
+    private XuLyService xuLyService;
 
     public static Integer TryParseInt(String txt) {
         try {
@@ -51,7 +55,17 @@ public class MainController {
     @GetMapping("/")
     public String homepage(Model model, @RequestParam("page") Optional<Integer> page,
             @RequestParam("tenTB") Optional<String> tenTB,
-            Pageable pageable) {
+            Pageable pageable, HttpSession session) {
+
+        ttSDService.RemoveAllTGDatchoOver1Hour();
+
+        XuLy xuLy = xuLyService.findByThanhVienId(TryParseInt(session.getAttribute("username").toString()));
+
+        if (xuLy != null) {
+            model.addAttribute("error", "Bạn hiện không thể đặt chỗ do đang trong thời gian xử lý vi phạm!");
+            model.addAttribute("xuLy", xuLy);
+            return "suspended";
+        }
 
         String TenTB = tenTB.orElse("");
         Page<ThietBi> list = tbService.GetList(TenTB, pageable);
@@ -277,8 +291,17 @@ public class MainController {
     }
 
     @GetMapping("/datcho/{id}")
-    public String getDatCho(@PathVariable("id") ThietBi thietBi, Model model) {
+    public String getDatCho(@PathVariable("id") ThietBi thietBi, Model model, HttpSession session) {
         ttSDService.RemoveAllTGDatchoOver1Hour();
+
+        XuLy xuLy = xuLyService.findByThanhVienId(TryParseInt(session.getAttribute("username").toString()));
+
+        if (xuLy != null) {
+            model.addAttribute("error", "Bạn hiện không thể đặt chỗ do đang trong thời gian xử lý vi phạm!");
+            model.addAttribute("xuLy", xuLy);
+            return "suspended";
+        }
+
         model.addAttribute("thietBi", thietBi);
         return "reservation";
     }
@@ -289,7 +312,7 @@ public class MainController {
             Model model) {
 
         String date = formData.getFirst("date");
-        String MaTV = (String) session.getAttribute("username");
+        String MaTV = session.getAttribute("username").toString();
         boolean check = true;
         if (!ttSDService.CheckTrangThaiDatCho(thietBi.getMaTB().toString(), date)) {
             model.addAttribute("error",
