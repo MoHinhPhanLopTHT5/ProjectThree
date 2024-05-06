@@ -11,6 +11,14 @@
           <form action="" method="get">
             <div class="row">
               <div class="col">
+                <label for="matb" class="form-label">Mã thiết bị</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="matb"
+                  name="matb"
+                  th:value="${matb}"
+                />
                 <label for="tentb" class="form-label">Tên thiết bị</label>
                 <input
                   type="text"
@@ -29,8 +37,6 @@
                   name="tgmuon"
                   th:value="${tgmuon}"
                 />
-              </div>
-              <div class="col">
                 <label for="tgtra" class="form-label">Thời gian trả</label>
                 <input
                   type="date"
@@ -76,7 +82,7 @@
                 <li class="page-item">
                   <a
                     class="page-link"
-                    th:href="@{/quantri/thongke/thietbi(page=${pageNumber-1},tentb=${tentb},tgmuon=${tgmuon},tgtra=${tgtra})}"
+                    th:href="@{/quantri/thongke/thietbi(page=${pageNumber-1},matb=${matb},tentb=${tentb},tgmuon=${tgmuon},tgtra=${tgtra})}"
                     th:text="${pageNumber}"
                   ></a>
                 </li>

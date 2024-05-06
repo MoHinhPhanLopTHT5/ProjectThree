@@ -25,22 +25,18 @@ public interface ThongTinSDRepository extends CrudRepository<ThongTinSD, Integer
         public Iterable<ThongTinSD> findAllByOrderByMaTTDesc();
 
         // danh sách thành viên vào
-        public Page<ThongTinSD> findAllBytGVaoNotNull(@PageableDefault(value = 10, page = 0) Pageable pageable); // lay
-                                                                                                                 // thong
-                                                                                                                 // tin
-                                                                                                                 // SD
-                                                                                                                 // kem
-                                                                                                                 // thoi
-                                                                                                                 // gian
-                                                                                                                 // vao
+        public Page<ThongTinSD> findAllBytGVaoNotNull(@PageableDefault(value = 10, page = 0) Pageable pageable);
+        // lay thong tin SD kem thoi gian vao
 
-        @Query("SELECT t FROM ThongTinSD t INNER JOIN t.thanhvien tv WHERE tv.khoa like %:khoa% AND tv.nganh like %:nganh%")
+        @Query("SELECT t FROM ThongTinSD t INNER JOIN t.thanhvien tv WHERE (:matv = -1 or tv.maTV = :matv) AND tv.hoTen like %:hoten% AND tv.khoa like %:khoa% AND tv.nganh like %:nganh% and t.tGVao is not null")
         public Page<ThongTinSD> findAllBytGVaoNotNull(@PageableDefault(value = 10, page = 0) Pageable pageable,
-                        @Param("khoa") String khoa, @Param("nganh") String nganh);
+                        @Param("matv") Integer matv, @Param("hoten") String hoten, @Param("khoa") String khoa,
+                        @Param("nganh") String nganh);
 
-        @Query("SELECT t FROM ThongTinSD t INNER JOIN t.thanhvien tv WHERE tv.khoa like %:khoa% AND tv.nganh like %:nganh% and Date(t.tGVao) = %:tgvao%")
+        @Query("SELECT t FROM ThongTinSD t INNER JOIN t.thanhvien tv WHERE (:matv = -1 or tv.maTV = :matv) AND tv.hoTen like %:hoten% AND tv.khoa like %:khoa% AND tv.nganh like %:nganh% and Date(t.tGVao) = %:tgvao%")
         public Page<ThongTinSD> findAllBytGVaoNotNull(@PageableDefault(value = 10, page = 0) Pageable pageable,
-                        @Param("khoa") String khoa, @Param("nganh") String nganh, @Param("tgvao") Date tgvao);
+                        @Param("matv") Integer matv, @Param("hoten") String hoten, @Param("khoa") String khoa,
+                        @Param("nganh") String nganh, @Param("tgvao") Date tgvao);
 
         // danh sách thiết bị mượn
         // 1 method để lấy toàn bộ thiết bị
@@ -50,21 +46,22 @@ public interface ThongTinSDRepository extends CrudRepository<ThongTinSD, Integer
 
         public Page<ThongTinSD> findAllBytGMuonNotNull(@PageableDefault(value = 10, page = 0) Pageable pageable);
 
-        @Query("SELECT t FROM ThongTinSD t INNER JOIN t.thietbi tb WHERE t.tGMuon is not null and tb.tenTB like %:tenTB%")
+        @Query("SELECT t FROM ThongTinSD t INNER JOIN t.thietbi tb WHERE t.tGMuon is not null and (:maTB = -1 or tb.maTB = :maTB) and tb.tenTB like %:tenTB%")
         public Page<ThongTinSD> findAllBytGMuonNotNull(@PageableDefault(value = 10, page = 0) Pageable pageable,
-                        @Param("tenTB") String tenTB);
+                        @Param("maTB") Integer maTB, @Param("tenTB") String tenTB);
 
-        @Query("SELECT t FROM ThongTinSD t INNER JOIN t.thietbi tb WHERE tb.tenTB like %:tenTB% and Date(t.tGMuon) = %:tgmuon%")
+        @Query("SELECT t FROM ThongTinSD t INNER JOIN t.thietbi tb WHERE (:maTB = -1 or tb.maTB = :maTB) and tb.tenTB like %:tenTB% and Date(t.tGMuon) = %:tgmuon%")
         public Page<ThongTinSD> findAllBytGMuonNotNull(@PageableDefault(value = 10, page = 0) Pageable pageable,
-                        @Param("tenTB") String tenTB, @Param("tgmuon") Date tgmuon);
+                        @Param("maTB") Integer maTB, @Param("tenTB") String tenTB, @Param("tgmuon") Date tgmuon);
 
-        @Query("SELECT t FROM ThongTinSD t INNER JOIN t.thietbi tb WHERE tb.tenTB like %:tenTB% and Date(t.tGTra) = %:tgtra%")
+        @Query("SELECT t FROM ThongTinSD t INNER JOIN t.thietbi tb WHERE (:maTB = -1 or tb.maTB = :maTB) and tb.tenTB like %:tenTB% and Date(t.tGTra) = %:tgtra%")
         public Page<ThongTinSD> findAllBytGTraNotNull(@PageableDefault(value = 10, page = 0) Pageable pageable,
-                        @Param("tenTB") String tenTB, @Param("tgtra") Date tgtra);
+                        @Param("maTB") Integer maTB, @Param("tenTB") String tenTB, @Param("tgtra") Date tgtra);
 
-        @Query("SELECT t FROM ThongTinSD t INNER JOIN t.thietbi tb WHERE tb.tenTB like %:tenTB% AND Date(t.tGMuon) = %:tgmuon% AND Date(t.tGTra) = %:tgtra%")
+        @Query("SELECT t FROM ThongTinSD t INNER JOIN t.thietbi tb WHERE (:maTB = -1 or tb.maTB = :maTB) and tb.tenTB like %:tenTB% AND Date(t.tGMuon) = %:tgmuon% AND Date(t.tGTra) = %:tgtra%")
         public Page<ThongTinSD> findAllBytGMuonNotNullAndtGTraNotNull(
-                        @PageableDefault(value = 10, page = 0) Pageable pageable, @Param("tenTB") String tenTB,
+                        @PageableDefault(value = 10, page = 0) Pageable pageable, @Param("maTB") Integer maTB,
+                        @Param("tenTB") String tenTB,
                         @Param("tgmuon") Date tgmuon, @Param("tgtra") Date tgtra);
 
         // Danh sách thiết bị đặt chỗ

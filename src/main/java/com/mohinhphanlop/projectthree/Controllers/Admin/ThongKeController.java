@@ -28,16 +28,21 @@ public class ThongKeController {
 
     @GetMapping("")
     public String getIndex(Model model, Pageable pageable, @RequestParam("page") Optional<Integer> page,
+            @RequestParam("matv") Optional<String> matv, @RequestParam("hoten") Optional<String> hoten,
             @RequestParam("khoa") Optional<String> khoa, @RequestParam("nganh") Optional<String> nganh,
             @RequestParam("tgvao") Optional<String> tgvao) {
 
+        model.addAttribute("matv", matv.orElse(""));
+        model.addAttribute("hoten", hoten.orElse(""));
         model.addAttribute("khoa", khoa.orElse(""));
         model.addAttribute("nganh", nganh.orElse(""));
         model.addAttribute("tgvao", tgvao.orElse(""));
 
         Page<ThongTinSD> list;
-        if (!khoa.orElse("").isEmpty() || !nganh.orElse("").isEmpty() || !tgvao.orElse("").isEmpty())
-            list = ttSDService.findAllBytGVaoNotNull(pageable, khoa.orElse(""), nganh.orElse(""), tgvao.orElse(""));
+        if (matv.orElse("").isEmpty() || hoten.orElse("").isEmpty() || !khoa.orElse("").isEmpty()
+                || !nganh.orElse("").isEmpty() || !tgvao.orElse("").isEmpty())
+            list = ttSDService.findAllBytGVaoNotNull(pageable, matv.orElse(""), hoten.orElse(""), khoa.orElse(""),
+                    nganh.orElse(""), tgvao.orElse(""));
         else
             list = ttSDService.findAllBytGVaoNotNull(pageable);
 
@@ -60,16 +65,20 @@ public class ThongKeController {
 
     @GetMapping("/thietbi")
     public String getThietBi(Model model, Pageable pageable, @RequestParam("page") Optional<Integer> page,
-            @RequestParam("tentb") Optional<String> tentb, @RequestParam("tgmuon") Optional<String> tgmuon,
+            @RequestParam("matb") Optional<String> matb, @RequestParam("tentb") Optional<String> tentb,
+            @RequestParam("tgmuon") Optional<String> tgmuon,
             @RequestParam("tgtra") Optional<String> tgtra) {
 
+        model.addAttribute("matb", matb.orElse(""));
         model.addAttribute("tentb", tentb.orElse(""));
         model.addAttribute("tgmuon", tgmuon.orElse(""));
         model.addAttribute("tgtra", tgtra.orElse(""));
 
         Page<ThongTinSD> list;
-        if (!tentb.orElse("").isEmpty() || !tgmuon.orElse("").isEmpty() || !tgtra.orElse("").isEmpty())
-            list = ttSDService.findAllBytGMuonNotNull(pageable, tentb.orElse(""), tgmuon.orElse(""), tgtra.orElse(""));
+        if (!matb.orElse("").isEmpty() || !tentb.orElse("").isEmpty() || !tgmuon.orElse("").isEmpty()
+                || !tgtra.orElse("").isEmpty())
+            list = ttSDService.findAllBytGMuonNotNull(pageable, matb.orElse(""), tentb.orElse(""), tgmuon.orElse(""),
+                    tgtra.orElse(""));
         else
             list = ttSDService.findAllBytGMuonNotNull(pageable);
 

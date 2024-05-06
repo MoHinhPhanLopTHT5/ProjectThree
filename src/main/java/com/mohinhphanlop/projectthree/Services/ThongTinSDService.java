@@ -114,14 +114,22 @@ public class ThongTinSDService {
         return ttSDRepository.findAllBytGVaoNotNull(pageable);
     }
 
-    public Page<ThongTinSD> findAllBytGVaoNotNull(Pageable pageable, String khoa, String nganh, String tgvao) {
-        // tgvao string to Date
+    public Page<ThongTinSD> findAllBytGVaoNotNull(Pageable pageable, String matv, String hoten, String khoa,
+            String nganh, String tgvao) {
 
+        Integer maTV = -1;
+        try {
+            maTV = Integer.parseInt(matv);
+        } catch (NumberFormatException e) {
+            maTV = -1;
+        }
+
+        // tgvao string to Date
         try {
             Date date = new SimpleDateFormat("yyyy-MM-dd").parse(tgvao);
-            return ttSDRepository.findAllBytGVaoNotNull(pageable, khoa, nganh, date);
+            return ttSDRepository.findAllBytGVaoNotNull(pageable, maTV, hoten, khoa, nganh, date);
         } catch (java.text.ParseException e) {
-            return ttSDRepository.findAllBytGVaoNotNull(pageable, khoa, nganh);
+            return ttSDRepository.findAllBytGVaoNotNull(pageable, maTV, hoten, khoa, nganh);
         }
     }
 
@@ -130,7 +138,16 @@ public class ThongTinSDService {
         return ttSDRepository.findAllBytGMuonNotNull(pageable);
     }
 
-    public Page<ThongTinSD> findAllBytGMuonNotNull(Pageable pageable, String tentb, String ngaymuon, String ngaytra) {
+    public Page<ThongTinSD> findAllBytGMuonNotNull(Pageable pageable, String matb, String tentb, String ngaymuon,
+            String ngaytra) {
+
+        Integer maTB;
+        try {
+            maTB = Integer.parseInt(matb);
+        } catch (NumberFormatException e) {
+            maTB = -1;
+        }
+
         // tgvao string to Date
 
         Date dateNgaymuon = null, dateNgayTra = null;
@@ -147,13 +164,14 @@ public class ThongTinSDService {
         }
 
         if (dateNgaymuon != null && dateNgayTra != null) {
-            return ttSDRepository.findAllBytGMuonNotNullAndtGTraNotNull(pageable, tentb, dateNgaymuon, dateNgayTra);
+            return ttSDRepository.findAllBytGMuonNotNullAndtGTraNotNull(pageable, maTB, tentb, dateNgaymuon,
+                    dateNgayTra);
         } else if (dateNgaymuon != null) {
-            return ttSDRepository.findAllBytGMuonNotNull(pageable, tentb, dateNgaymuon);
+            return ttSDRepository.findAllBytGMuonNotNull(pageable, maTB, tentb, dateNgaymuon);
         } else if (dateNgayTra != null) {
-            return ttSDRepository.findAllBytGTraNotNull(pageable, tentb, dateNgayTra);
+            return ttSDRepository.findAllBytGTraNotNull(pageable, maTB, tentb, dateNgayTra);
         }
-        return ttSDRepository.findAllBytGMuonNotNull(pageable, tentb);
+        return ttSDRepository.findAllBytGMuonNotNull(pageable, maTB, tentb);
     }
 
     // đặt chỗ nếu được

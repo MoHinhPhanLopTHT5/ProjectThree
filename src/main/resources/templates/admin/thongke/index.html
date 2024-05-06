@@ -11,6 +11,24 @@
           <form action="" method="get">
             <div class="row">
               <div class="col">
+                <label for="matv" class="form-label">Mã thành viên</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="matv"
+                  name="matv"
+                  th:value="${matv}"
+                />
+                <label for="hoten" class="form-label">Tên thành viên</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="hoten"
+                  name="hoten"
+                  th:value="${hoten}"
+                />
+              </div>
+              <div class="col">
                 <label for="khoa" class="form-label">Khoa</label>
                 <input
                   type="text"
@@ -19,8 +37,6 @@
                   name="khoa"
                   th:value="${khoa}"
                 />
-              </div>
-              <div class="col">
                 <label for="nganh" class="form-label">Ngành</label>
                 <input
                   type="text"
@@ -74,7 +90,7 @@
                 <li class="page-item">
                   <a
                     class="page-link"
-                    th:href="@{/quantri/thongke(page=${pageNumber-1},khoa=${khoa},nganh=${nganh},tgvao=${tgvao})}"
+                    th:href="@{/quantri/thongke(page=${pageNumber-1},matv=${matv},hoten=${hoten},khoa=${khoa},nganh=${nganh},tgvao=${tgvao})}"
                     th:text="${pageNumber}"
                   ></a>
                 </li>
