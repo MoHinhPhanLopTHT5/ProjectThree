@@ -7,6 +7,7 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.mohinhphanlop.projectthree.Controllers.MainController;
@@ -22,42 +23,63 @@ public class XuLyService {
     @Autowired
     private ThanhVienRepository tvRepository;
 
-    public XuLy addXuLy(int maXL, int maTV, String hinhThucXL, int soTien, Date ngayXL, int trangThaiXL) {
+    public XuLy addXuLy(String matv, String hinhThucXL, String sotien, String ngayxl, String trangthaixl) {
 
         XuLy xl = new XuLy();
-        ThanhVien tv = null;
-        tv.setMaTV(maTV);
+        ThanhVien tv = tvRepository.findById(MainController.TryParseInt(matv)).orElse(null);
+
+        Iterable<XuLy> list = xuLyRepository.findAll(Sort.by(Sort.Direction.DESC, "maXL"));
+
+        int count = 0;
+        for (XuLy item : list) {
+            count = 1;
+            xl.setMaXL(item.getMaXL() + 1);
+            break;
+        }
+
+        if (count == 0)
+            xl.setMaXL(1);
+
+        if (tv == null)
+            return null;
 
         xl.setThanhvien(tv);
         xl.setHinhThucXL(hinhThucXL);
-        xl.setSoTien(soTien);
-        xl.setTrangThaiXL(trangThaiXL);
+        xl.setSoTien(MainController.TryParseInt(sotien));
+        xl.setTrangThaiXL(MainController.TryParseInt(trangthaixl));
 
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        ngayXL = new Date();
+        Date ngayXL = DateService.dateStringtoDateType(ngayxl);
         xl.setNgayXL(ngayXL);
+
+        return xuLyRepository.save(xl);
+    }
+
+    public XuLy updateXuLy(Integer maXL, String hinhThucXL, String soTien, String ngayxl,
+            String trangThaiXL) {
+        XuLy xl = xuLyRepository.findById(maXL).orElse(null);
+
+        if (xl == null)
+            return null;
+
+        xl.setHinhThucXL(hinhThucXL);
+
+        xl.setSoTien(MainController.TryParseInt(soTien));
+
+        Date ngayXL = DateService.dateStringtoDateType(ngayxl);
+        xl.setNgayXL(ngayXL);
+        xl.setTrangThaiXL(Integer.parseInt(trangThaiXL));
 
         return xuLyRepository.save(xl);
 
     }
 
-    public XuLy updateXuLy(int maXL, int maTV, String hinhThucXL, int soTien, Date ngayXL, int trangThaiXL) {
-        XuLy xl = xuLyRepository.findById(maXL).get();
-        ThanhVien tv = new ThanhVien();
-        tv.setMaTV(maTV);
+    public boolean deleteXuLy(Integer maXL) {
+        XuLy xl = xuLyRepository.findById(maXL).orElse(null);
 
-        xl.setThanhvien(tv);
-        xl.setHinhThucXL(hinhThucXL);
-        xl.setSoTien(soTien);
-        xl.setNgayXL(ngayXL);
-        xl.setTrangThaiXL(trangThaiXL);
-
-        return xuLyRepository.save(xl);
-
-    }
-
-    public void deleteXuLy(int maXL) {
-        xuLyRepository.deleteById(maXL);
+        if (xl == null)
+            return false;
+        xuLyRepository.delete(xl);
+        return true;
     }
 
     public Page<XuLy> findAll(Pageable pageable) {

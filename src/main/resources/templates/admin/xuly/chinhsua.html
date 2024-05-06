@@ -11,6 +11,13 @@
           <form th:action="@{/quantri/xuly/{id}(id=${xuLy.maXL})}" method="post">
             <div class="row">
                 <div class="col">
+                    <!-- Bootstrap alert element -->
+                    <div th:if="${error}" class="alert alert-danger mb-3" role="alert">
+                        <span th:text="${error}"></span>
+                    </div>
+                    <div th:if="${success}" class="alert alert-success mb-3" role="alert">
+                        <span th:text="${success}"></span>
+                    </div>
                     <div class="mb-3">
                         <label for="maxl" class="form-label">Mã xử lý</label>
                         <input
@@ -96,7 +103,8 @@
                         class="form-control"
                         id="ngayxl"
                         name="ngayxl"
-                        th:value="${xuLy.NgayXL}"
+                        th:value="${#dates.format(xuLy.ngayXL, 'yyyy-MM-dd HH:mm:ss')}"
+                        required
                         />
                     </div>
                     <div class="mb-3">
@@ -107,6 +115,7 @@
                         </select>
                     </div>
                     <button type="submit" class="btn btn-success">Cập nhật</button>
+                    <a th:href="@{'/quantri/xuly'}" class="btn btn-primary">Quay về trang danh sách xử lý</a>
                     <a th:href="@{'/quantri/xuly/'+${xuLy.maXL}+'/xoa'}" class="btn btn-danger">Xoá</a>
                 </div>
           </form>
