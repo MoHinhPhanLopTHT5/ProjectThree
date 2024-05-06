@@ -6,7 +6,7 @@
     <main class="container">
       <div class="row">
         <div class="col">
-          <h2>Thống kê</h2>
+          <h2>Thống kê vi phạm</h2>
           <!-- Bootstrap form with 2 fields -->
           <form action="" method="get">
             <div class="row">
@@ -29,31 +29,32 @@
                 />
               </div>
               <div class="col">
-                <label for="khoa" class="form-label">Khoa</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="khoa"
-                  name="khoa"
-                  th:value="${khoa}"
-                />
-                <label for="nganh" class="form-label">Ngành</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="nganh"
-                  name="nganh"
-                  th:value="${nganh}"
-                />
-              </div>
-              <div class="col">
-                <label for="tgvao" class="form-label">Thời gian vào</label>
+                <label for="ngayxl" class="form-label">Ngày xử lý</label>
                 <input
                   type="date"
                   class="form-control"
-                  id="tgvao"
-                  name="tgvao"
-                  th:value="${tgvao}"
+                  id="ngayxl"
+                  name="ngayxl"
+                  th:value="${ngayxl}"
+                />
+                <label for="hinhthucxl" class="form-label">Hình thức xử lý</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="hinhthucxl"
+                  name="hinhthucxl"
+                  th:value="${hinhthucxl}"
+                />
+              </div>
+              <div class="col">
+                <label for="sotien" class="form-label">Số tiền (>= X VND)</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="sotien"
+                  name="sotien"
+                  th:value="${sotien}"
+                  min="0"
                 />
               </div>
             </div>
@@ -65,9 +66,10 @@
                 <th scope="col">#</th>
                 <th scope="col">Mã thành viên</th>
                 <th scope="col">Tên thành viên</th>
-                <th scope="col">Khoa</th>
-                <th scope="col">Ngành</th>
-                <th scope="col">Thời gian vào</th>
+                <th scope="col">Hình thức</th>
+                <th scope="col">Ngày xử lý</th>
+                <th scope="col">Số tiền</th>
+                <th scope="col">Trạng thái</th>
               </tr>
             </thead>
             <tbody>
@@ -75,9 +77,10 @@
                 <th scope="row" th:utext="${state.count}"></th>
                 <td th:utext="${row.thanhvien.MaTV}"></td>
                 <td th:utext="${row.thanhvien.HoTen}"></td>
-                <td th:utext="${row.thanhvien.Khoa}"></td>
-                <td th:utext="${row.thanhvien.Nganh}"></td>
-                <td th:utext="${row.TGVao}"></td>
+                <td th:utext="${row.HinhThucXL}"></td>
+                <td th:utext="${row.NgayXL}"></td>
+                <td th:utext="${row.SoTien}"></td>
+                <td th:utext="${row.TrangThaiXL}"></td>
               </tr>
             </tbody>
           </table>
@@ -90,7 +93,7 @@
                 <li class="page-item">
                   <a
                     class="page-link"
-                    th:href="@{/quantri/thongke(page=${pageNumber-1},matv=${matv},hoten=${hoten},khoa=${khoa},nganh=${nganh},tgvao=${tgvao})}"
+                    th:href="@{/quantri/thongke/vipham(page=${pageNumber-1},matv=${matv},hoten=${hoten},ngayxl=${ngayxl},sotien=${sotien})}"
                     th:text="${pageNumber}"
                   ></a>
                 </li>
