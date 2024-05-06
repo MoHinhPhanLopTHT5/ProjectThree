@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
  * @author Admin
  */
 @Repository
-public interface ThanhVienRepository extends CrudRepository<ThanhVien, Integer> {
+public interface ThanhVienRepository extends CrudRepository<ThanhVien, Long> {
 
 }
