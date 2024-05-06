@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:insert="~{fragments/general.html :: head}"></head>
+  <body>
+    <header th:replace="~{fragments/general.html :: header_admin}"></header>
+    <main class="container">
+      <div class="row">
+        <div class="col">
+          <h2>Chi tiết vi phạm</h2>
+          <!-- Bootstrap form with 2 fields -->
+          <form th:action="@{/quantri/xuly/{id}(id=${xuLy.maXL})}" method="post">
+            <div class="row">
+                <div class="col">
+                    <!-- Bootstrap alert element -->
+                    <div th:if="${error}" class="alert alert-danger mb-3" role="alert">
+                        <span th:text="${error}"></span>
+                    </div>
+                    <div th:if="${success}" class="alert alert-success mb-3" role="alert">
+                        <span th:text="${success}"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label for="maxl" class="form-label">Mã xử lý</label>
+                        <input
+                        type="text"
+                        class="form-control"
+                        id="maxl"
+                        name="maxl"
+                        th:value="${xuLy.maXL}"
+                        readonly
+                        />
+                    </div>
+                    <div class="mb-3">
+                        <label for="matv" class="form-label">Mã thành viên</label>
+                        <input
+                        type="text"
+                        class="form-control"
+                        id="matv"
+                        th:value="${xuLy.thanhvien.maTV}"
+                        readonly
+                        />
+                    </div>
+                    <div class="mb-3">
+                        <label for="hoten" class="form-label">Tên thành viên</label>
+                        <input
+                        type="text"
+                        class="form-control"
+                        id="hoten"
+                        th:value="${xuLy.thanhvien.hoTen}"
+                        readonly
+                        />
+                    </div>
+                    <div class="mb-3">
+                        <label for="hinhthucxl" class="form-label">Hình thức xử lý</label>
+                        <select class="form-select" id="hinhthucxl" name="hinhthucxl" th:value="${xuLy.hinhThucXL}">
+                            <option value="Khoá thẻ 1 tháng" th:selected="${xuLy.hinhThucXL =='Khoá thẻ 1 tháng'}">Khoá thẻ 1 tháng</option>
+                            <option value="Khoá thẻ 2 tháng" th:selected="${xuLy.hinhThucXL == 'Khoá thẻ 2 tháng'}">Khoá thẻ 2 tháng</option>
+                            <option value="Khoá thẻ vĩnh viễn" th:selected="${xuLy.hinhThucXL == 'Khoá thẻ vĩnh viễn'}">Khoá thẻ vĩnh viễn</option>
+                            <option value="Bồi thường" th:selected="${xuLy.hinhThucXL == 'Bồi thường'}">Bồi thường</option>
+                            <option value="Khoá thẻ 1 tháng và bồi thường" th:selected="${xuLy.hinhThucXL == 'Khoá thẻ 1 tháng và bồi thường'}">Khoá thẻ 1 tháng và bồi thường</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <script>
+                            document.addEventListener("DOMContentLoaded", function() {
+                                let hinhthucxl = document.querySelector('#hinhthucxl');
+                                let sotien = document.querySelector('#sotien');
+                                
+                                hinhthucxl.addEventListener('change', function() {
+                                    if (hinhthucxl.selectedIndex == 3 || hinhthucxl.selectedIndex == 4) {
+                                        sotien.removeAttribute('disabled');
+                                    } else {
+                                        sotien.setAttribute('disabled', 'disabled');
+                                    }
+                                })
+
+                                hinhthucxl.selectedIndex = hinhthucxl.selectedIndex
+                            })
+                        </script>
+                        <label for="sotien" class="form-label">Số tiền</label>
+                        <input
+                        type="number"
+                        class="form-control"
+                        id="sotien"
+                        name="sotien"
+                        th:value="${xuLy.soTien}"
+                        min="0"
+                        th:if="${#strings.contains(xuLy.hinhThucXL, 'thường')}"
+                        />
+                        <input
+                        type="number"
+                        class="form-control"
+                        id="sotien"
+                        name="sotien"
+                        min="0"
+                        disabled
+                        th:if="${#strings.contains(xuLy.hinhThucXL, 'thường')==false}"
+                        />
+                    </div>
+                    <div class="mb-3">
+                        <label for="ngayxl">Ngày xử lý</label>
+                        <input
+                        type="datetime-local"
+                        class="form-control"
+                        id="ngayxl"
+                        name="ngayxl"
+                        th:value="${#dates.format(xuLy.ngayXL, 'yyyy-MM-dd HH:mm:ss')}"
+                        required
+                        />
+                    </div>
+                    <div class="mb-3">
+                        <label for="trangthaixl">Trạng thái xử lý</label>
+                        <select class="form-select" name="trangthaixl" id="trangthaixl">
+                            <option value="1" th:selected="${xuLy.TrangThaiXL==1}">Đang xử lý</option>
+                            <option value="0" th:selected="${xuLy.TrangThaiXL==0}">Đã xử lý</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-success">Cập nhật</button>
+                    <a th:href="@{'/quantri/xuly'}" class="btn btn-primary">Quay về trang danh sách xử lý</a>
+                    <a th:href="@{'/quantri/xuly/'+${xuLy.maXL}+'/xoa'}" class="btn btn-danger">Xoá</a>
+                </div>
+          </form>
+        </div>
+      </div>
+    </main>
+    <footer th:insert="~{fragments/general.html :: footer}"></footer>
+    <div th:insert="~{fragments/general.html :: scripts}"></div>
+  </body>
+</html>

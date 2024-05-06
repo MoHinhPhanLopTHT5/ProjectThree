@@ -205,4 +205,16 @@ public class ThongTinSDService {
 
         return ttSDRepository.findAllBytGDatchoNotNull(pageable, MaTB, MaTV, tentb, hoten);
     }
+
+    public boolean deleteThongTinSD(Integer maTT) {
+        ThongTinSD ttsd = ttSDRepository.findById(maTT).orElse(null);
+        if (ttsd == null)
+            return false;
+        ttSDRepository.delete(ttsd);
+        return true;
+    }
+
+    public ThongTinSD findById(Integer maTT) {
+        return ttSDRepository.findById(maTT).orElse(null);
+    }
 }
