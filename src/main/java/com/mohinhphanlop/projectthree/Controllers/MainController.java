@@ -145,7 +145,7 @@ public class MainController {
             Model model, HttpServletRequest request, HttpSession session) {
 
         String code = formData.getFirst("code") == null ? "" : formData.getFirst("code");
-        System.out.println(code);
+
         if (!code.isEmpty()) { // Nếu có code
             String email_uuid = session.getAttribute("email_uuid") == null ? ""
                     : session.getAttribute("email_uuid").toString(); // Lấy email_uuid từ HttpSession
