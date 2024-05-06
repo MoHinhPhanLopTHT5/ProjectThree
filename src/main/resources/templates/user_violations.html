@@ -8,10 +8,10 @@
             <div class="col">
                 <h2>Danh sách vi phạm <span><a th:href="@{/hoso}" class="btn btn-primary">Quay về trang hồ sơ</a></span></h2>
                 <!-- Bootstrap alert -->
-                <div th:unless="${listXuLy.getSize() > 0}" class="alert alert-success mb-3" role="alert">
+                <div th:unless="${listXuLy.getNumberOfElements() > 0}" class="alert alert-success mb-3" role="alert">
                   Chúc mừng, bạn không có vi phạm nào!
                 </div>
-                <div th:if="${listXuLy.getSize() > 0}">
+                <div th:if="${listXuLy.getNumberOfElements() > 0}">
                   <table class="table">
                     <thead>
                       <tr>
