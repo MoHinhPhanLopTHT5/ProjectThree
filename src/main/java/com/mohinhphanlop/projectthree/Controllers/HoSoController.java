@@ -85,15 +85,16 @@ public class HoSoController {
             }
         }
 
-        // Nếu có đủ điều kiện thì cập nhật thông tin
-        if (check) {
+        // Nếu có đủ điều kiện và mật khẩu chính xác thì cập nhật thông tin
+        if (check && tvService.getByUsernameOrEmail(username).getPassword().equals(password)) {
             if (!new_password.isEmpty())
                 password = new_password;
 
             tvService.UpdateThanhVien(username, email, password);
             session.setAttribute("pw", password);
             model.addAttribute("success", "Cập nhật thông tin thành công!");
-        }
+        } else
+            model.addAttribute("error", "Mật khẩu không chính xác!");
 
         // Hiển thị thông tin thành viên vừa cập nhật
         model.addAttribute("ThanhVien", tvService.getByUsernameOrEmail(username));
