@@ -3,15 +3,11 @@ package com.mohinhphanlop.projectthree.Controllers;
 import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.mohinhphanlop.projectthree.Models.XuLy;
 import com.mohinhphanlop.projectthree.Services.ThanhVienService;
 import com.mohinhphanlop.projectthree.Services.ThongTinSDService;
-import com.mohinhphanlop.projectthree.Services.XuLyService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -27,8 +23,6 @@ public class HoSoController {
     private ThanhVienService tvService;
     @Autowired
     private ThongTinSDService ttSDService;
-    @Autowired
-    private XuLyService xuLyService;
 
     @GetMapping("")
     public String get() {
@@ -91,16 +85,15 @@ public class HoSoController {
             }
         }
 
-        // Nếu có đủ điều kiện và mật khẩu chính xác thì cập nhật thông tin
-        if (check && tvService.getByUsernameOrEmail(username).getPassword().equals(password)) {
+        // Nếu có đủ điều kiện thì cập nhật thông tin
+        if (check) {
             if (!new_password.isEmpty())
                 password = new_password;
 
             tvService.UpdateThanhVien(username, email, password);
             session.setAttribute("pw", password);
             model.addAttribute("success", "Cập nhật thông tin thành công!");
-        } else
-            model.addAttribute("error", "Mật khẩu không chính xác!");
+        }
 
         // Hiển thị thông tin thành viên vừa cập nhật
         model.addAttribute("ThanhVien", tvService.getByUsernameOrEmail(username));
@@ -108,21 +101,10 @@ public class HoSoController {
     }
 
     @GetMapping("/trangthaivipham")
-    public String getTrangThaiViPham(HttpSession session, Model model, Pageable pageable) {
+    public String getTrangThaiViPham(HttpSession session, Model model) {
         String username = session.getAttribute("username").toString();
-        Page<XuLy> list = xuLyService.findAllByThanhVienId(pageable, username);
-
-        model.addAttribute("listXuLy", list);
-
-        int totalPages = list.getTotalPages();
-        if (totalPages > 0) {
-            int[] pageNumbers = new int[totalPages];
-            for (int i = 0; i < totalPages; i++) {
-                pageNumbers[i] = i + 1;
-            }
-            model.addAttribute("totalPages", totalPages);
-            model.addAttribute("pageNumbers", pageNumbers);
-        }
+        System.out.println(tvService.GetListXuLyFrom(username));
+        model.addAttribute("listXuLy", tvService.GetListXuLyFrom(username));
         return "user_violations";
     }
 

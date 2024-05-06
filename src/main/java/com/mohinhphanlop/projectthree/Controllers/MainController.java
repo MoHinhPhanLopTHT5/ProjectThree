@@ -5,12 +5,10 @@
 package com.mohinhphanlop.projectthree.Controllers;
 
 import com.mohinhphanlop.projectthree.Models.ThietBi;
-import com.mohinhphanlop.projectthree.Models.XuLy;
 import com.mohinhphanlop.projectthree.Services.EmailService;
 import com.mohinhphanlop.projectthree.Services.ThanhVienService;
 import com.mohinhphanlop.projectthree.Services.ThietBiService;
 import com.mohinhphanlop.projectthree.Services.ThongTinSDService;
-import com.mohinhphanlop.projectthree.Services.XuLyService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -25,6 +23,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -40,8 +39,6 @@ public class MainController {
     private ThietBiService tbService;
     @Autowired
     private ThongTinSDService ttSDService;
-    @Autowired
-    private XuLyService xuLyService;
 
     public static Integer TryParseInt(String txt) {
         try {
@@ -55,17 +52,7 @@ public class MainController {
     @GetMapping("/")
     public String homepage(Model model, @RequestParam("page") Optional<Integer> page,
             @RequestParam("tenTB") Optional<String> tenTB,
-            Pageable pageable, HttpSession session) {
-
-        ttSDService.RemoveAllTGDatchoOver1Hour();
-
-        XuLy xuLy = xuLyService.findByThanhVienId(TryParseInt(session.getAttribute("username").toString()));
-
-        if (xuLy != null) {
-            model.addAttribute("error", "Bạn hiện không thể đặt chỗ do đang trong thời gian xử lý vi phạm!");
-            model.addAttribute("xuLy", xuLy);
-            return "suspended";
-        }
+            Pageable pageable) {
 
         String TenTB = tenTB.orElse("");
         Page<ThietBi> list = tbService.GetList(TenTB, pageable);
@@ -114,8 +101,7 @@ public class MainController {
         String password = formData.getFirst("password");
 
         if (tvService.CheckLogin(requestedUsernameOrEmail, password)) {
-            Integer username = tvService.getByUsernameOrEmail(requestedUsernameOrEmail).getMaTV();
-            session.setAttribute("username", username);
+            session.setAttribute("username", requestedUsernameOrEmail);
             session.setAttribute("pw", password);
             return "redirect:/";
         } else
@@ -159,7 +145,7 @@ public class MainController {
             Model model, HttpServletRequest request, HttpSession session) {
 
         String code = formData.getFirst("code") == null ? "" : formData.getFirst("code");
-
+        System.out.println(code);
         if (!code.isEmpty()) { // Nếu có code
             String email_uuid = session.getAttribute("email_uuid") == null ? ""
                     : session.getAttribute("email_uuid").toString(); // Lấy email_uuid từ HttpSession
@@ -291,17 +277,8 @@ public class MainController {
     }
 
     @GetMapping("/datcho/{id}")
-    public String getDatCho(@PathVariable("id") ThietBi thietBi, Model model, HttpSession session) {
+    public String getDatCho(@PathVariable("id") ThietBi thietBi, Model model) {
         ttSDService.RemoveAllTGDatchoOver1Hour();
-
-        XuLy xuLy = xuLyService.findByThanhVienId(TryParseInt(session.getAttribute("username").toString()));
-
-        if (xuLy != null) {
-            model.addAttribute("error", "Bạn hiện không thể đặt chỗ do đang trong thời gian xử lý vi phạm!");
-            model.addAttribute("xuLy", xuLy);
-            return "suspended";
-        }
-
         model.addAttribute("thietBi", thietBi);
         return "reservation";
     }
@@ -312,7 +289,7 @@ public class MainController {
             Model model) {
 
         String date = formData.getFirst("date");
-        String MaTV = session.getAttribute("username").toString();
+        String MaTV = (String) session.getAttribute("username");
         boolean check = true;
         if (!ttSDService.CheckTrangThaiDatCho(thietBi.getMaTB().toString(), date)) {
             model.addAttribute("error",
@@ -336,6 +313,88 @@ public class MainController {
     public String page(Model model) {
         model.addAttribute("attribute", "value");
         return "view.name";
+    }
+    
+    @GetMapping("/quanlythietbi")
+    public String getQuanLyThietBi(Model model, @RequestParam("page") Optional<Integer> page,
+            @RequestParam("tenTB") Optional<String> tenTB,
+            Pageable pageable) {
+        String TenTB = tenTB.orElse("");
+        Page<ThietBi> list = tbService.GetList(TenTB, pageable);
+        model.addAttribute("data", list);
+        model.addAttribute("TenTB", TenTB);
+        return "admin/thietbi/index";
+    }
+     
+    @GetMapping("/quanlythietbi/update/{id}")
+    public String getUpdateThietBi(@PathVariable("id") Integer maTB, Model model) {
+        ThietBi thietBi = tbService.GetByID(maTB.toString());
+        model.addAttribute("thietBi", thietBi);
+        return "admin/thietbi/update";
+    }
+    
+    @PostMapping("/updateTB")
+    public String postUpdateThietBi(@ModelAttribute("thietBi") ThietBi thietBi) {
+        tbService.updateThietBi(thietBi);
+        return "redirect:/quanlythietbi";
+    }
+    
+    @GetMapping("/quanlythietbi/delete/{id}")
+    public String getDeleteThietBi(@PathVariable("id") Integer maTB, Model model) {
+        ThietBi thietBi = tbService.GetByID(maTB.toString());
+        model.addAttribute("thietBi", thietBi);
+        return "testing/delete";
+    }
+    
+    @PostMapping("/deleteTB")
+    public String postDeleteThietBi(@ModelAttribute("thietBi") ThietBi thietBi, Model model) {
+        tbService.deleteThietBi(thietBi);
+        return "redirect:/quanlythietbi";
+    }
+    
+    private int tongSoLuongTBThem;
+    @GetMapping("/quanlythietbi/soLuongTB") 
+    public String getSoLuongThietBi() {
+        return "admin/thietbi/soluongthietbi";
+    }
+    
+    @PostMapping("/requestSoLuongTB")
+    public String postSoLuongThietBi(@RequestParam("quantity") int quantity) {
+        tongSoLuongTBThem = quantity;
+        return "redirect:/quanlythietbi/create";
+    }
+    
+    @GetMapping("/quanlythietbi/create")
+    public String getCreateThietBi(Model model){
+        if (tongSoLuongTBThem > 0) {
+            ThietBi thietBi = new ThietBi();
+            model.addAttribute("thietBi", thietBi);
+            tongSoLuongTBThem--;
+            return "admin/thietbi/create";
+        } else
+            return "redirect:/quanlythietbi";
+    }
+    
+    @PostMapping("/createTB")
+    public String postCreateThietBi(@RequestBody MultiValueMap<String, String> formData, Model model) {
+        String requestedId = formData.getFirst("maTB");
+        String name = formData.getFirst("tenTB");
+        String discription = formData.getFirst("moTaTB");
+        
+        Integer id = TryParseInt(requestedId);
+        
+        model.addAttribute("maTB", requestedId);
+        model.addAttribute("tenTB", name);
+        model.addAttribute("moTaTB", discription);
+        
+        if (tbService.isExistMaThietBi(requestedId)) {
+            model.addAttribute("error", "Mã Thiết bị đã tồn tại không thể thêm!");
+            tongSoLuongTBThem += 1;
+            return "redirect:/quanlythietbi/create";
+        } 
+        else
+            tbService.CreateThietBi(id,name,discription);
+        return "redirect:/quanlythietbi/create";    
     }
 
 }
