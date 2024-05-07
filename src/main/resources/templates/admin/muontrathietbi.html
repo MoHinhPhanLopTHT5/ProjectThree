@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head th:insert="~{fragments/general.html :: head}"></head>
+    <body>
+        <header th:replace="~{fragments/general.html :: header_admin}"></header>
+        <main class="container">
+            <div class="row align-items-center py-2 bg-light mx-1">
+                <div class="col-8">
+                    <p class="fs-6 fw-bold mb-0">Mượn trả thiết bị</p>
+                </div>
+            </div>
+            <div class="row py-2 mx-1">
+                <div class="col-3 px-0">
+                    <form id="vaoKhuHocTap" method="POST" th:action="@{/quantri/trathietbi}">
+                        <div class="mb-0">
+                            <label for="maTB" class="form-label d-flex justify-content-around">Nhập mã thiết bị tại đây để trả</label>
+                            <input type="text" name="maTB" class="form-control" id="maTB" placeholder="Mã thiết bị">
+                        </div>
+                        <div th:if="${errorTB}" class="alert alert-danger my-3 py-1 d-flex justify-content-around" role="alert">
+                            <span th:text="${errorTB}"></span>
+                        </div>
+                    </form>
+                </div>
+                <div class="col px-0 px-2 ms-2 content-xuLy">
+
+                </div>
+            </div>
+        </main>
+        <footer th:insert="~{fragments/general.html :: footer}"></footer>
+        <div th:insert="~{fragments/general.html :: scripts}"></div>
+    </body>
+</html>

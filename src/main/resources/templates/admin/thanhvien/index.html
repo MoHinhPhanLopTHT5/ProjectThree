@@ -109,7 +109,9 @@
                             url: "/quantri/thanhvien/" + memberId + "/xoa",
                             success: function (response) {
                                 new Swal('Thành công', response, "success");
-                                window.location.reload();
+                                setTimeout(function () {
+                                    window.location.reload();
+                                }, 1000);
                             },
                             error: function (error) {
                                 new Swal('Xóa không thành công', error.responseText, "error");
@@ -169,7 +171,10 @@
                         year: year
                     },
                     success: function (response) {
-                        window.location.reload();
+                        new Swal('Thành công', response, "success");
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 1000);
                     },
                     error: function (error) {
                         Swal.fire('Không thành công', 'Xóa không thành công', 'error');
@@ -217,7 +222,10 @@
                     contentType: false,
                     processData: false,
                     success: function (response) {
-                        window.location.reload();
+                        new Swal('Thành công', response, "success");
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 1000);
                     },
                     error: function (error) {
                         Swal.fire('Lỗi!', 'Có lỗi xảy ra khi import file: ' + error.responseText, 'error');

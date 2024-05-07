@@ -61,8 +61,9 @@ public class ThongTinSDService {
             LocalDate localDateNow = now.toLocalDate();
 
             // Ngày đặt là quá khứ
-            if (localDate.isBefore(localDateNow))
+            if (localDate.isBefore(localDateNow)) {
                 return false;
+            }
 
             Iterable<ThongTinSD> listThongTinSD = tb.getDS_ThongTinSD();
             for (ThongTinSD ttsd : listThongTinSD) {
@@ -109,7 +110,7 @@ public class ThongTinSDService {
         }
         return null;
     }
-    
+
     public ThongTinSD CreateNewInfo(long maTV) {
         ThongTinSD ttsd = new ThongTinSD();
         Date dateNow = new Date();
@@ -122,5 +123,17 @@ public class ThongTinSDService {
         }
         ttsd.setThanhvien(tvService.FindThanhVienById(maTV).get());
         return ttSDRepository.save(ttsd);
+    }
+
+    public ThongTinSD TraThietBi(ThongTinSD tt) {
+        Date dateNow = new Date();
+        SimpleDateFormat sdfDateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String dateTimeNow = sdfDateTime.format(dateNow);
+        try {
+            tt.setTGTra(sdfDateTime.parse(dateTimeNow));
+        } catch (ParseException ex) {
+            Logger.getLogger(ThongTinSDService.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return ttSDRepository.save(tt);
     }
 }

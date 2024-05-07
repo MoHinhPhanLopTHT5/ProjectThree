@@ -1,6 +1,7 @@
 package com.mohinhphanlop.projectthree.Controllers.Admin;
 
 import com.mohinhphanlop.projectthree.Models.ThanhVien;
+import com.mohinhphanlop.projectthree.Models.ThietBi;
 import com.mohinhphanlop.projectthree.Models.ThongTinSD;
 import com.mohinhphanlop.projectthree.Models.XuLy;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.mohinhphanlop.projectthree.Services.ThanhVienService;
+import com.mohinhphanlop.projectthree.Services.ThietBiService;
 import com.mohinhphanlop.projectthree.Services.ThongTinSDService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -48,10 +50,9 @@ public class AdminController {
     @Autowired
     private ThongTinSDService ttsdService;
 
-    // Hàm post mẫu, xử lý thành công thì return template
-    // gửi thông báo thành công thì là success
-    // thất bại thì là error
-    // thông qua model.addAttribute()
+    @Autowired
+    private ThietBiService tbSerive;
+
     @PostMapping("/path")
     public String postTenHam(@RequestBody MultiValueMap<String, String> formData, Model model,
             HttpServletRequest request, HttpSession session) {
@@ -104,5 +105,40 @@ public class AdminController {
         } catch (NumberFormatException ex) {
             return ResponseEntity.status(500).body("Vui lòng nhập dữ liệu hợp lệ");
         }
+    }
+
+    @GetMapping("/muontrathietbi")
+    public String MuonTraThietBi() {
+        return "admin/muontrathietbi";
+    }
+
+    @PostMapping("/trathietbi")
+    public String TraThietBi(Model model, @RequestBody MultiValueMap<String, String> data) {
+        String maTB = data.getFirst("maTB");
+        ThietBi thietbi = tbSerive.FindByID(maTB);
+        String message;
+        if (thietbi == null) {
+            message = "Thiết bị không tồn tại!";
+            model.addAttribute("errorTB", message);
+        } else {
+            ThongTinSD ttsd = null;
+            for (ThongTinSD tt : thietbi.getDS_ThongTinSD()) {
+                if (tt.getTGMuon() != null && tt.getTGTra() == null) {
+                    ttsd = tt;
+                }
+            }
+            if (ttsd == null) {
+                message = "Thiết bị này dường như chưa được mượn!";
+                model.addAttribute("errorTB", message);
+            } else {
+                if (ttsdService.TraThietBi(ttsd) != null) {
+                    return "redirect:/quantri/muontrathietbi";
+                }
+                message = "Lỗi chưa thể trả thiết bị này!";
+                model.addAttribute("errorTB", message);
+            }
+        }
+
+        return "/admin/muontrathietbi";
     }
 }

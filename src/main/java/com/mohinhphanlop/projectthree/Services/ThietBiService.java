@@ -6,9 +6,11 @@ import org.springframework.stereotype.Service;
 import com.mohinhphanlop.projectthree.Models.ThietBi;
 import com.mohinhphanlop.projectthree.Repositories.ThietBiRepository;
 import com.mohinhphanlop.projectthree.Repositories.ThongTinSDRepository;
+import java.util.Optional;
 
 @Service
 public class ThietBiService {
+
     @Autowired
     private ThietBiRepository tbRepository;
     @Autowired
@@ -22,5 +24,15 @@ public class ThietBiService {
         // Lấy danh sách thiết bị
         Iterable<ThietBi> list = tbRepository.findAll();
         return list;
+    }
+
+    public ThietBi FindByID(String maTB) {
+        Optional<ThietBi> optionalThietBi = tbRepository.findById(Integer.parseInt(maTB));
+        if (optionalThietBi.isPresent()) {
+            return optionalThietBi.get();
+        } else {
+            // Xử lý trường hợp không tìm thấy giá trị
+            return null; // hoặc ném một exception phù hợp
+        }
     }
 }
