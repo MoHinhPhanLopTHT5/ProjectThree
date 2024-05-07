@@ -1,5 +1,6 @@
 package com.mohinhphanlop.projectthree.Services;
 
+import com.mohinhphanlop.projectthree.Models.ThanhVien;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -123,6 +124,54 @@ public class ThongTinSDService {
         }
         ttsd.setThanhvien(tvService.FindThanhVienById(maTV).get());
         return ttSDRepository.save(ttsd);
+    }
+
+    public ThongTinSD LayTTSD(ThanhVien tv, ThietBi tb) {
+        Iterable<ThongTinSD> ttsds = ttSDRepository.findAll();
+        for (ThongTinSD tt : ttsds) {
+            if (tt.getThanhvien().equals(tv) && tt.getThietbi().equals(tb) && tt.getTGDatcho() != null) {
+                return tt;
+            }
+        }
+        return null;
+    }
+
+    public ThongTinSD MuonThietBiDaDat(ThongTinSD ttsd) {
+        try {
+            Date dateNow = new Date();
+            SimpleDateFormat sdfDateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String dateTimeNow = sdfDateTime.format(dateNow);
+            try {
+                ttsd.setTGMuon(sdfDateTime.parse(dateTimeNow));
+                ttsd.setTGDatcho(null);
+            } catch (ParseException ex) {
+                Logger.getLogger(ThongTinSDService.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return ttSDRepository.save(ttsd);
+        } catch (Exception ex) {
+        }
+        return null;
+    }
+
+    public ThongTinSD MuonThietBi(ThanhVien tv, ThietBi tb) {
+        for(ThietBi tba : tbService.DSThietBiHopLe()) {
+            System.out.println(tba.getMaTB());
+        }
+        if (tbService.DSThietBiHopLe().contains(tb)) {
+            ThongTinSD ttsd = new ThongTinSD();
+            Date dateNow = new Date();
+            SimpleDateFormat sdfDateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String dateTimeNow = sdfDateTime.format(dateNow);
+            try {
+                ttsd.setTGMuon(sdfDateTime.parse(dateTimeNow));
+            } catch (ParseException ex) {
+                Logger.getLogger(ThongTinSDService.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            ttsd.setThanhvien(tv);
+            ttsd.setThietbi(tb);
+            return ttSDRepository.save(ttsd);
+        }
+        return null;
     }
 
     public ThongTinSD TraThietBi(ThongTinSD tt) {

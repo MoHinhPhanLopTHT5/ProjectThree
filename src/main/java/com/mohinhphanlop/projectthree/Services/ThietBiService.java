@@ -6,6 +6,11 @@ import org.springframework.stereotype.Service;
 import com.mohinhphanlop.projectthree.Models.ThietBi;
 import com.mohinhphanlop.projectthree.Repositories.ThietBiRepository;
 import com.mohinhphanlop.projectthree.Repositories.ThongTinSDRepository;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -31,8 +36,18 @@ public class ThietBiService {
         if (optionalThietBi.isPresent()) {
             return optionalThietBi.get();
         } else {
-            // Xử lý trường hợp không tìm thấy giá trị
-            return null; // hoặc ném một exception phù hợp
+            return null;
         }
+    }
+
+    public List<ThietBi> DSThietBiHopLe() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_MONTH, 1);
+        Date tomorrow = calendar.getTime();
+        LocalDateTime lcd = LocalDateTime.now();
+        lcd = lcd.plusHours(-1);
+        DateTimeFormatter dt = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        System.out.println(dt.format(lcd));
+        return tbRepository.DSThietBiHopLe(tomorrow, lcd);
     }
 }

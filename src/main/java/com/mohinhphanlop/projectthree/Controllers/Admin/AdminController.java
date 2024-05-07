@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -113,32 +114,73 @@ public class AdminController {
     }
 
     @PostMapping("/trathietbi")
-    public String TraThietBi(Model model, @RequestBody MultiValueMap<String, String> data) {
+    public ResponseEntity<?> TraThietBi(Model model, @RequestBody MultiValueMap<String, String> data) {
         String maTB = data.getFirst("maTB");
-        ThietBi thietbi = tbSerive.FindByID(maTB);
-        String message;
-        if (thietbi == null) {
-            message = "Thiết bị không tồn tại!";
-            model.addAttribute("errorTB", message);
-        } else {
-            ThongTinSD ttsd = null;
-            for (ThongTinSD tt : thietbi.getDS_ThongTinSD()) {
-                if (tt.getTGMuon() != null && tt.getTGTra() == null) {
-                    ttsd = tt;
-                }
-            }
-            if (ttsd == null) {
-                message = "Thiết bị này dường như chưa được mượn!";
-                model.addAttribute("errorTB", message);
+        try {
+            ThietBi thietbi = tbSerive.FindByID(maTB);
+            if (thietbi == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Thiết bị không tồn tại!");
             } else {
-                if (ttsdService.TraThietBi(ttsd) != null) {
-                    return "redirect:/quantri/muontrathietbi";
+                ThongTinSD ttsd = null;
+                for (ThongTinSD tt : thietbi.getDS_ThongTinSD()) {
+                    if (tt.getTGMuon() != null && tt.getTGTra() == null) {
+                        ttsd = tt;
+                    }
                 }
-                message = "Lỗi chưa thể trả thiết bị này!";
-                model.addAttribute("errorTB", message);
+                if (ttsd == null) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Thiết bị này dường như chưa được mượn!");
+                } else {
+                    if (ttsdService.TraThietBi(ttsd) != null) {
+                        return ResponseEntity.status(HttpStatus.OK).body("Trả thiết bị thành công!");
+                    }
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Lỗi chưa thể trả thiết bị này!");
+                }
             }
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Lỗi dữ liệu nhập");
         }
+    }
 
-        return "/admin/muontrathietbi";
+    @PostMapping("/muonthietbi")
+    public ResponseEntity<?> MuonThietBi(Model model, @RequestBody MultiValueMap<String, String> data) {
+        String maTV = data.getFirst("maTV");
+        String maTB = data.getFirst("maTB");
+        if (maTV == null || maTB == null || maTV.isEmpty() || maTB.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Lỗi dữ liệu nhập không phù hợp!");
+        }
+        try {
+            Optional<ThanhVien> tv = tvService.FindThanhVienById(Long.valueOf(maTV));
+            if (tv.isPresent()) {
+                ThietBi tb = tbSerive.FindByID(maTB);
+                if (tb != null) {
+                    List<XuLy> listXuLy = tv.get().getDS_XuLy();
+                    listXuLy = listXuLy
+                            .stream()
+                            .filter(item -> item.getTrangThaiXL() == 0)
+                            .collect(Collectors.toList());
+                    int tongXuLy = listXuLy.size();
+                    if (tongXuLy == 0) {
+                        ThongTinSD ttsd = ttsdService.MuonThietBi(tv.get(), tb);
+                        if (ttsd != null) {
+                            return ResponseEntity.ok("Mượn thiết bị thành công");
+                        } else {
+                            ttsd = ttsdService.LayTTSD(tv.get(), tb);
+                            if (ttsd != null && ttsdService.MuonThietBiDaDat(ttsd) != null) {
+                                return ResponseEntity.ok("Mượn thiết bị đã đặt thành công");
+                            }
+                            return ResponseEntity.status(502).body("Thiết bị này đã được mượn hoặc đã được đặt chỗ trước");
+                        }
+                    } else {
+                        return ResponseEntity.status(502).body(listXuLy);
+                    }
+                } else {
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Thiết bị không tồn tại");
+                }
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Thành viên không tồn tại");
+            }
+        } catch (NumberFormatException ex) {
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Lỗi dữ liệu nhập không phù hợp!");
     }
 }
