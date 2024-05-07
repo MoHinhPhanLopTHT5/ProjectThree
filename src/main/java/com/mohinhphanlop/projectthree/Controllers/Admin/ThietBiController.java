@@ -23,8 +23,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class ThietBiController {
     @Autowired
     private ThietBiService tbService;
-    
-    @GetMapping("/quantri/thietbi/index") // trang chủ kết hợp với tìm kiếm theo tên
+
+    @GetMapping("") // trang chủ kết hợp với tìm kiếm theo tên
     public String getQuanLyThietBi(Model model, @RequestParam("page") Optional<Integer> page,
             @RequestParam("tenTB") Optional<String> tenTB,
             Pageable pageable) {
@@ -34,75 +34,86 @@ public class ThietBiController {
         model.addAttribute("TenTB", TenTB);
         return "admin/thietbi/index";
     }
-    
-    @GetMapping("/quantri/thietbi/update/{id}") // cập nhật thiết bị
+
+    @GetMapping("/sua/{id}") // cập nhật thiết bị
     public String getUpdateThietBi(@PathVariable("id") Integer maTB, Model model) {
         ThietBi thietBi = tbService.GetByID(maTB.toString());
         model.addAttribute("thietBi", thietBi);
+        model.addAttribute("id", maTB);
         return "admin/thietbi/update";
     }
-    
-    @PostMapping("/updateTB")
-    public String postUpdateThietBi(@ModelAttribute("thietBi") ThietBi thietBi) {
+
+    @PostMapping("/sua/{id}")
+    public String postUpdateThietBi(Model model, @ModelAttribute("thietBi") ThietBi thietBi,
+            @PathVariable("id") Integer maTB) {
         tbService.updateThietBi(thietBi);
-        return "redirect:/quantri/thietbi/index";
+        model.addAttribute("success", "Cập nhật thiết bị thành công!");
+        return "admin/thietbi/update";
     }
-    
-    @GetMapping("/quantri/thietbi/delete/{id}") // xóa thiết bị
+
+    @GetMapping("/xoa/{id}") // xóa thiết bị
     public String getDeleteThietBi(@PathVariable("id") Integer maTB, Model model) {
         ThietBi thietBi = tbService.GetByID(maTB.toString());
         model.addAttribute("thietBi", thietBi);
         return "admin/thietbi/delete";
     }
-    
-    @PostMapping("/deleteTB")
-    public String postDeleteThietBi(@ModelAttribute("thietBi") ThietBi thietBi, Model model) {
-        tbService.deleteThietBi(thietBi);
-        return "redirect:/quantri/thietbi/index";
+
+    @PostMapping("/xoa/{id}")
+    public String postDeleteThietBi(@PathVariable("id") Integer maTB, @ModelAttribute("thietBi") ThietBi thietBi,
+            Model model) {
+        if (tbService.deleteThietBi(thietBi)) {
+            model.addAttribute("success", "Xoá thiết bị thành công");
+        } else {
+            model.addAttribute("error", "Xoá thiết bị thất bại");
+        }
+        return "admin/thietbi/delete";
     }
-    
+
     private int tongSoLuongTBThem;
-    @GetMapping("/quantri/thietbi/soLuongTB") // thêm thiết bị
+
+    @GetMapping("/soLuongTB") // thêm thiết bị
     public String getSoLuongThietBi() {
         return "admin/thietbi/soluongthietbi";
     }
-    
+
     @PostMapping("/requestSoLuongTB")
     public String postSoLuongThietBi(@RequestParam("quantity") int quantity) {
         tongSoLuongTBThem = quantity;
-        return "redirect:/quantri/thietbi/create";
+        return "admin/thietbi/create";
     }
-    
-    @GetMapping("/quantri/thietbi/create")
-    public String getCreateThietBi(Model model){
-        if (tongSoLuongTBThem > 0) {
-            ThietBi thietBi = new ThietBi();
-            model.addAttribute("thietBi", thietBi);
-            tongSoLuongTBThem--;
-            return "testing/create";
-        } else
-            return "redirect:/quantri/thietbi/index";
+
+    @GetMapping("/taomoi")
+    public String getCreateThietBi(Model model) {
+        // if (tongSoLuongTBThem > 0) {
+        // ThietBi thietBi = new ThietBi();
+        // model.addAttribute("thietBi", thietBi);
+        // tongSoLuongTBThem--;
+        // return "/quantri/thietbi/create";
+        // } else
+        // return "/quantri/thietbi/index";
+
+        return "admin/thietbi/create";
     }
-    
-    @PostMapping("/createTB")
+
+    @PostMapping("/taomoi")
     public String postCreateThietBi(@RequestBody MultiValueMap<String, String> formData, Model model) {
         String requestedId = formData.getFirst("maTB");
         String name = formData.getFirst("tenTB");
         String discription = formData.getFirst("moTaTB");
-        
+
         Integer id = TryParseInt(requestedId);
-        
+
         model.addAttribute("maTB", requestedId);
         model.addAttribute("tenTB", name);
         model.addAttribute("moTaTB", discription);
-        
+
         if (tbService.isExistMaThietBi(requestedId)) {
             model.addAttribute("error", "Mã Thiết bị đã tồn tại không thể thêm!");
             tongSoLuongTBThem += 1;
-            return "redirect:/quantri/thietbi/create";
-        } 
-        else
-            tbService.CreateThietBi(id,name,discription);
-        return "redirect:/quantri/thietbi/create";    
+        } else {
+            tbService.CreateThietBi(id, name, discription);
+            model.addAttribute("success", "Thêm thiết bị thành công!");
+        }
+        return "admin/thietbi/create";
     }
 }

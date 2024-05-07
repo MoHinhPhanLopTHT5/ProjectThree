@@ -5,12 +5,15 @@
     <header th:replace="~{fragments/general.html :: header}"></header>
     <main class="container">
         <div class="row">
-<!--            <div th:if="${error}" class="alert alert-danger mb-3" role="alert">
+           <div th:if="${error}" class="alert alert-danger mb-3" role="alert">
                 <span th:text="${error}"></span>
-            </div>-->
+            </div>
+           <div th:if="${success}" class="alert alert-success mb-3" role="alert">
+                <span th:text="${success}"></span>
+            </div>
             <div class="col-md-8 mx-auto rounded border p-4 m-4">
                 <h2 class="text-center mb-5" style="font-size: 36px">CẬP NHẬT THIẾT BỊ</h2>
-                <form method="post" action="/updateTB" th:object="${thietBi}">
+                <form method="post" th:action="@{/quantri/thietbi/sua/{MaTB}(MaTB=${id})}" th:object="${thietBi}">
                     <div class="row mb-3">
                         <label class="col-sm-4 col-form-label">Mã thiết bị</label>
                         <div class="col-sm-8">
@@ -34,7 +37,7 @@
                             <button type="submit" class="btn btn-success">Cập nhật</button>
                         </div>
                         <div class="col-sm-4 d-grid">
-                            <a class="btn btn-secondary" th:href="@{/quanlythietbi}">Thoát</a>
+                            <a class="btn btn-secondary" th:href="@{/quantri/thietbi}">Thoát</a>
                         </div>
                     </div>
                 </form>
