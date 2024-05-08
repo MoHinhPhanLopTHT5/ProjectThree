@@ -123,6 +123,7 @@ public class ThietBiController {
             model.addAttribute("success", "Thêm thiết bị thành công!");
         }
         return "admin/thietbi/create";
+<<<<<<< HEAD
     }
     
     @GetMapping("/excel")
@@ -169,5 +170,7 @@ public class ThietBiController {
         Iterable<ThietBi> list = tbService.GetList();
         tbService.deleteNhieuThietBi(deviceID, list);
         return "admin/thietbi/deletemultiple";
+=======
+>>>>>>> a6d6a41ddfd195f3dde5f73af8f78faa10aa153d
     }
 }
