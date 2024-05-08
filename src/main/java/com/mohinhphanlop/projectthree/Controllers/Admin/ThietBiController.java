@@ -150,11 +150,12 @@ public class ThietBiController {
                     tbService.CreateThietBi(id, name, discrip);
                 }
             }
+            model.addAttribute("success", "Import thành công!");
         } catch (Exception e) {
             model.addAttribute("error", "Import thất bại!" + e.getMessage());
         }
 
-        return "/admin/thietbi/index";
+        return "admin/thietbi/excel";
     }
 
     @GetMapping("/xoanhieu")

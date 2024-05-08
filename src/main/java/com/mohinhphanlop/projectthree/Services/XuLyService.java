@@ -87,7 +87,7 @@ public class XuLyService {
     }
 
     public Page<XuLy> findAll(Pageable pageable, String matv, String sotien, String hoten, String hinhthucxl,
-            String ngayxl) {
+            String ngayxl, Integer trangthaixl) {
 
         Integer soTien, maTV;
 
@@ -107,11 +107,11 @@ public class XuLyService {
 
         try {
             ngayXL = new SimpleDateFormat("yyyy-MM-dd").parse(ngayxl);
-            return xuLyRepository.findAll(pageable, maTV, soTien, hoten, hinhthucxl, ngayXL);
+            return xuLyRepository.findAll(pageable, maTV, soTien, hoten, hinhthucxl, ngayXL, trangthaixl);
         } catch (ParseException e) {
         }
 
-        return xuLyRepository.findAll(pageable, maTV, soTien, hoten, hinhthucxl);
+        return xuLyRepository.findAll(pageable, maTV, soTien, hoten, hinhthucxl, trangthaixl);
     }
 
     public XuLy findByThanhVienId(Integer id) {

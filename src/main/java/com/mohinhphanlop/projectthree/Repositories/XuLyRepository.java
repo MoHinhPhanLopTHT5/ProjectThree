@@ -34,16 +34,16 @@ public interface XuLyRepository
         // 1 - theo tên thành viên
         public Page<XuLy> findAll(@PageableDefault(value = 10, page = 0) Pageable pageable);
 
-        @Query("SELECT x FROM XuLy x INNER JOIN x.thanhvien tv WHERE (:matv = -1 or tv.maTV = :matv) and (:soTien = -1 or x.soTien >= :soTien) and tv.hoTen like %:hoten% and x.hinhThucXL like %:hinhthucxl%")
+        @Query("SELECT x FROM XuLy x INNER JOIN x.thanhvien tv WHERE (:matv = -1 or tv.maTV = :matv) and (:soTien = -1 or x.soTien >= :soTien) and tv.hoTen like %:hoten% and x.hinhThucXL like %:hinhthucxl% and (:trangthaixl = -1 or x.trangThaiXL = :trangthaixl)")
         public Page<XuLy> findAll(@PageableDefault(value = 10, page = 0) Pageable pageable, @Param("matv") Integer matv,
                         @Param("soTien") Integer soTien, @Param("hoten") String hoten,
-                        @Param("hinhthucxl") String hinhthucxl);
+                        @Param("hinhthucxl") String hinhthucxl, @Param("trangthaixl") Integer trangthaixl);
 
-        @Query("SELECT x FROM XuLy x INNER JOIN x.thanhvien tv WHERE (:matv = -1 or tv.maTV = :matv) and (:soTien = -1 or x.soTien >= :soTien) and tv.hoTen like %:hoten% and x.hinhThucXL like %:hinhthucxl% and date(x.ngayXL) = :ngayxl")
+        @Query("SELECT x FROM XuLy x INNER JOIN x.thanhvien tv WHERE (:matv = -1 or tv.maTV = :matv) and (:soTien = -1 or x.soTien >= :soTien) and tv.hoTen like %:hoten% and x.hinhThucXL like %:hinhthucxl% and date(x.ngayXL) = :ngayxl and (:trangthaixl = -1 or x.trangThaiXL = :trangthaixl)")
         public Page<XuLy> findAll(@PageableDefault(value = 10, page = 0) Pageable pageable, @Param("matv") Integer matv,
                         @Param("soTien") Integer soTien, @Param("hoten") String hoten,
                         @Param("hinhthucxl") String hinhthucxl,
-                        @Param("ngayxl") Date ngayxl);
+                        @Param("ngayxl") Date ngayxl, @Param("trangthaixl") Integer trangthaixl);
 
         @Query("SELECT x FROM XuLy x INNER JOIN x.thanhvien tv WHERE tv.maTV = :id and x.trangThaiXL = 1")
         public XuLy findByThanhVienId(@Param("id") Integer id);

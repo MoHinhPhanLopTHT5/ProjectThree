@@ -29,19 +29,23 @@ public class XuLyController {
     public String getIndex(Model model, Pageable pageable, @RequestParam("page") Optional<Integer> page,
             @RequestParam("matv") Optional<String> matv, @RequestParam("hoten") Optional<String> hoten,
             @RequestParam("hinhthucxl") Optional<String> hinhthucxl, @RequestParam("ngayxl") Optional<String> ngayxl,
-            @RequestParam("sotien") Optional<String> sotien) {
+            @RequestParam("sotien") Optional<String> sotien,
+            @RequestParam("trangthaixl") Optional<Integer> trangthaixl) {
 
         model.addAttribute("matv", matv.orElse(""));
         model.addAttribute("hoten", hoten.orElse(""));
         model.addAttribute("hinhthucxl", hinhthucxl.orElse(""));
         model.addAttribute("ngayxl", ngayxl.orElse(""));
         model.addAttribute("sotien", sotien.orElse(""));
+        model.addAttribute("trangthaixl", trangthaixl.orElse(-1));
+
+        System.out.println(trangthaixl.orElse(-2));
 
         Page<XuLy> list;
         if (!matv.orElse("").isEmpty() || !hoten.orElse("").isEmpty() || !hinhthucxl.orElse("").isEmpty()
-                || !ngayxl.orElse("").isEmpty() || !sotien.orElse("").isEmpty())
+                || !ngayxl.orElse("").isEmpty() || !sotien.orElse("").isEmpty() || trangthaixl.orElse(-2) != -2)
             list = xuLyService.findAll(pageable, matv.orElse(""), sotien.orElse(""), hoten.orElse(""),
-                    hinhthucxl.orElse(""), ngayxl.orElse(""));
+                    hinhthucxl.orElse(""), ngayxl.orElse(""), trangthaixl.orElse(-1));
         else
             list = xuLyService.findAll(pageable);
 
