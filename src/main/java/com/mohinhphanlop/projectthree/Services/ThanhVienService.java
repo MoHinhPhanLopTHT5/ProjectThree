@@ -153,7 +153,7 @@ public class ThanhVienService {
         return list;
     }
 
-    public List<XuLy> GetListXuLyFromMember(long id) {
+    public List<XuLy> GetListXuLyFromMember(Integer id) {
         return tvRepository.findById(id).get().getDS_XuLy();
     }
 
@@ -169,7 +169,8 @@ public class ThanhVienService {
             if (listTv.isEmpty()) {
                 id = 0;
             } else {
-                id = Integer.parseInt(listTv.get(0).getMaTV().toString().substring(listTv.get(0).getMaTV().toString().length() - 4));
+                id = Integer.parseInt(
+                        listTv.get(0).getMaTV().toString().substring(listTv.get(0).getMaTV().toString().length() - 4));
             }
             tv.setMaTV(tv.getMaTV() + id + 1);
             tvRepository.save(tv);
@@ -188,11 +189,11 @@ public class ThanhVienService {
         return false;
     }
 
-    public Optional<ThanhVien> FindThanhVienById(long id) {
+    public Optional<ThanhVien> FindThanhVienById(Integer id) {
         return tvRepository.findById(id);
     }
 
-    public String Delete(long id) {
+    public String Delete(Integer id) {
         String result = "Xóa không thành công thành viên này";
         try {
             // Check isProcess
@@ -228,7 +229,7 @@ public class ThanhVienService {
     public String DeleteMany(String lastSchoolYear) {
         String result = "Xóa không thành công";
         try {
-            List<Long> listMaHopLe = tvRepository.GetIDHopLe(lastSchoolYear);
+            List<Integer> listMaHopLe = tvRepository.GetIDHopLe(lastSchoolYear);
             tvRepository.deleteAllById(listMaHopLe);
             result = "Xóa thành công";
         } catch (Exception ex) {
@@ -239,14 +240,15 @@ public class ThanhVienService {
     private String checkValidTitleOfFile(Sheet sheet, String... titles) {
         for (int i = 0; i < titles.length; i++) {
             if (!sheet.getRow(0).getCell(i).getStringCellValue().equals(titles[i])) {
-                return "The title of the " + (i + 1) + " column is not in the correct format (Must be '" + titles[i] + "')";
+                return "The title of the " + (i + 1) + " column is not in the correct format (Must be '" + titles[i]
+                        + "')";
             }
         }
         return null;
     }
 
     private boolean checkLenghtNumeric(Cell cell, int maxLenght) {
-        return ((long) cell.getNumericCellValue() + "").length() <= maxLenght;
+        return Integer.parseInt(cell.getNumericCellValue() + "") <= maxLenght;
     }
 
     private boolean checkLenghtString(Cell cell, int maxLenght) {
@@ -264,7 +266,8 @@ public class ThanhVienService {
             Sheet sheet = workbook.getSheetAt(0);
             for (Row row : sheet) {
                 if (row.getRowNum() == 0) {
-                    String errors = checkValidTitleOfFile(sheet, "MaTV", "HoTen", "Khoa", "Nganh", "SDT", "Password", "Email");
+                    String errors = checkValidTitleOfFile(sheet, "MaTV", "HoTen", "Khoa", "Nganh", "SDT", "Password",
+                            "Email");
                     if (errors != null) {
                         message = errors;
                         break;
@@ -272,8 +275,7 @@ public class ThanhVienService {
                 } else {
                     boolean isValid = true;
                     ThanhVien tv = new ThanhVien();
-                    OUTER:
-                    for (int i = 0; i <= 6; i++) {
+                    OUTER: for (int i = 0; i <= 6; i++) {
                         switch (i) {
                             case 0 -> {
                                 Cell cell = row.getCell(i, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
@@ -285,7 +287,9 @@ public class ThanhVienService {
                                 } else {
                                     if (cell.getCellType() == CellType.NUMERIC) {
                                         if (checkLenghtNumeric(cell, 10)) {
-                                            if (!tvRepository.findById((long) cell.getNumericCellValue()).isPresent()) {
+                                            if (!tvRepository
+                                                    .findById(Integer.parseInt(cell.getNumericCellValue() + ""))
+                                                    .isPresent()) {
                                                 tv.setMaTV((int) cell.getNumericCellValue());
                                             } else {
                                                 error++;
@@ -411,7 +415,7 @@ public class ThanhVienService {
                                         }
                                         case NUMERIC -> {
                                             if (checkLenghtNumeric(cell, 10)) {
-                                                tv.setPassword((long) cell.getNumericCellValue() + "");
+                                                tv.setPassword(cell.getStringCellValue());
                                             } else {
                                                 error++;
                                                 isValid = false;

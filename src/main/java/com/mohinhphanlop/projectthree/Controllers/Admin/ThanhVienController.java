@@ -63,7 +63,7 @@ public class ThanhVienController {
     }
 
     @GetMapping("/{id}/xem")
-    public String XemThanhVien(Model model, @PathVariable("id") long id) {
+    public String XemThanhVien(Model model, @PathVariable("id") Integer id) {
         Optional<ThanhVien> thanhvien = tvService.FindThanhVienById(id);
         thanhvien.ifPresent(tv -> {
             model.addAttribute("member", thanhvien);
@@ -76,14 +76,15 @@ public class ThanhVienController {
     }
 
     @GetMapping("/{id}/sua")
-    public String SuaThanhVienForm(Model model, @PathVariable("id") long id) {
+    public String SuaThanhVienForm(Model model, @PathVariable("id") Integer id) {
         Optional<ThanhVien> thanhvien = tvService.FindThanhVienById(id);
         thanhvien.ifPresent(tv -> model.addAttribute("member", thanhvien));
         return "admin/thanhvien/thanhvien_sua";
     }
 
     @PostMapping("/capnhat")
-    public String SuaThanhVien(Model model, @ModelAttribute("member") ThanhVien thanhVien, @RequestBody MultiValueMap<String, String> formData) {
+    public String SuaThanhVien(Model model, @ModelAttribute("member") ThanhVien thanhVien,
+            @RequestBody MultiValueMap<String, String> formData) {
         Optional<ThanhVien> tv = tvService.FindThanhVienById(thanhVien.getMaTV());
         if (tv.isPresent()) {
             thanhVien.setPassword(tv.get().getPassword());
@@ -111,7 +112,7 @@ public class ThanhVienController {
     }
 
     @PostMapping("/{id}/xoa")
-    public ResponseEntity<String> deleteThanhVien(Model model, @PathVariable("id") long id) {
+    public ResponseEntity<String> deleteThanhVien(Model model, @PathVariable("id") Integer id) {
         String result = tvService.Delete(id);
         if (result.equals("Xóa thành viên này thành công!")) {
             return ResponseEntity.ok(result);

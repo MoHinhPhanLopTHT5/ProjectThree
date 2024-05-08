@@ -229,7 +229,7 @@ public class ThongTinSDService {
         return ttSDRepository.findBymaTTAndtGDatchoNotNull(maTT);
     }
 
-    public ThongTinSD CreateNewInfo(long maTV) {
+    public ThongTinSD CreateNewInfo(Integer maTV) {
         ThongTinSD ttsd = new ThongTinSD();
         Date dateNow = new Date();
         SimpleDateFormat sdfDateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

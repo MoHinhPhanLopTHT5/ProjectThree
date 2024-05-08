@@ -226,7 +226,7 @@ public class AdminController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Lỗi dữ liệu nhập không phù hợp!");
         }
         try {
-            Optional<ThanhVien> tv = tvService.FindThanhVienById(Long.valueOf(maTV));
+            Optional<ThanhVien> tv = tvService.FindThanhVienById(Integer.parseInt(maTV));
             if (tv.isPresent()) {
                 ThietBi tb = tbSerive.FindByID(maTB);
                 if (tb != null) {
