@@ -6,31 +6,17 @@
     <main class="container">
         <div class="row">
             <div class="col-md-8 mx-auto rounded border p-4 m-4">
-                <h2 class="text-center mb-5" style="font-size: 36px">THÊM THIẾT BỊ</h2>
-                <form method="post" th:action="@{/quantri/thietbi/taomoi}">
+                <h2 class="text-center mb-5" style="font-size: 36px">NHẬP EXCEL</h2>
+                <form method="post" th:action="@{/quantri/thietbi/excel}" enctype="multipart/form-data">
                     <div th:if="${error}" class="alert alert-danger mb-3" role="alert">
                         <span th:text="${error}"></span>
                     </div>
                     <div th:if="${success}" class="alert alert-success mb-3" role="alert">
                         <span th:text="${success}"></span>
                     </div>
+                    <p class="text-center">Chọn file Excel</p>
                     <div class="row mb-3">
-                        <label class="col-sm-4 col-form-label">Mã thiết bị</label>
-                        <div class="col-sm-8">
-                            <input class="form-control" type="text" id="maTB" name="maTB" required>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <label class="col-sm-4 col-form-label">Tên thiết bị</label>
-                        <div class="col-sm-8">
-                            <input class="form-control" type="text" id="tenTB" name="tenTB" required>
-                        </div>
-                    </div>               
-                    <div class="row mb-3">
-                        <label class="col-sm-4 col-form-label">Mô tả thiết bị</label>
-                        <div class="col-sm-8">
-                            <textarea class="form-control" placeholder="Nhập mô tả" id="moTaTB" name="moTaTB" required></textarea>
-                        </div>
+                            <input type="file" name="file" accept=".xls,.xlsx">
                     </div>
                     <div class="row">
                         <div class="offset-sm-4 col-sm-4 d-grid">

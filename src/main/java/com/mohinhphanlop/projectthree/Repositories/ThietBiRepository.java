@@ -4,6 +4,7 @@ import com.mohinhphanlop.projectthree.Models.ThietBi;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.web.PageableDefault;
@@ -20,4 +21,5 @@ public interface ThietBiRepository
         Page<ThietBi> findAll(@PageableDefault(value = 10, page = 0) Pageable pageable);
 
         Page<ThietBi> findAllByTenTB(String tenTB, @PageableDefault(value = 10, page = 0) Pageable pageable);
+        
 }

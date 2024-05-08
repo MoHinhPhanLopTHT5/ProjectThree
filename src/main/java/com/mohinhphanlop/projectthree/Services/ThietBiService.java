@@ -30,20 +30,20 @@ public class ThietBiService {
             list = tbRepository.findAllByTenTB(tenTB, pageable);
         return list;
     }
-    
-     public Iterable<ThietBi> GetList() {
+
+    public Iterable<ThietBi> GetList() {
         Iterable<ThietBi> list = tbRepository.findAll();
         return list;
     }
-    
+
     public ThietBi CreateThietBi(Integer maTB, String tenTB, String motaTB) {
         ThietBi tb = new ThietBi();
         tb.setMaTB(maTB);
         tb.setTenTB(tenTB);
-        tb.setMoTaTB(motaTB);  
+        tb.setMoTaTB(motaTB);
         return tbRepository.save(tb);
-    } 
-    
+    }
+
     public boolean isExistMaThietBi(String maTB) {
         Iterable<ThietBi> list = tbRepository.findAll();
         for (ThietBi tb : list)
@@ -51,7 +51,7 @@ public class ThietBiService {
                 return true;
         return false;
     }
-    
+
     public void updateThietBi(ThietBi thietBi) {
         ThietBi tb = tbRepository.findById(thietBi.getMaTB()).orElse(null);
         if (tb != null) {
@@ -62,12 +62,21 @@ public class ThietBiService {
             throw new EntityNotFoundException("Thiết bị không tồn tại");
         }
     }
-    
-    public void deleteThietBi(ThietBi thietBi) {
+
+    public boolean deleteThietBi(ThietBi thietBi) {
         ThietBi tb = tbRepository.findById(thietBi.getMaTB()).orElse(null);
         if (tb != null)
             tbRepository.deleteById(thietBi.getMaTB());
-        else 
-            throw new EntityNotFoundException("Thiết bị không tồn tại");
+        else
+            return false;
+        return true;
+    }
+    
+    public void deleteNhieuThietBi(String kyTu, Iterable<ThietBi> list) {
+        for (ThietBi tb : list) {
+            String thietbi = tb.getMaTB().toString().substring(0,1);
+            if (kyTu.startsWith(thietbi))
+                tbRepository.delete(tb);
+        }
     }
 }
