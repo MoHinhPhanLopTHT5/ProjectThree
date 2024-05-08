@@ -87,6 +87,18 @@
             <type>module</type>
             <version>3.2.4</version>
         </dependency>
+        <dependency>
+            <groupId>br.com.objectos.way</groupId>
+            <artifactId>xls-api</artifactId>
+            <version>0.6.0</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>ch.digitalfondue.basicxlsx</groupId>
+            <artifactId>basicxlsx</artifactId>
+            <version>0.7.1</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
 
     <build>
