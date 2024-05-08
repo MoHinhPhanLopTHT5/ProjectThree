@@ -30,15 +30,16 @@ public interface ThongTinSDRepository extends CrudRepository<ThongTinSD, Integer
         public Iterable<ThongTinSD> findAllByMaTB(@Param("maTB") Integer maTB);
 
         // danh sách thành viên vào
+        @Query("SELECT t FROM ThongTinSD t INNER JOIN t.thanhvien tv WHERE t.tGVao is not null")
         public Page<ThongTinSD> findAllBytGVaoNotNull(@PageableDefault(value = 10, page = 0) Pageable pageable);
         // lay thong tin SD kem thoi gian vao
 
-        @Query("SELECT t FROM ThongTinSD t INNER JOIN t.thanhvien tv WHERE (:matv = -1 or tv.maTV = :matv) AND tv.hoTen like %:hoten% AND tv.khoa like %:khoa% AND tv.nganh like %:nganh% and t.tGVao is not null")
+        @Query("SELECT t FROM ThongTinSD t INNER JOIN t.thanhvien tv WHERE (:matv = -1 or tv.maTV = :matv) AND (tv.hoTen like %:hoten% or tv.hoTen is null) AND (tv.khoa like %:khoa% or tv.khoa is null) AND (tv.nganh like %:nganh% or tv.nganh is null) and t.tGVao is not null")
         public Page<ThongTinSD> findAllBytGVaoNotNull(@PageableDefault(value = 10, page = 0) Pageable pageable,
                         @Param("matv") Integer matv, @Param("hoten") String hoten, @Param("khoa") String khoa,
                         @Param("nganh") String nganh);
 
-        @Query("SELECT t FROM ThongTinSD t INNER JOIN t.thanhvien tv WHERE (:matv = -1 or tv.maTV = :matv) AND tv.hoTen like %:hoten% AND tv.khoa like %:khoa% AND tv.nganh like %:nganh% and Date(t.tGVao) = %:tgvao%")
+        @Query("SELECT t FROM ThongTinSD t INNER JOIN t.thanhvien tv WHERE (:matv = -1 or tv.maTV = :matv) AND (tv.hoTen like %:hoten% or tv.hoTen is null) AND (tv.khoa like %:khoa% or tv.khoa is null) AND (tv.nganh like %:nganh% or tv.nganh is null) and Date(t.tGVao) = %:tgvao%")
         public Page<ThongTinSD> findAllBytGVaoNotNull(@PageableDefault(value = 10, page = 0) Pageable pageable,
                         @Param("matv") Integer matv, @Param("hoten") String hoten, @Param("khoa") String khoa,
                         @Param("nganh") String nganh, @Param("tgvao") Date tgvao);
@@ -73,12 +74,12 @@ public interface ThongTinSDRepository extends CrudRepository<ThongTinSD, Integer
 
         public Page<ThongTinSD> findAllBytGDatchoNotNull(@PageableDefault(value = 10, page = 0) Pageable pageable);
 
-        @Query("SELECT t FROM ThongTinSD t INNER JOIN t.thanhvien tv INNER JOIN t.thietbi tb WHERE (:maTB = -1 or tb.maTB = :maTB) and (:maTV = -1 or tv.maTV = :maTV) and tb.tenTB like %:tenTB% and tv.hoTen like %:hoTen% AND t.tGDatcho is not null")
+        @Query("SELECT t FROM ThongTinSD t INNER JOIN t.thanhvien tv INNER JOIN t.thietbi tb WHERE (:maTB = -1 or tb.maTB = :maTB) and (:maTV = -1 or tv.maTV = :maTV) and tb.tenTB like %:tenTB% and (tv.hoTen like %:hoTen% or tv.hoTen is null) AND t.tGDatcho is not null")
         public Page<ThongTinSD> findAllBytGDatchoNotNull(@PageableDefault(value = 10, page = 0) Pageable pageable,
                         @Param("maTB") Integer maTB, @Param("maTV") Integer maTV,
                         @Param("tenTB") String tenTB, @Param("hoTen") String hoTen);
 
-        @Query("SELECT t FROM ThongTinSD t INNER JOIN t.thanhvien tv INNER JOIN t.thietbi tb WHERE (:maTB = -1 or tb.maTB = :maTB) and (:maTV = -1 or tv.maTV = :maTV) and tb.tenTB like %:tenTB% and tv.hoTen like %:hoTen% AND Date(t.tGDatcho) = %:tgDatcho%")
+        @Query("SELECT t FROM ThongTinSD t INNER JOIN t.thanhvien tv INNER JOIN t.thietbi tb WHERE (:maTB = -1 or tb.maTB = :maTB) and (:maTV = -1 or tv.maTV = :maTV) and tb.tenTB like %:tenTB% and (tv.hoTen like %:hoTen% or tv.hoTen is null) AND Date(t.tGDatcho) = %:tgDatcho%")
         public Page<ThongTinSD> findAllBytGDatchoNotNull(@PageableDefault(value = 10, page = 0) Pageable pageable,
                         @Param("maTB") Integer maTB, @Param("maTV") Integer maTV,
                         @Param("tenTB") String tenTB, @Param("hoTen") String hoTen, @Param("tgDatcho") Date tgDatcho);
