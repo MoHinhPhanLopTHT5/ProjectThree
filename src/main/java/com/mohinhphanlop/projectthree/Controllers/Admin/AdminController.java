@@ -185,6 +185,15 @@ public class AdminController {
         }
     }
 
+    @GetMapping("chomuonthietbitudatcho/{id}")
+    public String getMethodName(@PathVariable("id") ThongTinSD ttsd) {
+        if (ttsd.getTGDatcho() != null) {
+            // record đặt chỗ
+            ttsdService.MuonThietBiDaDat(ttsd);
+        }
+        return "redirect:/quantri/thongke/thietbi";
+    }
+
     @GetMapping("/muontrathietbi")
     public String MuonTraThietBi() {
         return "admin/muontrathietbi";
