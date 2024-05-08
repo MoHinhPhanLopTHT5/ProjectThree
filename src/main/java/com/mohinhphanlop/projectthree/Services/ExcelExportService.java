@@ -1,6 +1,7 @@
 package com.mohinhphanlop.projectthree.Services;
 
 import java.io.IOException;
+import java.util.Date;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -170,6 +171,10 @@ public class ExcelExportService {
             cell.setCellValue((Integer) value);
         } else if (value instanceof Boolean) {
             cell.setCellValue((Boolean) value);
+        } else if (value instanceof Date) {
+            // Date to string
+            Date converted = (Date) value;
+            cell.setCellValue(converted.toString());
         } else {
             cell.setCellValue((String) value);
         }
