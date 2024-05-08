@@ -1,17 +1,59 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head th:insert="~{fragments/general.html :: head}"></head>
+    <head th:insert="~{fragments/general.html :: head}"></head>
   <body>
     <header th:replace="~{fragments/general.html :: header_admin}"></header>
     <main class="container">
+        <div class="row" style="font-size: 32px">
+            <h2>Quản lý thiết bị</h2>
+        </div>   
         <div class="row">
-            <div class="col">
-              <h2>Danh sách thiết bị</h2>
-              
+            <div class="col-sm-6 mr-2">
+                <form action="" method="get">
+                    <label for="search" class="form-label">Tìm kiếm</label>
+                    <input th:value="${TenTB}" name="tenTB" type="search" id="search" class="form-control" aria-describedby="searchHelpBlock">
+                    <div id="searchHelpBlock" class="form-text">
+                      Tìm thiết bị theo tên
+                    </div>
+                    <div class="mt-3 mb-3">
+                      <button type="submit" class="btn btn-primary">Tìm</button>
+                      <a class="btn btn-danger d-inline-block" th:href="@{/quantri/thietbi}">Làm mới</a>
+                      <a th:href="@{/quantri/thietbi/taomoi}" class="btn btn-primary">Thêm thiết bị</a>
+                      <a class="btn btn-danger mr-2" th:href="@{/quantri/thietbi/xoanhieu}">Xóa nhiều thiết bị</a>
+                      <a class="btn btn-success mr-2" th:href="@{/quantri/thietbi/excel}">Import</a>
+                    </div>
+                </form>
+                
             </div>
+        </div>
+        <div class="row mt-5">
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Mã thiết bị</th>
+                    <th scope="col">Tên thiết bị</th>
+                    <th scope="col">Mô tả thiết bị</th>
+                    <th scope="col">Hành động</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="row, state: ${data}">
+                        <th scope="row" th:utext="${state.count}"></th>
+                        <td th:utext="${row.MaTB}"></td>
+                        <td th:utext="${row.TenTB}"></td>
+                        <td th:utext="${row.MoTaTB}"></td>  
+                        <td>
+                            <a class="btn btn-success ml-2" th:href="@{/quantri/thietbi/sua/{id}(id=${row.MaTB})}">Cập nhật</a>
+                            <a class="btn btn-danger mr-2" th:href="@{/quantri/thietbi/xoa/{id}(id=${row.MaTB})}">Xóa thiết bị</a>  
+                        </td>
+                    </tr>
+                </tbody>
+            </table> 
         </div>
     </main>
     <footer th:insert="~{fragments/general.html :: footer}"></footer>
     <div th:insert="~{fragments/general.html :: scripts}"></div>
+    
   </body>
 </html>

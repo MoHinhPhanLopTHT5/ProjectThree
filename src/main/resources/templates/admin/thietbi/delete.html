@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:insert="~{fragments/general.html :: head}"></head>
+  <body>
+    <header th:replace="~{fragments/general.html :: header_admin}"></header>
+    <main class="container">
+        <div class="row">
+            <!-- Bootstrap alert -->
+            <div th:if="${error}" class="alert alert-danger mb-3" role="alert">
+                <span th:text="${error}"></span>
+            </div>
+            <div th:if="${success}" class="alert alert-success mb-3" role="alert">
+                <span th:text="${success}"></span>
+            </div>
+            <div class="col-md-8 mx-auto rounded border p-4 m-4">
+                <h2 class="text-center mb-5" style="font-size: 36px">XÓA THIẾT BỊ</h2>
+                <form th:unless="${success} or ${error}" method="post" th:action="@{/quantri/thietbi/xoa/{MaTB}(MaTB=${id})}" th:object="${thietBi}">
+                    <div class="row mb-3">
+                        <p class="text-center">Bạn chắc chắn muốn xóa thiết bị này?</p>
+                    </div>
+                    <div class="row mb-3">
+                        <label class="col-sm-4 col-form-label">Mã thiết bị</label>
+                        <div class="col-sm-8">
+                            <input class="form-control" readonly th:value="${thietBi.maTB}" id="maTB" name="maTB" style="cursor:not-allowed;">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label class="col-sm-4 col-form-label">Tên thiết bị</label>
+                        <div class="col-sm-8">
+                            <input class="form-control" readonly th:value="${thietBi.tenTB}" id="tenTB" name="tenTB" style="cursor:not-allowed;">
+                        </div>
+                    </div>               
+                    <div class="row mb-3">
+                        <label class="col-sm-4 col-form-label">Mô tả thiết bị</label>
+                        <div class="col-sm-8">
+                            <textarea class="form-control" th:text="${thietBi.moTaTB}" id="moTaTB" name="moTaTB" readonly style="cursor:not-allowed;"></textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="offset-sm-4 col-sm-4 d-grid">
+                            <button type="submit" class="btn btn-danger">Xóa</button>
+                        </div>
+                    </div>
+                </form>
+                <div class="row mt-3">
+                    <a class="btn btn-secondary" th:href="@{/quantri/thietbi}">Thoát</a>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer th:insert="~{fragments/general.html :: footer}"></footer>
+    <div th:insert="~{fragments/general.html :: scripts}"></div>
+  </body>
+</html>

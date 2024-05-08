@@ -26,6 +26,9 @@ public interface ThongTinSDRepository extends CrudRepository<ThongTinSD, Integer
 
         public Iterable<ThongTinSD> findAllBythietbiNotNull();
 
+        @Query("SELECT t FROM ThongTinSD t INNER JOIN t.thietbi tb WHERE tb.maTB = :maTB")
+        public Iterable<ThongTinSD> findAllByMaTB(@Param("maTB") Integer maTB);
+
         // danh sách thành viên vào
         public Page<ThongTinSD> findAllBytGVaoNotNull(@PageableDefault(value = 10, page = 0) Pageable pageable);
         // lay thong tin SD kem thoi gian vao
