@@ -19,8 +19,14 @@
                       <button type="submit" class="btn btn-primary">Tìm</button>
                       <a class="btn btn-danger d-inline-block" th:href="@{/quantri/thietbi}">Làm mới</a>
                       <a th:href="@{/quantri/thietbi/taomoi}" class="btn btn-primary">Thêm thiết bị</a>
+<<<<<<< HEAD
+                      <a class="btn btn-danger mr-2" th:href="@{/quantri/thietbi/xoanhieu}">Xóa nhiều thiết bị</a>
+                      <a class="btn btn-success mr-2" th:href="@{/quantri/thietbi/excel}">Import</a>
+=======
+>>>>>>> a6d6a41ddfd195f3dde5f73af8f78faa10aa153d
                     </div>
                 </form>
+                
             </div>
         </div>
         <div class="row mt-5">
@@ -42,8 +48,12 @@
                         <td th:utext="${row.MoTaTB}"></td>  
                         <td>
                             <a class="btn btn-success ml-2" th:href="@{/quantri/thietbi/sua/{id}(id=${row.MaTB})}">Cập nhật</a>
+<<<<<<< HEAD
+                            <a class="btn btn-danger mr-2" th:href="@{/quantri/thietbi/xoa/{id}(id=${row.MaTB})}">Xóa thiết bị</a>  
+=======
                             <a class="btn btn-danger mr-2" th:href="@{/quantri/thietbi/xoa/{id}(id=${row.MaTB})}">Xóa thiết bị</a>
                                  
+>>>>>>> a6d6a41ddfd195f3dde5f73af8f78faa10aa153d
                         </td>
                     </tr>
                 </tbody>
