@@ -240,6 +240,8 @@ public class ThongTinSDService {
             Logger.getLogger(ThongTinSDService.class.getName()).log(Level.SEVERE, null, ex);
         }
         ttsd.setThanhvien(tvService.FindThanhVienById(maTV).get());
+        ttsd.setMaTT(findLastID() + 1);
+
         return ttSDRepository.save(ttsd);
     }
 

@@ -13,7 +13,6 @@ import org.hibernate.annotations.OnDeleteAction;
 public class ThongTinSD {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer maTT;
 
     @Column(nullable = true, name = "tgvao")
