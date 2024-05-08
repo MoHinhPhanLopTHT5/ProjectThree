@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.mohinhphanlop.projectthree.Models.ThanhVien;
+import com.mohinhphanlop.projectthree.Models.XuLy;
 import com.mohinhphanlop.projectthree.Services.ThanhVienService;
 import com.mohinhphanlop.projectthree.Services.ThongTinSDService;
 
@@ -57,6 +59,7 @@ public class HoSoController {
 
         // Lấy dữ liệu từ form
         String email = formData.getFirst("email");
+        String sdt = formData.getFirst("sdt");
         String password = formData.getFirst("password");
         String new_password = formData.getFirst("new_password");
 
@@ -66,12 +69,22 @@ public class HoSoController {
         // Kiểm tra đủ điều kiện để cập nhật
         boolean check = true;
 
+        ThanhVien tv = tvService.getByUsernameOrEmail(username);
         // Trường hợp đổi email
-        if ((tvService.CheckNotTheSameEmail(tvService.getByUsernameOrEmail(username), email))) {
+        if ((tvService.CheckNotTheSameEmail(tv, email))) {
             // Trường hợp email nhập vào là email mới
             if (tvService.CheckEmailExists(email)) {
                 // email đã tồn tại
                 model.addAttribute("error", "Email đã được sử dụng bới một tài khoản khác!");
+                check = false;
+            }
+        }
+        // Trường hợp đổi sdt
+        if ((tvService.CheckNotTheSameSDT(tv, sdt))) {
+            // Trường hợp email nhập vào là sdt mới
+            if (tvService.CheckSDTExists(sdt)) {
+                // sdt đã tồn tại
+                model.addAttribute("error", "SĐT đã được sử dụng bới một tài khoản khác!");
                 check = false;
             }
         }
@@ -90,10 +103,11 @@ public class HoSoController {
             if (!new_password.isEmpty())
                 password = new_password;
 
-            tvService.UpdateThanhVien(username, email, password);
+            tvService.UpdateThanhVien(username, email, password, sdt);
             session.setAttribute("pw", password);
             model.addAttribute("success", "Cập nhật thông tin thành công!");
-        }
+        } else if (model.getAttribute("error") == null)
+            model.addAttribute("error", "Mật khẩu không chính xác!");
 
         // Hiển thị thông tin thành viên vừa cập nhật
         model.addAttribute("ThanhVien", tvService.getByUsernameOrEmail(username));

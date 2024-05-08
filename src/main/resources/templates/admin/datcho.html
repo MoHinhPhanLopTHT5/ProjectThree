@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:insert="~{fragments/general.html :: head}"></head>
+  <body>
+    <header th:replace="~{fragments/general.html :: header_admin}"></header>
+    <main class="container">
+      <div class="row">
+        <div class="col">
+          <h2>Quản lý đặt chỗ</h2>
+          <!-- Bootstrap form with 2 fields -->
+          <form action="" method="get">
+            <div class="row">
+              <div class="col">
+                <label for="matb" class="form-label">Mã thiết bị</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="matb"
+                  name="matb"
+                  th:value="${matb}"
+                />
+                <label for="tentb" class="form-label">Tên thiết bị</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="tentb"
+                  name="tentb"
+                  th:value="${tentb}"
+                />
+              </div>
+              <div class="col">
+                <label for="matv" class="form-label">Mã thành viên</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="matv"
+                  name="matv"
+                  th:value="${matv}"
+                />
+                <label for="hoten" class="form-label">Tên thành viên</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="hoten"
+                  name="hoten"
+                  th:value="${hoten}"
+                />
+              </div>
+              <div class="col">
+                <label for="tgdatcho" class="form-label">Thời gian đặt chỗ</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  id="tgdatcho"
+                  name="tgdatcho"
+                  th:value="${tgdatcho}"
+                />
+              </div>
+            </div>
+            <button type="submit" class="btn btn-success mt-3">Tìm</button>
+          </form>
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Mã thiết bị</th>
+                <th scope="col">Tên thiết bị</th>
+                <th scope="col">Mã thành viên</th>
+                <th scope="col">Tên thành viên</th>
+                <th scope="col">Thời gian đặt chỗ</th>
+                <th scope="col">Hành động</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="row, state: ${data}">
+                <th scope="row" th:utext="${state.count}"></th>
+                <td th:utext="${row.thietbi.MaTB}"></td>
+                <td th:utext="${row.thietbi.TenTB}"></td>
+                <td th:utext="${row.thanhvien.MaTV}"></td>
+                <td th:utext="${row.thanhvien.HoTen}"></td>
+                <td th:utext="${row.TGDatcho}"></td>
+                <td>
+                  <a
+                    th:href="@{'/quantri/datcho/'+${row.MaTT}+'/xoa'}"
+                    class="btn btn-danger"
+                    >Xoá</a
+                  >
+                  <button class="btn btn-success btnChoMuon" th:attr="data-id=${row.MaTT}">Cho mượn</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <script>
+            let btnChoMuons = document.querySelectorAll(".btnChoMuon");
+            for (let i = 0; i < btnChoMuons.length; i++) {
+              const element = btnChoMuons[i];
+              element.addEventListener('click', () => {
+                Swal.fire({
+                  title: "Bạn có muốn cho mượn thiết bị này chứ?",
+                  showDenyButton: true,
+                  confirmButtonText: "Cho phép",
+                  denyButtonText: `Huỷ`
+                }).then((result) => {
+                  /* Read more about isConfirmed, isDenied below */
+                  if (result.isConfirmed) {
+                    const id = element.dataset.id;
+                    fetch("/quantri/chomuonthietbitudatcho/"+id);
+                    // Thông báo swal thành công
+                    Swal.fire('Thành công', "Cho mượn thiết bị thành công!", 'success');
+                    setTimeout(() => {
+                      window.location.reload()
+                    }, 2000);
+                  } else if (result.isDenied) {
+                    // Huỷ
+                  }
+                });
+              })
+            }
+          </script>
+          <nav th:if="${totalPages > 0}" aria-label="Page navigation">
+            <ul class="pagination">
+              <li class="page-item" th:if="${data.hasPrevious()}">
+                <a class="page-link" href="#">Previous</a>
+              </li>
+              <div th:each="pageNumber : ${pageNumbers}">
+                <li class="page-item">
+                  <a
+                    class="page-link"
+                    th:href="@{/quantri/thongke(page=${pageNumber-1},matb=${matb},tentb=${tentb},matv=${matv},hoten=${hoten},tgdatcho=${tgdatcho})}"
+                    th:text="${pageNumber}"
+                  ></a>
+                </li>
+              </div>
+              <li class="page-item" th:if="${data.hasNext()}">
+                <a class="page-link" href="#">Next</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </main>
+    <footer th:insert="~{fragments/general.html :: footer}"></footer>
+    <div th:insert="~{fragments/general.html :: scripts}"></div>
+  </body>
+</html>

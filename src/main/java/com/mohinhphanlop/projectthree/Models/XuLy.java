@@ -1,17 +1,12 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.mohinhphanlop.projectthree.Models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.util.Date;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
-/**
- *
- * @author Admin
- */
 @Data
 @Entity(name = "XuLy")
 @Table(name = "xuly")
@@ -34,5 +29,7 @@ public class XuLy {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "MaTV", nullable = false)
+    @JsonBackReference
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private ThanhVien thanhvien;
 }

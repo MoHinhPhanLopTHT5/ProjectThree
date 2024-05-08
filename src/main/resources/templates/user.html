@@ -25,15 +25,19 @@
                     </div>
                     <div class="mb-3">
                         <label for="email" class="form-label">Email</label>
-                        <input th:value="${ThanhVien.Email} ?: ''" type="email" class="form-control" id="email" name="email" required>
+                        <input maxlength="25" th:value="${ThanhVien.Email} ?: ''" type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="sDT" class="form-label">SĐT</label>
+                        <input name="sdt" type="tel" th:value="${ThanhVien.SDT}" class="form-control" id="sDT" placeholder="Số điện thoại" pattern="(03|09|08|07|05)\d{8}" title="Vui lòng nhập số điện thoại di động theo đúng định dạng" required>
                     </div>
                     <div class="mb-3">
                         <label for="new_password" class="form-label">Mật khẩu mới (bỏ trống nếu không muốn thay đổi)</label>
-                        <input type="password" class="form-control" id="new_password" name="new_password">
+                        <input minlength="6" maxlength="10" type="password" class="form-control" id="new_password" name="new_password">
                     </div>
                     <div class="mb-3">
                         <label for="password" class="form-label">Mật khẩu hiện tại</label>
-                        <input type="password" class="form-control" id="password" name="password" required>
+                        <input minlength="6" maxlength="10" type="password" class="form-control" id="password" name="password" required>
                     </div>
                     <button type="submit" class="btn btn-success">Cập nhật thông tin</button>
                 </form>

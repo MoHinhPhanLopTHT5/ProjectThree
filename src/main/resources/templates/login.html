@@ -13,12 +13,12 @@
                         <span th:text="${error}"></span>
                     </div>
                     <div class="mb-3">
-                        <label for="username" class="form-label">Tên đăng nhập</label>
-                        <input th:value="${usernameOrEmail} ?: ''" type="text" class="form-control" id="username" name="usernameOrEmail" required>
+                        <label for="username" class="form-label">Tên đăng nhập (Email hoặc mã thành viên)</label>
+                        <input maxlength="25" th:value="${usernameOrEmail} ?: ''" type="text" class="form-control" id="username" name="usernameOrEmail" required>
                     </div>
                     <div class="mb-3">
                         <label for="password" class="form-label">Mật khẩu</label> <span>(<a th:href="@{/quenmatkhau}">Quên mật khẩu</a>)</span>
-                        <input type="password" class="form-control" id="password" name="password" required>
+                        <input minlength="6" maxlength="10" type="password" class="form-control" id="password" name="password" required>
                     </div>
                     <button type="submit" class="btn btn-success">Đăng nhập</button>
                     <span>Chưa đăng ký thành viên? <a class="btn btn-primary" th:href="@{/dangky}">Đăng ký</a></span>

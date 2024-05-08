@@ -44,23 +44,22 @@ public class MainFilter implements Filter {
         String username = session.getAttribute("username") == null ? "" : session.getAttribute("username").toString();
         String pw = session.getAttribute("pw") == null ? "" : session.getAttribute("pw").toString();
 
-        boolean onLoginRegisterPages = requestedUri.contains("/dangnhap")
+        boolean onSpecialPages = requestedUri.contains("/dangnhap")
                 || requestedUri.contains("/dangky") || requestedUri.contains("/quenmatkhau")
                 || requestedUri.contains("/quantri");
 
         if ((username.isEmpty()
-                || pw.isEmpty()) && !onLoginRegisterPages) {
+                || pw.isEmpty()) && !onSpecialPages) {
             // Chưa đăng nhập và đang ở trên trang nào đấy
             res.sendRedirect("/dangnhap");
-        } else if (!tvService.CheckLogin(username, pw) && !onLoginRegisterPages) {
+        } else if (!tvService.CheckLogin(username, pw) && !onSpecialPages) {
             // Đăng nhập thất bại
             res.sendRedirect("/dangnhap");
-        } else if (onLoginRegisterPages && tvService.CheckLogin(username, pw)) {
+        } else if (onSpecialPages && tvService.CheckLogin(username, pw)) {
             // Đã đăng nhập và đang ở trên trang đăng nhập/đăng ký
             res.sendRedirect("/");
         }
 
         filterChain.doFilter(req, res);
     }
-
 }

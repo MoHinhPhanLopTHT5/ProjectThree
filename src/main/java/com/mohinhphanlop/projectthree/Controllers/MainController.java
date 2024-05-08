@@ -4,7 +4,11 @@
  */
 package com.mohinhphanlop.projectthree.Controllers;
 
+import com.mohinhphanlop.projectthree.Models.ThanhVien;
 import com.mohinhphanlop.projectthree.Models.ThietBi;
+import com.mohinhphanlop.projectthree.Models.ThongTinSD;
+import com.mohinhphanlop.projectthree.Models.XuLy;
+import com.mohinhphanlop.projectthree.Services.DateService;
 import com.mohinhphanlop.projectthree.Services.EmailService;
 import com.mohinhphanlop.projectthree.Services.ThanhVienService;
 import com.mohinhphanlop.projectthree.Services.ThietBiService;
@@ -13,6 +17,8 @@ import com.mohinhphanlop.projectthree.Services.ThongTinSDService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -87,6 +93,7 @@ public class MainController {
     public String getDangXuat(HttpSession session) {
         session.removeAttribute("username");
         session.removeAttribute("pw");
+        session.invalidate();
         return "redirect:/dangnhap";
     }
 
@@ -159,8 +166,9 @@ public class MainController {
                             .toString(); // Lấy tên đăng
                                          // nhập từ
                                          // HttpSession
+                    ThanhVien tv = tvService.getByUsernameOrEmail(requestedUsername);
                     if (tvService.UpdateThanhVien(requestedUsername, // Thực hiện cập nhật mật khẩu
-                            tvService.getByUsernameOrEmail(requestedUsername).getEmail(), new_password) != null) {
+                            tv.getEmail(), new_password, tv.getSDT()) != null) {
                         model.addAttribute("success", "Thay đổi mật khẩu thành công!");
                         session.removeAttribute("email_uuid");
                         session.removeAttribute("requested_username");
@@ -210,12 +218,14 @@ public class MainController {
         String requestedUsername = formData.getFirst("username");
         String email = formData.getFirst("email");
         String fullname = formData.getFirst("fullname");
+        String sdt = formData.getFirst("sdt");
 
         Integer maTV = TryParseInt(requestedUsername);
 
         model.addAttribute("username", requestedUsername);
         model.addAttribute("email", email);
         model.addAttribute("fullname", fullname);
+        model.addAttribute("sdt", sdt);
 
         String password = formData.getFirst("password");
         String confirm_password = formData.getFirst("confirm_password");
@@ -225,6 +235,12 @@ public class MainController {
         if (tvService.CheckEmailExists(email)) {
             // Email đã được sử dụng
             model.addAttribute("error", "Email đã tồn tại trong cơ sở dữ liệu, hãy sử dụng email khác.");
+            check = false;
+        }
+
+        if (tvService.CheckSDTExists(sdt)) {
+            // SDT đã được sử dụng
+            model.addAttribute("error", "SĐT đã tồn tại trong cơ sở dữ liệu, hãy sử dụng SĐT khác.");
             check = false;
         }
 
@@ -243,7 +259,7 @@ public class MainController {
             }
 
             if (check) {
-                if (tvService.UpdateThanhVien(requestedUsername, email, password) != null) {
+                if (tvService.UpdateThanhVien(requestedUsername, email, password, sdt) != null) {
                     model.addAttribute("success", "Tạo tài khoản thành công, vui lòng đăng nhập!");
                 } else
                     model.addAttribute("error", "Lưu thông tin thất bại.");
@@ -259,7 +275,7 @@ public class MainController {
 
             if (check) {
                 // Thoả mọi điều kiện đặt ra
-                if (tvService.CreateThanhVien(requestedUsername, email, password, fullname) != null) {
+                if (tvService.CreateThanhVien(requestedUsername, email, sdt, password, fullname) != null) {
                     model.addAttribute("success", "Tạo tài khoản thành công, vui lòng đăng nhập!");
                 } else
                     model.addAttribute("error", "Lưu thông tin thất bại.");
@@ -279,8 +295,61 @@ public class MainController {
     @GetMapping("/datcho/{id}")
     public String getDatCho(@PathVariable("id") ThietBi thietBi, Model model) {
         ttSDService.RemoveAllTGDatchoOver1Hour();
+
+        XuLy xuLy = xuLyService.findByThanhVienId(TryParseInt(session.getAttribute("username").toString()));
+
+        if (xuLy != null) {
+            model.addAttribute("error", "Bạn hiện không thể đặt chỗ do đang trong thời gian xử lý vi phạm!");
+            model.addAttribute("xuLy", xuLy);
+            return "suspended";
+        }
+
+        Iterable<ThongTinSD> listTTSD = ttSDService.findByMaTBAndtGDatchoNotNull(thietBi.getMaTB());
+
+        // Chỉ thêm vào nếu ngày đặt chỗ là hôm nay
+        for (ThongTinSD ttsd : listTTSD) {
+            LocalDate localDateNow = DateService.dateTypeToLocalDateType(new Date());
+            LocalDate localDatetGDatcho = DateService.dateTypeToLocalDateType(ttsd.getTGDatcho());
+            if (localDateNow.equals(localDatetGDatcho)) {
+                model.addAttribute("ttsd", ttsd);
+                model.addAttribute("tgDatChoHomNay", true);
+                break;
+            }
+        }
+
+        model.addAttribute("username", session.getAttribute("username").toString());
         model.addAttribute("thietBi", thietBi);
         return "reservation";
+    }
+
+    @GetMapping("/datcho/{id}/xoa")
+    public String getXoaDatCho(Model model, HttpSession session, @PathVariable("id") Integer id) {
+
+        ThongTinSD ttsd = ttSDService.findBymaTTAndtGDatchoNotNull(id);
+        if (ttsd != null) {
+            if (ttsd.getThanhvien().getMaTV().toString().equals(session.getAttribute("username").toString()))
+                model.addAttribute("MaTT", ttsd.getMaTT());
+            else
+                model.addAttribute("error", "Bạn không có quyền xoá thông tin này!");
+        } else
+            model.addAttribute("error", "Thông tin sử dụng này không phải là thông tin đặt chỗ!");
+        return "cancel_reservation";
+    }
+
+    @PostMapping("/datcho/{id}/xoa")
+    public String postXoaDatCho(Model model, HttpSession session, @PathVariable("id") Integer id) {
+        ThongTinSD ttsd = ttSDService.findBymaTTAndtGDatchoNotNull(id);
+        if (ttsd != null) {
+            if (ttsd.getThanhvien().getMaTV().toString().equals(session.getAttribute("username").toString())) {
+                if (ttSDService.deleteThongTinSD(ttsd.getMaTT()))
+                    model.addAttribute("success", "Xóa thành công!");
+                else
+                    model.addAttribute("error", "Xoá thất bại!");
+            } else
+                model.addAttribute("error", "Bạn không có quyền xoá thông tin này!");
+        } else
+            model.addAttribute("error", "Thông tin sử dụng này không phải là thông tin đặt chỗ!");
+        return "cancel_reservation";
     }
 
     @PostMapping("/datcho/{id}")
@@ -291,9 +360,12 @@ public class MainController {
         String date = formData.getFirst("date");
         String MaTV = (String) session.getAttribute("username");
         boolean check = true;
-        if (!ttSDService.CheckTrangThaiDatCho(thietBi.getMaTB().toString(), date)) {
+        if (ttSDService.CheckTrangThaiDatCho(thietBi.getMaTB().toString(), date) == 0) {
             model.addAttribute("error",
                     "Ngày đã nhập là ngày trong quá khứ hoặc thiết bị này đã được đặt chỗ vào ngày bạn nhập, hãy chọn một ngày khác!");
+            check = false;
+        } else if (ttSDService.CheckTrangThaiDatCho(thietBi.getMaTB().toString(), date) == -1) {
+            model.addAttribute("error", "Thiết bị đang được mượn, không thể đặt chỗ!");
             check = false;
         }
 

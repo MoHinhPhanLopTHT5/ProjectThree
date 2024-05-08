@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Thêm thành viên</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.all.min.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.min.css" rel="stylesheet">
+        <link th:href="@{/assets/css/member_add.css}" rel="stylesheet">
+    </head>
+    <body style="background:rgba(249,250,255,0.1)">
+        <div class="wrapper">
+            <h2>Thêm thành viên mới</h2>
+            <form th:action="@{/quantri/thanhvien/them}" th:object="${member}" method="POST">
+                <div class="mb-0">
+                    <label for="maTV" class="form-label">Mã thành viên</label>
+                    <input type="text" class="form-control" id="maTV" th:field="*{maTV}" placeholder="Mã thành viên" readonly>
+                </div>
+                <div class="mb-0">
+                    <label for="hoTen" class="form-label">Họ và tên <span style="color: red">(*)</span></label>
+                    <input type="text" class="form-control" id="hoTen" th:field="*{hoTen}" placeholder="Họ và tên" required>
+                </div>
+                <div class="row">
+                    <div class="col-6 mb-0">
+                        <label for="khoa" class="form-label">Khoa <span style="color: red">(*)</span></label>
+                        <select class="form-select" id="khoa" th:field="*{khoa}"></select>
+                    </div>
+                    <div class="col-6 mb-0">
+                        <label for="nganh" class="form-label">Ngành <span style="color: red">(*)</span></label>
+                        <select class="form-select" id="nganh" th:field="*{nganh}"></select>
+                    </div>
+                </div>
+
+                <div class="mb-0">
+                    <label for="sDT" class="form-label">Số điện thoại <span style="color: red">(*)</span></label>
+                    <input type="tel" class="form-control" id="sDT" th:field="*{sDT}" placeholder="Số điện thoại" pattern="(03|09|08|07|05)\d{8}" title="Vui lòng nhập số điện thoại di động theo đúng định dạng" required>
+                </div>
+                <div class="mb-0">
+                    <label for="email" class="form-label">Email <span style="color: red">(*)</span></label>
+                    <input type="email" class="form-control" id="email" th:field="*{email}" title="Email không được quá 25 ký tự" pattern=".{1,25}" placeholder="Email" required>
+                </div>
+                <div class="btn-bottom mt-2">
+                    <a th:href="@{/quantri/thanhvien}"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Trở về</button></a>
+                    <button type="submit" class="btn btn-primary ms-2">Thêm mới</button>
+                </div>
+            </form>
+            <div th:if="${error}" class="alert alert-danger my-3 py-1 d-flex justify-content-around" role="alert">
+                <span th:text="${error}"></span>
+            </div>
+        </div>
+    </body>
+    <script>
+        const listKhoa = [
+            "CNTT", "Điện Tử - Viễn Thông", "Môi Trường", "GD Mầm Non", "GD Tiểu Học", "GD Chính Trị",
+            "Luật", "Ngoại Ngữ", "Nghệ Thuật", "QTKD", "QLGD", "Toán UD", "TC- KT", "SP KHTN", "TT - VP",
+            "VH - DL", "SP KHXH"
+        ];
+        var selectKhoa = document.getElementById("khoa");
+        listKhoa.forEach(function (option) {
+            var optionElement = document.createElement("option");
+            optionElement.text = option;
+            optionElement.value = option;
+            selectKhoa.appendChild(optionElement);
+        });
+
+        var selectNganh = document.getElementById("nganh");
+        var listNganh = [];
+        console.log(selectNganh);
+        
+        function updateSelectNganh() {
+            // Xóa các tùy chọn cũ
+            selectNganh.innerHTML = "";
+
+            switch (selectKhoa.value) {
+                case "CNTT":
+                    listNganh = ["CNTT: 41", "KTPM: 56"];
+                    break;
+                case "Điện Tử - Viễn Thông":
+                    listNganh = ["CNKTDT-VT: 52", "KTDT-VT: 50", "CNKTD-DT: 51", "KTD: 49"];
+                    break;
+                case "Môi Trường":
+                    listNganh = ["KTMT: 34"];
+                    break;
+                case "GD Mầm Non":
+                    listNganh = ["GDMN: 19"];
+                    break;
+                case "GD Tiểu Học":
+                    listNganh = ["GDTH: 15"];
+                    break;
+                case "GD Chính Trị":
+                    listNganh = ["GDCT: 20"];
+                    break;
+                case "Luật":
+                    listNganh = ["Luật: 43"];
+                    break;
+                case "Ngoại Ngữ":
+                    listNganh = ["NNA: 38", "Anh: 13"];
+                    break;
+                case "Nghệ Thuật":
+                    listNganh = ["SPMT: 17", "TN: 47", "SPAN: 16"];
+                    break;
+                case "QTKD":
+                    listNganh = ["QTNH&DVAU: 59", "KDQT: 55", "QTKD: 33"];
+                    break;
+                case "QLGD":
+                    listNganh = ["QLGD: 46", "TLH: 53"];
+                    break;
+                case "Toán UD":
+                    listNganh = ["KHDL: 58", "Toán: 01", "TUD: 48"];
+                    break;
+                case "TC- KT":
+                    listNganh = ["KT: 32", "TC-NH: 42"];
+                    break;
+                case "SP KHTN":
+                    listNganh = ["Hóa: 03", "SPKHTN: 21", "Lí: 02", "Sinh: 06"];
+                    break;
+                case "TT - VP":
+                    listNganh = ["QTVP: 36", "TT-TV: 39"];
+                    break;
+                case "VH - DL":
+                    listNganh = ["DL: 57", "QTH: 54", "VNH: 35"];
+                    break;
+                case "SP KHXH":
+                    listNganh = ["SPLS-DL: 22", "Sử: 10", "Địa: 11", "Văn: 09"];
+                    break;
+            }
+            listNganh.forEach(function (option) {
+                var optionElement = document.createElement("option");
+                optionElement.text = option.split(":")[0];
+                optionElement.value = option;
+                selectNganh.appendChild(optionElement);
+            });
+        }
+        
+        document.addEventListener("DOMContentLoaded", updateSelectNganh);
+        
+        selectKhoa.addEventListener("change", updateSelectNganh);
+        
+    </script>
+</html>

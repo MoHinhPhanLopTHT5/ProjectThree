@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Thêm thành viên</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.all.min.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.min.css" rel="stylesheet">
+        <link th:href="@{/assets/css/member_add.css}" rel="stylesheet">
+    </head>
+    <body style="background:rgba(249,250,255,0.1)">
+        <div class="wrapper">
+            <h2>Thông tin thành viên</h2>
+            <div>
+                <form th:object="${member}">    
+                    <div class="mb-0">
+                        <label for="maTV" class="form-label">Thông tin thành viên</label>
+                        <input type="text" class="form-control" id="maTV" th:field="*{maTV}" placeholder="Mã thành viên" readonly>
+                    </div>
+                    <div class="mb-0">
+                        <label for="hoTen" class="form-label">Họ và tên</label>
+                        <input type="text" class="form-control" id="hoTen" th:field="*{hoTen}" placeholder="Họ và tên" readonly>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 mb-0">
+                            <label for="khoa" class="form-label">Khoa</label>
+                            <input type="text" class="form-control" id="khoa" th:field="*{khoa}" placeholder="Ngành" readonly>
+                        </div>
+                        <div class="col-6 mb-0">
+                            <label for="nganh" class="form-label">Ngành</label>
+                            <input type="text" class="form-control" id="nganh" th:field="*{nganh}" placeholder="Ngành" readonly>
+                        </div>
+                    </div>
+
+                    <div class="mb-0">
+                        <label for="sDT" class="form-label">Số điện thoại</label>
+                        <input type="tel" class="form-control" id="sDT" th:field="*{sDT}" placeholder="Số điện thoại" readonly>
+                    </div>
+                    <div class="mb-0">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" placeholder="Email" th:field="*{email}" readonly>
+                    </div>
+                    <div class="btn-bottom">
+                        <a th:href="@{/quantri/thanhvien}"><button type="button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Trở về</button></a>
+                    </div>
+                </form>
+                <div class="xuLy d-flex gap-4 mt-2 mb-2" style="flex-wrap: wrap">
+                    <div th:class="${item.trangThaiXL == 0} ? 'bg-success card text-white col-6' : 'bg-danger card text-white col-6'" style="max-width: 18rem;" th:each="item: ${xuLy}">
+                        <div class="card-header" th:utext="${'Mã vi phạm ' + item.MaXL}"></div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item" th:utext="${'Hình thức xử lý: ' + item.hinhThucXL}"/>
+                            <li class="list-group-item" th:utext="${item.soTien == null} ? 'Số tiền: 0' : ${'Số tiền: ' + item.soTien}"/>
+                            <li class="list-group-item" th:utext="${'Ngày xử lý: ' + item.ngayXL}"/>
+                            <li class="list-group-item" th:utext="${'Trạng thái xử lý: ' + item.trangThaiXL}"/>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

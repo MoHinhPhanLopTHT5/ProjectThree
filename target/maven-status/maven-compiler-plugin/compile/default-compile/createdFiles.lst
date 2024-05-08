@@ -10,6 +10,7 @@ com\mohinhphanlop\projectthree\Controllers\Admin\AdminController.class
 com\mohinhphanlop\projectthree\Controllers\HoSoController.class
 com\mohinhphanlop\projectthree\Services\EmailService.class
 com\mohinhphanlop\projectthree\Filters\MainFilter.class
+com\mohinhphanlop\projectthree\Services\ThanhVienService$1.class
 com\mohinhphanlop\projectthree\Models\ThietBi.class
 com\mohinhphanlop\projectthree\Models\XuLy.class
 com\mohinhphanlop\projectthree\Controllers\Admin\XuLyController.class

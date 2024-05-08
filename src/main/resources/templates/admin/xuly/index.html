@@ -9,6 +9,64 @@
               <h2>Danh sách xử lý</h2>
               
             </div>
+            <div class="row mt-3">
+              <div class="col">
+                <button type="submit" class="btn btn-primary">Tìm</button>
+                <a th:href="@{/quantri/xuly/them}" class="btn btn-success">Thêm xử lý vi phạm</a>
+              </div>
+            </div>
+          </form>
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Mã thành viên</th>
+                <th scope="col">Tên thành viên</th>
+                <th scope="col">Hình thức</th>
+                <th scope="col">Ngày xử lý</th>
+                <th scope="col">Số tiền</th>
+                <th scope="col">Trạng thái</th>
+                <th scope="col">Hành động</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="row, state: ${data}">
+                <th scope="row" th:utext="${state.count}"></th>
+                <td th:utext="${row.thanhvien.MaTV}"></td>
+                <td th:utext="${row.thanhvien.HoTen}"></td>
+                <td th:utext="${row.HinhThucXL}"></td>
+                <td th:utext="${row.NgayXL}"></td>
+                <td th:utext="${row.SoTien} == null ? 'Không khả dụng' : ${row.SoTien} + ' VNĐ'"></td>
+                <td>
+                  <span th:if="${row.TrangThaiXL == 0}" class="badge bg-success">Đã xử lý</span>
+                  <span th:if="${row.TrangThaiXL == 1}" class="badge bg-danger">Đang xử lý</span>
+                </td>
+                <td>
+                  <a th:href="@{/quantri/xuly/{id}(id=${row.MaXL})}" class="btn btn-primary">Sửa</a>
+                  <a th:href="@{'/quantri/xuly/'+${row.MaXL}+'/xoa'}" class="btn btn-danger">Xoá</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <nav th:if="${totalPages > 0}" aria-label="Page navigation">
+            <ul class="pagination">
+              <li class="page-item" th:if="${data.hasPrevious()}">
+                <a class="page-link" href="#">Previous</a>
+              </li>
+              <div th:each="pageNumber : ${pageNumbers}">
+                <li class="page-item">
+                  <a
+                    class="page-link"
+                    th:href="@{/quantri/thongke/vipham(page=${pageNumber-1},matv=${matv},hoten=${hoten},ngayxl=${ngayxl},sotien=${sotien})}"
+                    th:text="${pageNumber}"
+                  ></a>
+                </li>
+              </div>
+              <li class="page-item" th:if="${data.hasNext()}">
+                <a class="page-link" href="#">Next</a>
+              </li>
+            </ul>
+          </nav>
         </div>
     </main>
     <footer th:insert="~{fragments/general.html :: footer}"></footer>

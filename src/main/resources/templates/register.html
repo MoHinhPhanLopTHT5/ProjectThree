@@ -17,23 +17,27 @@
                     </div>
                     <div class="mb-3">
                         <label for="username" class="form-label">Mã thành viên</label>
-                        <input th:value="${username} ?: ''" type="text" class="form-control" id="username" name="username" required>
+                        <input pattern="(1)\d{9}" title="Vui lòng nhập mã thành viên theo đúng định dạng 1XXXXXXXXX. Ví dụ 112141XXXX" placeholder="Ví dụ: 312141XXXX ==> 112141XXXX" th:value="${username} ?: ''" maxlength="10" type="text" class="form-control" id="username" name="username" required>
                     </div>
                     <div class="mb-3">
                         <label for="fullname" class="form-label">Họ tên</label>
-                        <input th:value="${fullname} ?: ''" type="text" class="form-control" id="fullname" name="fullname" required>
+                        <input maxlength="100" th:value="${fullname} ?: ''" type="text" class="form-control" id="fullname" name="fullname" required>
                     </div>
                     <div class="mb-3">
                         <label for="email" class="form-label">Email</label>
-                        <input th:value="${email} ?: ''" type="email" class="form-control" id="email" name="email" required>
+                        <input maxlength="25" th:value="${email} ?: ''" type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="sDT" class="form-label">SDT</label>
+                        <input name="sdt" type="tel" th:value="${sdt}" class="form-control" id="sDT" pattern="(03|09|08|07|05)\d{8}" title="Vui lòng nhập số điện thoại di động theo đúng định dạng" required>
                     </div>
                     <div class="mb-3">
                         <label for="password" class="form-label">Mật khẩu</label>
-                        <input type="password" class="form-control" id="password" name="password" required>
+                        <input minlength="6" maxlength="10" type="password" class="form-control" id="password" name="password" required>
                     </div>
                     <div class="mb-3">
                         <label for="c_password" class="form-label">Xác nhận mật khẩu</label>
-                        <input type="password" class="form-control" id="c_password" name="confirm_password" required>
+                        <input minlength="6" maxlength="10" type="password" class="form-control" id="c_password" name="confirm_password" required>
                     </div>
                     <button type="submit" class="btn btn-success">Đăng ký</button>
                     <span>Đã đăng ký thành viên? <a class="btn btn-primary" th:href="@{/dangnhap}">Đăng nhập</a></span>
