@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
+
+import com.mohinhphanlop.projectthree.Controllers.MainController;
 import com.mohinhphanlop.projectthree.Models.ThietBi;
 import com.mohinhphanlop.projectthree.Models.ThongTinSD;
 import com.mohinhphanlop.projectthree.Repositories.ThongTinSDRepository;
@@ -53,12 +55,10 @@ public class ThongTinSDService {
         if (tb != null) {
 
             // date to LocalDateTime
-            LocalDateTime localDateTime = LocalDateTime.parse(date + ":00",
-                    DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:00"));
-            LocalDate localDate = localDateTime.toLocalDate();
 
-            LocalDateTime now = LocalDateTime.now().atZone(ZoneId.of("Asia/Ho_Chi_Minh")).toLocalDateTime();
-            LocalDate localDateNow = now.toLocalDate();
+            LocalDate localDate = DateService.dateTypeToLocalDateType(
+                    DateService.dateStringtoDateType(date));
+            LocalDate localDateNow = DateService.dateTypeToLocalDateType(new Date());
 
             // Ngày đặt là quá khứ
             if (localDate.isBefore(localDateNow))
@@ -67,10 +67,7 @@ public class ThongTinSDService {
             Iterable<ThongTinSD> listThongTinSD = tb.getDS_ThongTinSD();
             for (ThongTinSD ttsd : listThongTinSD) {
                 if (ttsd.getTGDatcho() != null) {
-                    LocalDate tgDatCho = ttsd.getTGDatcho()
-                            .toInstant()
-                            .atZone(ZoneId.of("Asia/Ho_Chi_Minh"))
-                            .toLocalDate();
+                    LocalDate tgDatCho = DateService.dateTypeToLocalDateType(ttsd.getTGDatcho());
                     if (tgDatCho.isEqual(localDate)) {
                         // Thiết bị đã được đặt chỗ trong ngày chỉ định
                         return false;
@@ -216,5 +213,13 @@ public class ThongTinSDService {
 
     public ThongTinSD findById(Integer maTT) {
         return ttSDRepository.findById(maTT).orElse(null);
+    }
+
+    public Iterable<ThongTinSD> findByMaTBAndtGDatchoNotNull(Integer maTB) {
+        return ttSDRepository.findByMaTBAndtGDatchoNotNull(maTB);
+    }
+
+    public ThongTinSD findBymaTTAndtGDatchoNotNull(Integer maTT) {
+        return ttSDRepository.findBymaTTAndtGDatchoNotNull(maTT);
     }
 }

@@ -77,4 +77,10 @@ public interface ThongTinSDRepository extends CrudRepository<ThongTinSD, Integer
         public Page<ThongTinSD> findAllBytGDatchoNotNull(@PageableDefault(value = 10, page = 0) Pageable pageable,
                         @Param("maTB") Integer maTB, @Param("maTV") Integer maTV,
                         @Param("tenTB") String tenTB, @Param("hoTen") String hoTen, @Param("tgDatcho") Date tgDatcho);
+
+        @Query("SELECT t FROM ThongTinSD t INNER JOIN t.thietbi tb WHERE tb.maTB = :maTB AND t.tGDatcho is not null")
+        public Iterable<ThongTinSD> findByMaTBAndtGDatchoNotNull(@Param("maTB") Integer maTB);
+
+        @Query("SELECT t FROM ThongTinSD t WHERE t.maTT = :maTT AND t.tGDatcho is not null")
+        public ThongTinSD findBymaTTAndtGDatchoNotNull(@Param("maTT") Integer maTT);
 }

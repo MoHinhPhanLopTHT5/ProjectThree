@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:insert="~{fragments/general.html :: head}"></head>
+  <body>
+    <header th:replace="~{fragments/general.html :: header}"></header>
+    <main class="container">
+      <div class="row">
+        <div class="col">
+          <h2>Xoá đặt chỗ</h2>
+          <!-- Bootstrap form delete request -->
+          <form th:unless="${success} or ${error}" th:action="@{'/datcho/'+${MaTT}+'/xoa'}" method="post">
+            <div class="row">
+                <div class="col">
+                    <div>
+                        <p>Bạn có muốn xoá đặt chỗ này không? Lưu ý rằng hành động xoá này sẽ không thể khôi phục!</p>
+                        <button class="btn btn-danger">Xoá</button>
+                        <a th:href="@{/hoso/thietbidatcho}" class="btn btn-primary">Trang danh sách đặt chỗ</a>
+                    </div>
+                </div>
+          </form>
+          <!-- Bootstrap alerts -->
+          <div th:if="${error}" class="alert alert-danger mb-3" role="alert">
+            <span th:text="${error}"></span>
+            <a th:href="@{/hoso/thietbidatcho}" class="btn btn-primary">Quay về trang danh sách đặt chỗ</a>
+          </div>
+          <div th:if="${success}" class="alert alert-success mb-3" role="alert">
+            <span th:text="${success}"></span>
+            <a th:href="@{/hoso/thietbidatcho}" class="btn btn-primary">Quay về trang danh sách đặt chỗ</a>
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer th:insert="~{fragments/general.html :: footer}"></footer>
+    <div th:insert="~{fragments/general.html :: scripts}"></div>
+  </body>
+</html>

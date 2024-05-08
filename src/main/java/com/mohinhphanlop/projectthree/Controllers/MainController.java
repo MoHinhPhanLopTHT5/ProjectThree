@@ -5,7 +5,9 @@
 package com.mohinhphanlop.projectthree.Controllers;
 
 import com.mohinhphanlop.projectthree.Models.ThietBi;
+import com.mohinhphanlop.projectthree.Models.ThongTinSD;
 import com.mohinhphanlop.projectthree.Models.XuLy;
+import com.mohinhphanlop.projectthree.Services.DateService;
 import com.mohinhphanlop.projectthree.Services.EmailService;
 import com.mohinhphanlop.projectthree.Services.ThanhVienService;
 import com.mohinhphanlop.projectthree.Services.ThietBiService;
@@ -15,6 +17,8 @@ import com.mohinhphanlop.projectthree.Services.XuLyService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -302,8 +306,52 @@ public class MainController {
             return "suspended";
         }
 
+        Iterable<ThongTinSD> listTTSD = ttSDService.findByMaTBAndtGDatchoNotNull(thietBi.getMaTB());
+
+        // Chỉ thêm vào nếu ngày đặt chỗ là hôm nay
+        for (ThongTinSD ttsd : listTTSD) {
+            LocalDate localDateNow = DateService.dateTypeToLocalDateType(new Date());
+            LocalDate localDatetGDatcho = DateService.dateTypeToLocalDateType(ttsd.getTGDatcho());
+            if (localDateNow.equals(localDatetGDatcho)) {
+                model.addAttribute("ttsd", ttsd);
+                model.addAttribute("tgDatChoHomNay", true);
+                break;
+            }
+        }
+
+        model.addAttribute("username", session.getAttribute("username").toString());
         model.addAttribute("thietBi", thietBi);
         return "reservation";
+    }
+
+    @GetMapping("/datcho/{id}/xoa")
+    public String getXoaDatCho(Model model, HttpSession session, @PathVariable("id") Integer id) {
+
+        ThongTinSD ttsd = ttSDService.findBymaTTAndtGDatchoNotNull(id);
+        if (ttsd != null) {
+            if (ttsd.getThanhvien().getMaTV().toString().equals(session.getAttribute("username").toString()))
+                model.addAttribute("MaTT", ttsd.getMaTT());
+            else
+                model.addAttribute("error", "Bạn không có quyền xoá thông tin này!");
+        } else
+            model.addAttribute("error", "Thông tin sử dụng này không phải là thông tin đặt chỗ!");
+        return "cancel_reservation";
+    }
+
+    @PostMapping("/datcho/{id}/xoa")
+    public String postXoaDatCho(Model model, HttpSession session, @PathVariable("id") Integer id) {
+        ThongTinSD ttsd = ttSDService.findBymaTTAndtGDatchoNotNull(id);
+        if (ttsd != null) {
+            if (ttsd.getThanhvien().getMaTV().toString().equals(session.getAttribute("username").toString())) {
+                if (ttSDService.deleteThongTinSD(ttsd.getMaTT()))
+                    model.addAttribute("success", "Xóa thành công!");
+                else
+                    model.addAttribute("error", "Xoá thất bại!");
+            } else
+                model.addAttribute("error", "Bạn không có quyền xoá thông tin này!");
+        } else
+            model.addAttribute("error", "Thông tin sử dụng này không phải là thông tin đặt chỗ!");
+        return "cancel_reservation";
     }
 
     @PostMapping("/datcho/{id}")

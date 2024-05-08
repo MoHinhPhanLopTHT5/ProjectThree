@@ -1,5 +1,6 @@
 package com.mohinhphanlop.projectthree.Services;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -27,4 +28,9 @@ public class DateService {
         localDatetoDate = Date.from(localDateTime.atZone(ZoneId.of("Asia/Ho_Chi_Minh")).toInstant());
         return localDatetoDate;
     }
+
+    public static LocalDate dateTypeToLocalDateType(Date dateToConvert) {
+        return dateToConvert.toInstant().atZone(ZoneId.of("Asia/Ho_Chi_Minh")).toLocalDate();
+    }
+
 }
