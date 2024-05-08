@@ -1,17 +1,237 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head th:insert="~{fragments/general.html :: head}"></head>
-  <body>
-    <header th:replace="~{fragments/general.html :: header_admin}"></header>
-    <main class="container">
-        <div class="row">
-            <div class="col">
-              <h2>Danh sách thành viên</h2>
-              
+    <head th:insert="~{fragments/general.html :: head}"></head>
+    <body style="background:rgba(249,250,255,0.1)">
+        <header th:replace="~{fragments/general.html :: header_admin}"></header>
+        <main class="container">
+            <div class="row align-items-center py-2 bg-light mx-1">
+                <div class="col-8">
+                    <p class="fs-6 fw-bold mb-0">Danh sách thành viên</p>
+                </div>
+                <div class="col-4 d-flex justify-content-end">
+                    <a class="me-2" id="btnDeleteMany">
+                        <button type="button" class="btn btn-outline-danger">
+                            Xóa nhiều
+                        </button>
+                    </a>
+                    <a class="me-2" id="btnAddMany">
+                        <button type="button" class="btn btn-outline-success">
+                            Nhập File Excel
+                        </button>
+                    </a>
+                    <a th:href="@{/quantri/thanhvien/them}">
+                        <button type="button" class="btn btn-primary">
+                            Thêm thành viên
+                        </button>
+                    </a>
+                </div>
             </div>
-        </div>
-    </main>
-    <footer th:insert="~{fragments/general.html :: footer}"></footer>
-    <div th:insert="~{fragments/general.html :: scripts}"></div>
-  </body>
+            <div class="row mx-1 py-2 d-flex justify-content-end">
+                <div class="col-3 px-0">
+                    <div class="">
+                        <form th:action="@{/quantri/thanhvien/timkiem}" method="POST" style="display: flex">
+                            <input type="text" id="keySearch" name="keySearch" class="form-control" placeholder="Tìm kiếm thành viên" aria-label="Tìm kiếm thành viên" aria-describedby="basic-addon2">
+                            <button type="submit" class="px-0 py-0 ms-1" style="border: 0px; background: white">
+                                <span style="height: 100%;" class="input-group-text" id="basic-addon2">
+                                    <i class="fa fa-search"></i>
+                                </span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="row mx-1">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th class="text-center" scope="col">#</th>
+                            <th class="text-center" scope="col">Mã thành viên</th>
+                            <th class="text-center" scope="col">Họ và tên</th>
+                            <th class="text-center" scope="col">Khoa</th>
+                            <th class="text-center" scope="col">Ngành</th>
+                            <th class="text-center" scope="col">Số điện thoại</th>
+                            <th class="text-center" scope="col">Email</th>
+                            <th class="text-center" scope="col">Chức năng</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="member, index: ${members}">
+                            <td  class="text-center" th:text="${index.count}" th:style="${index.odd}? 'background: rgb(254,254,254);'" />
+                            <td class="text-center" th:text="${member.MaTV}" th:style="${index.odd}? 'background: rgb(254,254,254);'" />
+                            <td th:text="${member.hoTen}" th:style="${index.odd}? 'background: rgb(254,254,254);'" />
+                            <td th:text="${member.Khoa}" th:style="${index.odd}? 'background: rgb(254,254,254);'"/>
+                            <td th:text="${member.Nganh}" th:style="${index.odd}? 'background: rgb(254,254,254);'"/>
+                            <td th:text="${member.SDT}" th:style="${index.odd}? 'background: rgb(254,254,254);'"/>  
+                            <td th:text="${member.Email}" th:style="${index.odd}? 'background: rgb(254,254,254);'"/>
+                            <td th:style="${index.odd}? 'background: rgb(254,254,254);'">
+                                <div class="d-flex justify-content-around">
+                                    <a th:href="@{/quantri/thanhvien/}+${member.MaTV}+'/xem'">
+                                        <button class="btn btn-sm btn-outline-success px-2">
+                                            <i class="fa fa-eye" aria-hidden="true"></i>
+                                        </button>
+                                    </a>
+                                    <a th:href="@{/quantri/thanhvien/}+${member.MaTV}+'/sua'">
+                                        <button class="btn btn-sm btn-outline-warning px-2">
+                                            <i class="fa fa-pencil-square" aria-hidden="true"></i>
+                                        </button>
+                                    </a>
+                                    <a class="delete-member-btn" th:data-MaTV="${member.MaTV}">
+                                        <button class="btn btn-sm btn-outline-danger px-2">
+                                            <i class="fa fa-trash" aria-hidden="true"></i>
+                                        </button>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div th:if="${error}" class="alert alert-danger my-3 py-1 d-flex justify-content-around" role="alert">
+                <span th:text="${error}"></span>
+            </div>
+        </main>
+        <footer th:insert="~{fragments/general.html :: footer}"></footer>
+        <div th:insert="~{fragments/general.html :: scripts}"></div>
+        <script th:src="@{/assets/js/member.js}"></script>
+        <script>
+            $(".delete-member-btn").click(function () {
+                var memberId = $(this).data('matv');
+                Swal.fire({
+                    title: 'Bạn có chắc chắn muốn xóa thành viên này không?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes',
+                    cancelButtonText: 'No'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: "POST",
+                            url: "/quantri/thanhvien/" + memberId + "/xoa",
+                            success: function (response) {
+                                new Swal('Thành công', response, "success");
+                                setTimeout(function () {
+                                    window.location.reload();
+                                }, 1000);
+                            },
+                            error: function (error) {
+                                new Swal('Xóa không thành công', error.responseText, "error");
+                            }
+                        });
+                    }
+                });
+            });
+
+            $('#btnDeleteMany').click(function () {
+                Swal.fire({
+                    title: 'Nhập niên khóa muốn xóa:',
+                    input: 'text',
+                    inputPlaceholder: 'Nhập năm',
+                    inputAttributes: {
+                        autocapitalize: 'off'
+                    },
+                    showCancelButton: true,
+                    confirmButtonText: 'Xác nhận',
+                    cancelButtonText: 'Hủy',
+                    showLoaderOnConfirm: true,
+                    preConfirm: (year) => {
+                        if (/^\d{4}$/.test(year)) {
+                            return year;
+                        } else {
+                            Swal.showValidationMessage('Năm không hợp lệ, vui lòng nhập lại.');
+                        }
+                    },
+                    allowOutsideClick: () => !Swal.isLoading()
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        var validYear = result.value;
+                        confirmDelete(validYear);
+                    }
+                });
+            });
+
+            function confirmDelete(year) {
+                Swal.fire({
+                    title: 'Xác nhận xóa',
+                    text: `Bạn có chắc chắn muốn xóa các thành viên trong niên khóa ${year} không?`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Đồng ý',
+                    cancelButtonText: 'Hủy'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        deleteItemsInYear(year);
+                    }
+                });
+            }
+            function deleteItemsInYear(year) {
+                $.ajax({
+                    type: 'POST',
+                    url: '/quantri/thanhvien/xoanhieu',
+                    data: {
+                        year: year
+                    },
+                    success: function (response) {
+                        new Swal('Thành công', response, "success");
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 1000);
+                    },
+                    error: function (error) {
+                        Swal.fire('Không thành công', 'Xóa không thành công', 'error');
+                    }
+                });
+            }
+
+            $('#btnAddMany').click(function () {
+                Swal.fire({
+                    title: 'Chọn file Excel',
+                    input: 'file',
+                    inputAttributes: {
+                        accept: '.xlsx,.xls',
+                        'aria-label': 'Upload your Excel file'
+                    },
+                    showCancelButton: true,
+                    confirmButtonText: 'Import',
+                    showLoaderOnConfirm: true,
+                    preConfirm: (file) => {
+                        if (!file) {
+                            Swal.showValidationMessage('Vui lòng chọn một file');
+                        }
+                        return file;
+                    },
+                    allowOutsideClick: () => !Swal.isLoading()
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        var selectedFile = result.value;
+                        if (selectedFile) {
+                            importExcel(selectedFile);
+                        } else {
+                            Swal.fire('Lỗi', 'Bạn chưa chọn file nào', 'error');
+                        }
+                    }
+                });
+            });
+
+            function importExcel(file) {
+                var formData = new FormData();
+                formData.append('file', file);
+                $.ajax({
+                    url: '/quantri/thanhvien/themnhieu',
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        new Swal('Thành công', response, "success");
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 1000);
+                    },
+                    error: function (error) {
+                        Swal.fire('Lỗi!', 'Có lỗi xảy ra khi import file: ' + error.responseText, 'error');
+                    }
+                });
+            }
+        </script>
+    </body>
 </html>

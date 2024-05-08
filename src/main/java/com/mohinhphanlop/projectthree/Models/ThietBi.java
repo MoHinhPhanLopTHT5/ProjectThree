@@ -4,6 +4,7 @@
  */
 package com.mohinhphanlop.projectthree.Models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.util.List;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -25,6 +26,7 @@ public class ThietBi {
     private String moTaTB;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "thietbi")
+    @JsonManagedReference
     private List<ThongTinSD> DS_ThongTinSD;
 
     @Transient
