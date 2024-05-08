@@ -101,7 +101,7 @@ public class ThanhVienService {
 
     public boolean CheckNotTheSameEmail(ThanhVien tvCurrent, String email) {
         if (tvCurrent.getEmail() == null)
-            return false;
+            return true;
         if (tvCurrent.getEmail().equals(email)) {
             return false;
         }

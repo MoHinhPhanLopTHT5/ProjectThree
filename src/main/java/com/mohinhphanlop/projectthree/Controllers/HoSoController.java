@@ -80,7 +80,7 @@ public class HoSoController {
             // Trường hợp email nhập vào là email mới
             if (tvService.CheckEmailExists(email)) {
                 // email đã tồn tại
-                model.addAttribute("error", "Email đã được sử dụng bới một tài khoản khác!");
+                model.addAttribute("error", "Email đã được sử dụng bởi một tài khoản khác!");
                 check = false;
             }
         }
