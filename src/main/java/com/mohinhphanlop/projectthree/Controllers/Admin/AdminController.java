@@ -16,13 +16,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.mohinhphanlop.projectthree.Models.ThongTinSD;
+import com.mohinhphanlop.projectthree.Services.ExcelExportService;
 import com.mohinhphanlop.projectthree.Services.ThanhVienService;
 import com.mohinhphanlop.projectthree.Services.ThietBiService;
 import com.mohinhphanlop.projectthree.Services.ThongTinSDService;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.websocket.server.PathParam;
+
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -270,4 +277,23 @@ public class AdminController {
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Lỗi dữ liệu nhập không phù hợp!");
     }
+
+    // Xuất Excel
+
+    @Autowired
+    ExcelExportService xlsxExportSrv;
+
+    @GetMapping("/xuatexcel")
+    public void exportToExcel(HttpServletResponse response) throws IOException {
+        response.setContentType("application/octet-stream");
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+        String currentDateTime = dateFormatter.format(new Date());
+
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=qltv_nhom9_" + currentDateTime + ".xlsx";
+        response.setHeader(headerKey, headerValue);
+
+        xlsxExportSrv.export(response);
+    }
+
 }

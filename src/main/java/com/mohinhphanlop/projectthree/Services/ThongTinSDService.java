@@ -35,6 +35,10 @@ public class ThongTinSDService {
     @Autowired
     private ThanhVienService tvService;
 
+    public Iterable<ThongTinSD> GetList() {
+        return ttSDRepository.findAll();
+    }
+
     public void RemoveAllTGDatchoOver1Hour() {
         Iterable<ThongTinSD> listThongTinSD = ttSDRepository.findAll();
         // Lấy danh sách thông tin sử dụng ứng với thiết bị

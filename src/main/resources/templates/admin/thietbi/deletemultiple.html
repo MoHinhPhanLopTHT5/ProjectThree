@@ -16,12 +16,12 @@
                 <h2 class="text-center mb-5" style="font-size: 36px">XÓA NHIỀU THIẾT BỊ</h2>
                 <form th:unless="${success} or ${error}" method="post" th:action="@{/quantri/thietbi/xoanhieu}">
                     <div class="row mb-3">
-                        <p class="text-center">Nhập vào mã thiết bị bạn muốn xóa</p>
+                        <p class="text-center">Nhập vào mã thiết bị bạn muốn xóa (Ký tự đầu)</p>
                     </div>
                     <div class="row mb-3">
                         <label class="col-sm-4 col-form-label">Mã thiết bị</label>
                         <div class="col-sm-8">
-                            <input class="form-control" id="deviceID" name="deviceID" type="text" required>
+                            <input class="form-control" id="deviceID" name="deviceID" type="text" maxlength="1" required>
                         </div>
                     </div>
                     <div class="row">

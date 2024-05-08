@@ -23,6 +23,10 @@ public class XuLyService {
     @Autowired
     private ThanhVienRepository tvRepository;
 
+    public Iterable<XuLy> GetList() {
+        return xuLyRepository.findAll();
+    }
+
     public XuLy addXuLy(String matv, String hinhThucXL, String sotien, String ngayxl, String trangthaixl) {
 
         XuLy xl = new XuLy();

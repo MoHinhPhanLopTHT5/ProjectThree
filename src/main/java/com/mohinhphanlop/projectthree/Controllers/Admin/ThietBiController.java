@@ -140,7 +140,7 @@ public class ThietBiController {
 
         try (InputStream inputStream = file.getInputStream()) {
             XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
-            XSSFSheet sheet = workbook.getSheetAt(0); // sheet đầu tiên
+            XSSFSheet sheet = workbook.getSheetAt(1); // sheet đầu tiên
             for (int i = 1; i <= sheet.getLastRowNum(); i++) {
                 XSSFRow row = sheet.getRow(i);
                 if (row != null) {
@@ -151,6 +151,7 @@ public class ThietBiController {
                 }
             }
             model.addAttribute("success", "Import thành công!");
+            workbook.close();
         } catch (Exception e) {
             model.addAttribute("error", "Import thất bại!" + e.getMessage());
         }

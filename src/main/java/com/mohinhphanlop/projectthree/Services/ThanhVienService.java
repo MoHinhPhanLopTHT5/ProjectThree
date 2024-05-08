@@ -263,7 +263,8 @@ public class ThanhVienService {
 
     private String checkValidTitleOfFile(Sheet sheet, String... titles) {
         for (int i = 0; i < titles.length; i++) {
-            if (!sheet.getRow(0).getCell(i).getStringCellValue().equals(titles[i])) {
+            if (!sheet.getRow(0).getCell(i).getStringCellValue()
+                    .toLowerCase().equals(titles[i].toLowerCase())) {
                 return "The title of the " + (i + 1) + " column is not in the correct format (Must be '" + titles[i]
                         + "')";
             }
@@ -405,7 +406,10 @@ public class ThanhVienService {
                                     isValid = false;
                                     break OUTER;
                                 } else {
-                                    if (cell.getCellType() == CellType.STRING) {
+                                    System.out.println(cell.getCellType());
+                                    System.out.println(cell.getStringCellValue());
+                                    if (cell.getCellType() == CellType.NUMERIC || cell.getCellType() == CellType.FORMULA
+                                            || cell.getCellType() == CellType.STRING) {
                                         if (checkLenghtString(cell, 15)) {
                                             tv.setSDT(cell.getStringCellValue());
                                         } else {
