@@ -58,7 +58,8 @@ public class MainFilter implements Filter {
         } else if (onSpecialPages && tvService.CheckLogin(username, pw)) {
             // Đã đăng nhập và đang ở trên trang đăng nhập/đăng ký
             res.sendRedirect("/");
-        } else
-            filterChain.doFilter(req, res);
+        }
+
+        filterChain.doFilter(req, res);
     }
 }

@@ -70,24 +70,36 @@
             <version>8.0.26</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <scope>runtime</scope>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <version>6.4.4.Final</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-mail</artifactId>
-            <type>module</type>
-            <version>3.2.4</version>
-        </dependency>
-    </dependencies>
+                <dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-devtools</artifactId>
+                    <scope>runtime</scope>
+                    <optional>true</optional>
+                </dependency>
+	 <dependency>
+	  <groupId>org.hibernate</groupId>
+	  <artifactId>hibernate-core</artifactId>
+          <version>6.4.4.Final</version>
+	 </dependency>
+	 <dependency>
+	  <groupId>org.springframework.boot</groupId>
+	  <artifactId>spring-boot-starter-mail</artifactId>
+	  <type>module</type>
+          <version>3.2.4</version>
+	 </dependency>
+	 <dependency>
+	  <groupId>br.com.objectos.way</groupId>
+	  <artifactId>xls-api</artifactId>
+	  <version>0.6.0</version>
+	  <type>jar</type>
+	 </dependency>
+	 <dependency>
+	  <groupId>ch.digitalfondue.basicxlsx</groupId>
+	  <artifactId>basicxlsx</artifactId>
+	  <version>0.7.1</version>
+	  <type>jar</type>
+	 </dependency>
+	</dependencies>
 
     <build>
         <plugins>

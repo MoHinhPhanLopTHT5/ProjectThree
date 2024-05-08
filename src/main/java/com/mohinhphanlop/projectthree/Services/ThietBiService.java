@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.mohinhphanlop.projectthree.Models.ThietBi;
 import com.mohinhphanlop.projectthree.Repositories.ThietBiRepository;
 import com.mohinhphanlop.projectthree.Repositories.ThongTinSDRepository;
+import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
@@ -35,6 +36,58 @@ public class ThietBiService {
         else
             list = tbRepository.findAllByTenTB(tenTB, pageable);
         return list;
+    }
+
+    public Iterable<ThietBi> GetList() {
+        Iterable<ThietBi> list = tbRepository.findAll();
+        return list;
+    }
+
+    public ThietBi CreateThietBi(Integer maTB, String tenTB, String motaTB) {
+        ThietBi tb = new ThietBi();
+        tb.setMaTB(maTB);
+        tb.setTenTB(tenTB);
+        tb.setMoTaTB(motaTB);
+        return tbRepository.save(tb);
+    }
+
+    public boolean isExistMaThietBi(String maTB) {
+        Iterable<ThietBi> list = tbRepository.findAll();
+        for (ThietBi tb : list)
+            if (tb.getMaTB().toString().equals(maTB))
+                return true;
+        return false;
+    }
+
+    public void updateThietBi(ThietBi thietBi) {
+        ThietBi tb = tbRepository.findById(thietBi.getMaTB()).orElse(null);
+        if (tb != null) {
+            tb.setTenTB(thietBi.getTenTB());
+            tb.setMoTaTB(thietBi.getMoTaTB());
+            tbRepository.save(tb);
+        } else {
+            throw new EntityNotFoundException("Thiết bị không tồn tại");
+        }
+    }
+
+    public boolean deleteThietBi(ThietBi thietBi) {
+        ThietBi tb = tbRepository.findById(thietBi.getMaTB()).orElse(null);
+        if (tb != null)
+            tbRepository.deleteById(thietBi.getMaTB());
+        else
+            return false;
+        return true;
+<<<<<<< HEAD
+    }
+    
+    public void deleteNhieuThietBi(String kyTu, Iterable<ThietBi> list) {
+        for (ThietBi tb : list) {
+            String thietbi = tb.getMaTB().toString().substring(0,1);
+            if (kyTu.startsWith(thietbi))
+                tbRepository.delete(tb);
+        }
+=======
+>>>>>>> a6d6a41ddfd195f3dde5f73af8f78faa10aa153d
     }
 
     public ThietBi FindByID(String maTB) {

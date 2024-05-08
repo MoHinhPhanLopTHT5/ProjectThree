@@ -140,17 +140,17 @@ public class ThanhVienService {
     }
 
     public Iterable<XuLy> GetListXuLyFrom(String maThanhVien) {
-        ThanhVien tv = tvRepository.findById(Integer.parseInt(maThanhVien)).get();
+        ThanhVien tv = tvRepository.findById(Long.parseLong(maThanhVien)).get();
         return tv.getDS_XuLy();
     }
 
     public Iterable<ThongTinSD> GetListThongTinSDFrom(String maThanhVien) {
-        ThanhVien tv = tvRepository.findById(Integer.parseInt(maThanhVien)).get();
+        ThanhVien tv = tvRepository.findById(Long.parseLong(maThanhVien)).get();
         return tv.getDS_ThongTinSD();
     }
 
     public Iterable<ThongTinSD> GetListThongTinSDDangMuonFrom(String maThanhVien) {
-        ThanhVien tv = tvRepository.findById(Integer.parseInt(maThanhVien)).get();
+        ThanhVien tv = tvRepository.findById(Long.parseLong(maThanhVien)).get();
 
         Iterable<ThongTinSD> listTemp = tv.getDS_ThongTinSD();
         ArrayList<ThongTinSD> list = new ArrayList<ThongTinSD>();
@@ -164,7 +164,7 @@ public class ThanhVienService {
     }
 
     public Iterable<ThongTinSD> GetListThongTinSDDatchoFrom(String maThanhVien) {
-        ThanhVien tv = tvRepository.findById(Integer.parseInt(maThanhVien)).get();
+        ThanhVien tv = tvRepository.findById(Long.parseLong(maThanhVien)).get();
 
         Iterable<ThongTinSD> listTemp = tv.getDS_ThongTinSD();
         ArrayList<ThongTinSD> list = new ArrayList<ThongTinSD>();

@@ -7,15 +7,11 @@ import com.mohinhphanlop.projectthree.Models.ThietBi;
 import com.mohinhphanlop.projectthree.Models.ThongTinSD;
 import com.mohinhphanlop.projectthree.Models.XuLy;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import com.mohinhphanlop.projectthree.Models.ThongTinSD;
 import com.mohinhphanlop.projectthree.Services.ThanhVienService;
 import com.mohinhphanlop.projectthree.Services.ThietBiService;
 import com.mohinhphanlop.projectthree.Services.ThongTinSDService;
@@ -32,7 +28,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -43,75 +38,6 @@ public class AdminController {
     @GetMapping("")
     public String getIndex() {
         return "admin/index";
-    }
-
-    @Autowired
-    private ThongTinSDService ttSDService;
-
-    @GetMapping("/datcho")
-    public String getDatCho(Model model, Pageable pageable, @RequestParam("page") Optional<Integer> page,
-            @RequestParam("matb") Optional<String> matb, @RequestParam("tentb") Optional<String> tentb,
-            @RequestParam("matv") Optional<String> matv, @RequestParam("hoten") Optional<String> hoten,
-            @RequestParam("tgdatcho") Optional<String> tgdatcho) {
-
-        ttSDService.RemoveAllTGDatchoOver1Hour();
-
-        model.addAttribute("matb", matb.orElse(""));
-        model.addAttribute("tentb", tentb.orElse(""));
-        model.addAttribute("matv", matv.orElse(""));
-        model.addAttribute("hoten", hoten.orElse(""));
-        model.addAttribute("tgdatcho", tgdatcho.orElse(""));
-
-        Page<ThongTinSD> list;
-        if (!matb.orElse("").isEmpty() || !tentb.orElse("").isEmpty() || !matv.orElse("").isEmpty()
-                || !hoten.orElse("").isEmpty() || !tgdatcho.orElse("").isEmpty())
-            list = ttSDService.findAllBytGDatchoNotNull(pageable, matb.orElse(""), tentb.orElse(""), matv.orElse(""),
-                    hoten.orElse(""), tgdatcho.orElse(""));
-        else
-            list = ttSDService.findAllBytGDatchoNotNull(pageable);
-
-        model.addAttribute("data", list);
-
-        // Add total pages
-
-        int totalPages = list.getTotalPages();
-        if (totalPages > 0) {
-            int[] pageNumbers = new int[totalPages];
-            for (int i = 0; i < totalPages; i++) {
-                pageNumbers[i] = i + 1;
-            }
-            model.addAttribute("totalPages", totalPages);
-            model.addAttribute("pageNumbers", pageNumbers);
-        }
-
-        return "admin/datcho";
-    }
-
-    @GetMapping("/datcho/{id}/xoa")
-    public String getXoaDatCho(Model model, @PathVariable("id") Integer id) {
-        model.addAttribute("MaTT", id);
-        return "admin/xoadatcho";
-    }
-
-    @PostMapping("/datcho/{id}/xoa")
-    public String postXoaDatCho(Model model, @PathVariable("id") Integer id) {
-
-        ThongTinSD thongTinSD = ttSDService.findById(id);
-        if (thongTinSD == null) {
-            model.addAttribute("error", "Xoá thất bại do không tìm thấy!");
-            return "admin/xoadatcho";
-        }
-
-        if (thongTinSD.getTGDatcho() == null) {
-            model.addAttribute("error", "Xoá thất bại do đây không phải thông tin đặt chỗ!");
-            return "admin/xoadatcho";
-        }
-
-        if (ttSDService.deleteThongTinSD(id))
-            model.addAttribute("success", "Xoá thành công");
-        else
-            model.addAttribute("error", "Xoá thất bại");
-        return "admin/xoadatcho";
     }
 
     @GetMapping("/tenpath")

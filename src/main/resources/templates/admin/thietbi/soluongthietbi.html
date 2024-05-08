@@ -1,0 +1,37 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:insert="~{fragments/general.html :: head}"></head>
+  <body>
+    <header th:replace="~{fragments/general.html :: header}"></header>
+    <main class="container">
+        <div class="row">
+            <div th:if="${error}" class="alert alert-danger mb-3" role="alert">
+                <span th:text="${error}"></span>
+            </div>
+            <div class="col-md-8 mx-auto rounded border p-4 m-4">
+                <h2 class="text-center mb-5" style="font-size: 36px">THÊM THIẾT BỊ</h2>
+                <p class="text-center mb-5">Nhập số lượng thiết bị bạn muốn thêm</p>
+                <form method="post" action="/requestSoLuongTB" th:object="${thietBi}">
+                    <div class="row mb-3">
+                        <label class="col-sm-4 col-form-label">Số lượng</label>
+                        <div class="col-sm-8">
+                            <input class="form-control" type="number" id="quantity" name="quantity" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="offset-sm-4 col-sm-4 d-grid">
+                            <button type="submit" class="btn btn-primary">Tiếp theo</button>
+                        </div>
+                        <div class="col-sm-4 d-grid">
+                            <a class="btn btn-secondary" th:href="@{/quanlythietbi}">Thoát</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+       
+    </main>
+    <footer th:insert="~{fragments/general.html :: footer}"></footer>
+    <div th:insert="~{fragments/general.html :: scripts}"></div>
+  </body>
+</html>
