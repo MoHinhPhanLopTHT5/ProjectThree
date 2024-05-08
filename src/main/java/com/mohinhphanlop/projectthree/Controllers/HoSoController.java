@@ -99,7 +99,7 @@ public class HoSoController {
             tvService.UpdateThanhVien(username, email, password);
             session.setAttribute("pw", password);
             model.addAttribute("success", "Cập nhật thông tin thành công!");
-        } else
+        } else if (model.getAttribute("error") == null)
             model.addAttribute("error", "Mật khẩu không chính xác!");
 
         // Hiển thị thông tin thành viên vừa cập nhật
