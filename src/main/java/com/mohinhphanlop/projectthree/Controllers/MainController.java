@@ -105,6 +105,7 @@ public class MainController {
     public String getDangXuat(HttpSession session) {
         session.removeAttribute("username");
         session.removeAttribute("pw");
+        session.invalidate();
         return "redirect:/dangnhap";
     }
 
@@ -287,7 +288,7 @@ public class MainController {
 
             if (check) {
                 // Thoả mọi điều kiện đặt ra
-                if (tvService.CreateThanhVien(requestedUsername, email, password, fullname) != null) {
+                if (tvService.CreateThanhVien(requestedUsername, email, sdt, password, fullname) != null) {
                     model.addAttribute("success", "Tạo tài khoản thành công, vui lòng đăng nhập!");
                 } else
                     model.addAttribute("error", "Lưu thông tin thất bại.");

@@ -125,10 +125,11 @@ public class ThanhVienService {
         return tvRepository.save(tv);
     }
 
-    public ThanhVien CreateThanhVien(String maThanhVien, String email, String password, String fullname) {
+    public ThanhVien CreateThanhVien(String maThanhVien, String email, String sdt, String password, String fullname) {
         ThanhVien tv = new ThanhVien();
         tv.setMaTV(Integer.parseInt(maThanhVien));
         tv.setEmail(email);
+        tv.setSDT(sdt);
         tv.setPassword(password);
         tv.setHoTen(fullname);
         return tvRepository.save(tv);

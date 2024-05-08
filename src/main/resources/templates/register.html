@@ -17,7 +17,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="username" class="form-label">Mã thành viên</label>
-                        <input placeholder="Ví dụ: 312141XXXX ==> 112141XXXX" th:value="${username} ?: ''" maxlength="2147483647" type="number" class="form-control" id="username" name="username" required>
+                        <input pattern="(1)\d{9}" title="Vui lòng nhập mã thành viên theo đúng định dạng 1XXXXXXXXX. Ví dụ 112141XXXX" placeholder="Ví dụ: 312141XXXX ==> 112141XXXX" th:value="${username} ?: ''" maxlength="10" type="text" class="form-control" id="username" name="username" required>
                     </div>
                     <div class="mb-3">
                         <label for="fullname" class="form-label">Họ tên</label>
@@ -29,7 +29,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="sDT" class="form-label">SDT</label>
-                        <input type="tel" th:value="${sdt}" class="form-control" id="sDT" name="sdt" placeholder="Số điện thoại" pattern="(03|09|08|07|05)\d{8}" title="Vui lòng nhập số điện thoại di động theo đúng định dạng" required>
+                        <input name="sdt" type="tel" th:value="${sdt}" class="form-control" id="sDT" pattern="(03|09|08|07|05)\d{8}" title="Vui lòng nhập số điện thoại di động theo đúng định dạng" required>
                     </div>
                     <div class="mb-3">
                         <label for="password" class="form-label">Mật khẩu</label>
