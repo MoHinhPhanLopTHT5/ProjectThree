@@ -47,7 +47,7 @@
                     </div>
                 </form>
                 <div class="xuLy d-flex gap-4 mt-2 mb-2" style="flex-wrap: wrap">
-                    <div th:class="${item.trangThaiXL == 1} ? 'bg-success card text-white col-6' : 'bg-danger card text-white col-6'" style="max-width: 18rem;" th:each="item: ${xuLy}">
+                    <div th:class="${item.trangThaiXL == 0} ? 'bg-success card text-white col-6' : 'bg-danger card text-white col-6'" style="max-width: 18rem;" th:each="item: ${xuLy}">
                         <div class="card-header" th:utext="${'Mã vi phạm ' + item.MaXL}"></div>
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item" th:utext="${'Hình thức xử lý: ' + item.hinhThucXL}"/>

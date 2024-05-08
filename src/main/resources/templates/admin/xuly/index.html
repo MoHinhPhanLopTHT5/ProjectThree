@@ -85,8 +85,11 @@
                 <td th:utext="${row.thanhvien.HoTen}"></td>
                 <td th:utext="${row.HinhThucXL}"></td>
                 <td th:utext="${row.NgayXL}"></td>
-                <td th:utext="${row.SoTien}"></td>
-                <td th:utext="${row.TrangThaiXL}"></td>
+                <td th:utext="${row.SoTien} == null ? 'Không khả dụng' : ${row.SoTien} + ' VNĐ'"></td>
+                <td>
+                  <span th:if="${row.TrangThaiXL == 0}" class="badge bg-success">Đã xử lý</span>
+                  <span th:if="${row.TrangThaiXL == 1}" class="badge bg-danger">Đang xử lý</span>
+                </td>
                 <td>
                   <a th:href="@{/quantri/xuly/{id}(id=${row.MaXL})}" class="btn btn-primary">Sửa</a>
                   <a th:href="@{'/quantri/xuly/'+${row.MaXL}+'/xoa'}" class="btn btn-danger">Xoá</a>

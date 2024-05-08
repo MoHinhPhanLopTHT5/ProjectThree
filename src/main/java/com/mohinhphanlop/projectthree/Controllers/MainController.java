@@ -362,9 +362,12 @@ public class MainController {
         String date = formData.getFirst("date");
         String MaTV = session.getAttribute("username").toString();
         boolean check = true;
-        if (!ttSDService.CheckTrangThaiDatCho(thietBi.getMaTB().toString(), date)) {
+        if (ttSDService.CheckTrangThaiDatCho(thietBi.getMaTB().toString(), date) == 0) {
             model.addAttribute("error",
                     "Ngày đã nhập là ngày trong quá khứ hoặc thiết bị này đã được đặt chỗ vào ngày bạn nhập, hãy chọn một ngày khác!");
+            check = false;
+        } else if (ttSDService.CheckTrangThaiDatCho(thietBi.getMaTB().toString(), date) == -1) {
+            model.addAttribute("error", "Thiết bị đang được mượn, không thể đặt chỗ!");
             check = false;
         }
 

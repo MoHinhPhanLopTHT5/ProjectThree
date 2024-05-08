@@ -55,7 +55,7 @@ public class ThongTinSDService {
         }
     }
 
-    public boolean CheckTrangThaiDatCho(String maTB, String date) {
+    public int CheckTrangThaiDatCho(String maTB, String date) {
         ThietBi tb = tbService.GetByID(maTB);
         if (tb != null) {
 
@@ -67,7 +67,7 @@ public class ThongTinSDService {
 
             // Ngày đặt là quá khứ
             if (localDate.isBefore(localDateNow)) {
-                return false;
+                return 0;
             }
 
             Iterable<ThongTinSD> listThongTinSD = tb.getDS_ThongTinSD();
@@ -76,14 +76,21 @@ public class ThongTinSDService {
                     LocalDate tgDatCho = DateService.dateTypeToLocalDateType(ttsd.getTGDatcho());
                     if (tgDatCho.isEqual(localDate)) {
                         // Thiết bị đã được đặt chỗ trong ngày chỉ định
-                        return false;
+                        return 0;
                     }
                 }
             }
 
-            return true;
+            Iterable<ThongTinSD> list = tb.getDS_ThongTinSD();
+
+            for (ThongTinSD ttsd : list) {
+                if (ttsd.getTGMuon() != null && ttsd.getTGTra() == null)
+                    return -1;
+            }
+
+            return 1;
         }
-        return false;
+        return 0;
     }
 
     public Integer findLastID() {
@@ -246,7 +253,7 @@ public class ThongTinSDService {
     }
 
     public ThongTinSD LayTTSD(ThanhVien tv, ThietBi tb) {
-        Iterable<ThongTinSD> ttsds = ttSDRepository.findAll();
+        Iterable<ThongTinSD> ttsds = ttSDRepository.findAllBythietbiNotNull();
         for (ThongTinSD tt : ttsds) {
             if (tt.getThanhvien().equals(tv) && tt.getThietbi().equals(tb) && tt.getTGDatcho() != null) {
                 return tt;
@@ -277,7 +284,20 @@ public class ThongTinSDService {
             System.out.println(tba.getMaTB());
         }
         if (tbService.DSThietBiHopLe().contains(tb)) {
-            ThongTinSD ttsd = new ThongTinSD();
+
+            LocalDate nowLocalDate = LocalDate.now();
+
+            ThongTinSD ttsd = ttSDRepository.findByMaTBAndtGDatchoEquals(tb.getMaTB(),
+                    DateService.localDateTypeToDateType(nowLocalDate));
+
+            if (ttsd == null) {
+                ttsd = new ThongTinSD();
+                ttsd.setMaTT(findLastID() + 1);
+            } else {
+                if (!ttsd.getThanhvien().equals(tv))
+                    return null; // Thiết bị đã đặt chỗ và thành viên mượn ko phải là thành viên đặt chỗ
+            }
+
             Date dateNow = new Date();
             SimpleDateFormat sdfDateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String dateTimeNow = sdfDateTime.format(dateNow);

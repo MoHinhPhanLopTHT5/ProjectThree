@@ -161,7 +161,7 @@ public class AdminController {
                 List<XuLy> listXuLy = tv.get().getDS_XuLy();
                 listXuLy = listXuLy
                         .stream()
-                        .filter(item -> item.getTrangThaiXL() == 0)
+                        .filter(item -> item.getTrangThaiXL() == 1)
                         .collect(Collectors.toList());
                 int tongXuLy = listXuLy.size();
                 if (tongXuLy == 0) {
@@ -233,7 +233,7 @@ public class AdminController {
                     List<XuLy> listXuLy = tv.get().getDS_XuLy();
                     listXuLy = listXuLy
                             .stream()
-                            .filter(item -> item.getTrangThaiXL() == 0)
+                            .filter(item -> item.getTrangThaiXL() == 1)
                             .collect(Collectors.toList());
                     int tongXuLy = listXuLy.size();
                     if (tongXuLy == 0) {
@@ -246,7 +246,7 @@ public class AdminController {
                                 return ResponseEntity.ok("Mượn thiết bị đã đặt thành công");
                             }
                             return ResponseEntity.status(502)
-                                    .body("Thiết bị này đã được mượn hoặc đã được đặt chỗ trước");
+                                    .body("Thiết bị này đang được mượn hoặc đã được đặt chỗ trước");
                         }
                     } else {
                         return ResponseEntity.status(502).body(listXuLy);

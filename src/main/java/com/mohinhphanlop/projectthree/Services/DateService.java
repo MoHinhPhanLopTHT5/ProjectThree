@@ -33,4 +33,8 @@ public class DateService {
         return dateToConvert.toInstant().atZone(ZoneId.of("Asia/Ho_Chi_Minh")).toLocalDate();
     }
 
+    public static Date localDateTypeToDateType(LocalDate localDateToConvert) {
+        return Date.from(localDateToConvert.atStartOfDay(ZoneId.of("Asia/Ho_Chi_Minh")).toInstant());
+    }
+
 }

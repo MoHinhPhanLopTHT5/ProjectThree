@@ -24,6 +24,8 @@ public interface ThongTinSDRepository extends CrudRepository<ThongTinSD, Integer
                 JpaRepository<ThongTinSD, Integer>, PagingAndSortingRepository<ThongTinSD, Integer> {
         public Iterable<ThongTinSD> findAllByOrderByMaTTDesc();
 
+        public Iterable<ThongTinSD> findAllBythietbiNotNull();
+
         // danh sách thành viên vào
         public Page<ThongTinSD> findAllBytGVaoNotNull(@PageableDefault(value = 10, page = 0) Pageable pageable);
         // lay thong tin SD kem thoi gian vao
@@ -80,6 +82,10 @@ public interface ThongTinSDRepository extends CrudRepository<ThongTinSD, Integer
 
         @Query("SELECT t FROM ThongTinSD t INNER JOIN t.thietbi tb WHERE tb.maTB = :maTB AND t.tGDatcho is not null")
         public Iterable<ThongTinSD> findByMaTBAndtGDatchoNotNull(@Param("maTB") Integer maTB);
+
+        @Query("SELECT t FROM ThongTinSD t INNER JOIN t.thietbi tb WHERE tb.maTB = :maTB AND date(t.tGDatcho) = :tgDatcho")
+        public ThongTinSD findByMaTBAndtGDatchoEquals(@Param("maTB") Integer maTB,
+                        @Param("tgDatcho") Date tgDatcho);
 
         @Query("SELECT t FROM ThongTinSD t WHERE t.maTT = :maTT AND t.tGDatcho is not null")
         public ThongTinSD findBymaTTAndtGDatchoNotNull(@Param("maTT") Integer maTT);

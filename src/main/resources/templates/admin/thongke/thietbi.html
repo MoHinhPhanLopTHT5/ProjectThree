@@ -69,7 +69,11 @@
                 <td th:utext="${row.thanhvien.MaTV}"></td>
                 <td th:utext="${row.thanhvien.HoTen}"></td>
                 <td th:utext="${row.TGMuon}"></td>
-                <td th:utext="${row.TGTra}"></td>
+                <td th:unless="${row.TGTra}">
+                  <!-- Badge -->
+                  <span class="badge bg-primary">Đang mượn</span>
+                </td>
+                <td th:if="${row.TGTra}" th:text="${row.TGTra}"></td>
               </tr>
             </tbody>
           </table>

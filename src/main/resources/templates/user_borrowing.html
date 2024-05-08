@@ -26,7 +26,12 @@
                         <th scope="row" th:utext="${state.count}"></th>
                         <td th:utext="${row.thietbi.MaTB}"></td>
                         <td th:utext="${row.thietbi.TenTB}"></td>
-                        <td th:utext="${row.TGDatcho}"></td>
+                        <td th:utext="${row.TGMuon}"></td>
+                        <td th:unless="${row.TGTra}">
+                          <!-- Badge -->
+                          <span class="badge bg-primary">Đang mượn</span>
+                        </td>
+                        <td th:if="${row.TGTra}" th:text="${row.TGTra}"></td>
                       </tr>
                     </tbody>
                   </table>

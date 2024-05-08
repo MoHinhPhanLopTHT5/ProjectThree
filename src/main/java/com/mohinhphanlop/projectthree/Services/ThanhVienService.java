@@ -200,7 +200,7 @@ public class ThanhVienService {
             List<XuLy> processList = tvRepository.findById(id).get().getDS_XuLy();
             int count = processList
                     .stream()
-                    .filter(item -> item.getTrangThaiXL() == 0)
+                    .filter(item -> item.getTrangThaiXL() == 1)
                     .toList()
                     .size();
             if (count > 0) {
