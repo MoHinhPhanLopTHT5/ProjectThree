@@ -1,0 +1,50 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:insert="~{fragments/general.html :: head}"></head>
+  <body>
+    <header th:replace="~{fragments/general.html :: header}"></header>
+    <main class="container">
+        <div class="row">
+           <div th:if="${error}" class="alert alert-danger mb-3" role="alert">
+                <span th:text="${error}"></span>
+            </div>
+           <div th:if="${success}" class="alert alert-success mb-3" role="alert">
+                <span th:text="${success}"></span>
+            </div>
+            <div class="col-md-8 mx-auto rounded border p-4 m-4">
+                <h2 class="text-center mb-5" style="font-size: 36px">CẬP NHẬT THIẾT BỊ</h2>
+                <form method="post" th:action="@{/quantri/thietbi/sua/{MaTB}(MaTB=${id})}" th:object="${thietBi}">
+                    <div class="row mb-3">
+                        <label class="col-sm-4 col-form-label">Mã thiết bị</label>
+                        <div class="col-sm-8">
+                            <input class="form-control" readonly th:value="${thietBi.maTB}" id="maTB" name="maTB" style="cursor:not-allowed;">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label class="col-sm-4 col-form-label">Tên thiết bị</label>
+                        <div class="col-sm-8">
+                            <input class="form-control" type="text" th:value="${thietBi.tenTB}" id="tenTB" name="tenTB" required>
+                        </div>
+                    </div>               
+                    <div class="row mb-3">
+                        <label class="col-sm-4 col-form-label">Mô tả thiết bị</label>
+                        <div class="col-sm-8">
+                            <textarea class="form-control" placeholder="Nhập mô tả" th:text="${thietBi.moTaTB}" id="moTaTB" name="moTaTB" required></textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="offset-sm-4 col-sm-4 d-grid">
+                            <button type="submit" class="btn btn-success">Cập nhật</button>
+                        </div>
+                        <div class="col-sm-4 d-grid">
+                            <a class="btn btn-secondary" th:href="@{/quantri/thietbi}">Thoát</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+    <footer th:insert="~{fragments/general.html :: footer}"></footer>
+    <div th:insert="~{fragments/general.html :: scripts}"></div>
+  </body>
+</html>

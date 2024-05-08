@@ -14,6 +14,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class ThietBiService {
@@ -55,5 +56,54 @@ public class ThietBiService {
         DateTimeFormatter dt = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
         System.out.println(dt.format(lcd));
         return tbRepository.DSThietBiHopLe(tomorrow, lcd);
+    }
+
+    public Iterable<ThietBi> GetList() {
+        Iterable<ThietBi> list = tbRepository.findAll();
+        return list;
+    }
+
+    public ThietBi CreateThietBi(Integer maTB, String tenTB, String motaTB) {
+        ThietBi tb = new ThietBi();
+        tb.setMaTB(maTB);
+        tb.setTenTB(tenTB);
+        tb.setMoTaTB(motaTB);
+        return tbRepository.save(tb);
+    }
+
+    public boolean isExistMaThietBi(String maTB) {
+        Iterable<ThietBi> list = tbRepository.findAll();
+        for (ThietBi tb : list)
+            if (tb.getMaTB().toString().equals(maTB))
+                return true;
+        return false;
+    }
+
+    public void updateThietBi(ThietBi thietBi) {
+        ThietBi tb = tbRepository.findById(thietBi.getMaTB()).orElse(null);
+        if (tb != null) {
+            tb.setTenTB(thietBi.getTenTB());
+            tb.setMoTaTB(thietBi.getMoTaTB());
+            tbRepository.save(tb);
+        } else {
+            throw new EntityNotFoundException("Thiết bị không tồn tại");
+        }
+    }
+
+    public boolean deleteThietBi(ThietBi thietBi) {
+        ThietBi tb = tbRepository.findById(thietBi.getMaTB()).orElse(null);
+        if (tb != null)
+            tbRepository.deleteById(thietBi.getMaTB());
+        else
+            return false;
+        return true;
+    }
+
+    public void deleteNhieuThietBi(String kyTu, Iterable<ThietBi> list) {
+        for (ThietBi tb : list) {
+            String thietbi = tb.getMaTB().toString().substring(0, 1);
+            if (kyTu.startsWith(thietbi))
+                tbRepository.delete(tb);
+        }
     }
 }
