@@ -272,7 +272,7 @@ public class ThanhVienService {
     }
 
     private boolean checkLenghtNumeric(Cell cell, int maxLenght) {
-        return Integer.parseInt(cell.getNumericCellValue() + "") <= maxLenght;
+        return ((long) cell.getNumericCellValue() + "").length() <= maxLenght;
     }
 
     private boolean checkLenghtString(Cell cell, int maxLenght) {
@@ -312,7 +312,7 @@ public class ThanhVienService {
                                     if (cell.getCellType() == CellType.NUMERIC) {
                                         if (checkLenghtNumeric(cell, 10)) {
                                             if (!tvRepository
-                                                    .findById(Integer.parseInt(cell.getNumericCellValue() + ""))
+                                                    .findById((int) cell.getNumericCellValue())
                                                     .isPresent()) {
                                                 tv.setMaTV((int) cell.getNumericCellValue());
                                             } else {
@@ -439,7 +439,7 @@ public class ThanhVienService {
                                         }
                                         case NUMERIC -> {
                                             if (checkLenghtNumeric(cell, 10)) {
-                                                tv.setPassword(cell.getStringCellValue());
+                                                tv.setPassword((long) cell.getNumericCellValue() + "");
                                             } else {
                                                 error++;
                                                 isValid = false;
