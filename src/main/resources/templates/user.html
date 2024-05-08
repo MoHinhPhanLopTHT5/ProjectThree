@@ -25,15 +25,15 @@
                     </div>
                     <div class="mb-3">
                         <label for="email" class="form-label">Email</label>
-                        <input th:value="${ThanhVien.Email} ?: ''" type="email" class="form-control" id="email" name="email" required>
+                        <input max="25" th:value="${ThanhVien.Email} ?: ''" type="email" class="form-control" id="email" name="email" required>
                     </div>
                     <div class="mb-3">
                         <label for="new_password" class="form-label">Mật khẩu mới (bỏ trống nếu không muốn thay đổi)</label>
-                        <input type="password" class="form-control" id="new_password" name="new_password">
+                        <input min="6" max="10" type="password" class="form-control" id="new_password" name="new_password">
                     </div>
                     <div class="mb-3">
                         <label for="password" class="form-label">Mật khẩu hiện tại</label>
-                        <input type="password" class="form-control" id="password" name="password" required>
+                        <input min="6" max="10" type="password" class="form-control" id="password" name="password" required>
                     </div>
                     <button type="submit" class="btn btn-success">Cập nhật thông tin</button>
                 </form>

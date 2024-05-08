@@ -21,19 +21,19 @@
                     </div>
                     <div class="mb-3">
                         <label for="fullname" class="form-label">Họ tên</label>
-                        <input th:value="${fullname} ?: ''" type="text" class="form-control" id="fullname" name="fullname" required>
+                        <input max="100" th:value="${fullname} ?: ''" type="text" class="form-control" id="fullname" name="fullname" required>
                     </div>
                     <div class="mb-3">
                         <label for="email" class="form-label">Email</label>
-                        <input th:value="${email} ?: ''" type="email" class="form-control" id="email" name="email" required>
+                        <input max="25" th:value="${email} ?: ''" type="email" class="form-control" id="email" name="email" required>
                     </div>
                     <div class="mb-3">
                         <label for="password" class="form-label">Mật khẩu</label>
-                        <input type="password" class="form-control" id="password" name="password" required>
+                        <input min="6" max="10" type="password" class="form-control" id="password" name="password" required>
                     </div>
                     <div class="mb-3">
                         <label for="c_password" class="form-label">Xác nhận mật khẩu</label>
-                        <input type="password" class="form-control" id="c_password" name="confirm_password" required>
+                        <input min="6" max="10" type="password" class="form-control" id="c_password" name="confirm_password" required>
                     </div>
                     <button type="submit" class="btn btn-success">Đăng ký</button>
                     <span>Đã đăng ký thành viên? <a class="btn btn-primary" th:href="@{/dangnhap}">Đăng nhập</a></span>

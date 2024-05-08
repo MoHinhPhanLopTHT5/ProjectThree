@@ -18,7 +18,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="password" class="form-label">Mật khẩu</label> <span>(<a th:href="@{/quenmatkhau}">Quên mật khẩu</a>)</span>
-                        <input type="password" class="form-control" id="password" name="password" required>
+                        <input min="6" max="10" type="password" class="form-control" id="password" name="password" required>
                     </div>
                     <button type="submit" class="btn btn-success">Đăng nhập</button>
                     <span>Chưa đăng ký thành viên? <a class="btn btn-primary" th:href="@{/dangky}">Đăng ký</a></span>
