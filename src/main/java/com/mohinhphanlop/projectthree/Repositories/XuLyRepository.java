@@ -45,8 +45,8 @@ public interface XuLyRepository
                         @Param("hinhthucxl") String hinhthucxl,
                         @Param("ngayxl") Date ngayxl, @Param("trangthaixl") Integer trangthaixl);
 
-        @Query("SELECT x FROM XuLy x INNER JOIN x.thanhvien tv WHERE tv.maTV = :id and x.trangThaiXL = 1")
-        public XuLy findByThanhVienId(@Param("id") Integer id);
+        @Query("SELECT x FROM XuLy x INNER JOIN x.thanhvien tv WHERE tv.maTV = :id and x.trangThaiXL = 1 ORDER BY x.ngayXL DESC")
+        public Iterable<XuLy> findByThanhVienId(@Param("id") Integer id);
 
         @Query("SELECT x FROM XuLy x INNER JOIN x.thanhvien tv WHERE tv.maTV = :id")
         public Page<XuLy> findAllByThanhVienId(@PageableDefault(value = 10, page = 0) Pageable pageable,

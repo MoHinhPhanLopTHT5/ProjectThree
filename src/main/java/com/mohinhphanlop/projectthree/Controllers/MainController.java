@@ -64,11 +64,11 @@ public class MainController {
 
         ttSDService.RemoveAllTGDatchoOver1Hour();
 
-        XuLy xuLy = xuLyService.findByThanhVienId(TryParseInt(session.getAttribute("username").toString()));
+        Iterable<XuLy> xuLy = xuLyService.findByThanhVienId(TryParseInt(session.getAttribute("username").toString()));
 
-        if (xuLy != null) {
+        for (XuLy item : xuLy) {
             model.addAttribute("error", "Bạn hiện không thể đặt chỗ do đang trong thời gian xử lý vi phạm!");
-            model.addAttribute("xuLy", xuLy);
+            model.addAttribute("xuLy", item);
             return "suspended";
         }
 
@@ -309,9 +309,10 @@ public class MainController {
     public String getDatCho(@PathVariable("id") ThietBi thietBi, Model model, HttpSession session) {
         ttSDService.RemoveAllTGDatchoOver1Hour();
 
-        XuLy xuLy = xuLyService.findByThanhVienId(TryParseInt(session.getAttribute("username").toString()));
+        Iterable<XuLy> xuLyList = xuLyService
+                .findByThanhVienId(TryParseInt(session.getAttribute("username").toString()));
 
-        if (xuLy != null) {
+        for (XuLy xuLy : xuLyList) {
             model.addAttribute("error", "Bạn hiện không thể đặt chỗ do đang trong thời gian xử lý vi phạm!");
             model.addAttribute("xuLy", xuLy);
             return "suspended";

@@ -114,7 +114,7 @@ public class XuLyService {
         return xuLyRepository.findAll(pageable, maTV, soTien, hoten, hinhthucxl, trangthaixl);
     }
 
-    public XuLy findByThanhVienId(Integer id) {
+    public Iterable<XuLy> findByThanhVienId(Integer id) {
         return xuLyRepository.findByThanhVienId(id);
     }
 
