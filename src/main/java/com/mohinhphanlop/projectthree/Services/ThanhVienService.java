@@ -35,7 +35,7 @@ public class ThanhVienService {
         Iterable<ThanhVien> list = tvRepository.findAll();
         for (ThanhVien tv : list) {
             String maTV = tv.getMaTV().toString();
-            String email = tv.getEmail() == null ? "-1" : tv.getEmail();
+            String email = tv.getEmail() == null ? "-1" : tv.getEmail().isEmpty() ? "-1" : tv.getEmail();
             String pw = tv.getPassword();
             if ((maTV.equals(usernameOrEmail) || email.equals(usernameOrEmail))
                     && pw.equals(password)) {
@@ -88,17 +88,40 @@ public class ThanhVienService {
         return false;
     }
 
+    public boolean CheckSDTExists(String sdt) {
+        Iterable<ThanhVien> list = tvRepository.findAll();
+        for (ThanhVien tv : list) {
+            String sdtTV = tv.getSDT() == null ? "-1" : tv.getSDT();
+            if (sdtTV.equals(sdt)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public boolean CheckNotTheSameEmail(ThanhVien tvCurrent, String email) {
+        if (tvCurrent.getEmail() == null)
+            return false;
         if (tvCurrent.getEmail().equals(email)) {
             return false;
         }
         return true;
     }
 
-    public ThanhVien UpdateThanhVien(String maThanhVien, String email, String password) {
+    public boolean CheckNotTheSameSDT(ThanhVien tvCurrent, String sdt) {
+        if (tvCurrent.getSDT() == null)
+            return false;
+        if (tvCurrent.getSDT().equals(sdt)) {
+            return false;
+        }
+        return true;
+    }
+
+    public ThanhVien UpdateThanhVien(String maThanhVien, String email, String password, String sdt) {
         ThanhVien tv = tvRepository.findById(Integer.parseInt(maThanhVien)).get();
         tv.setEmail(email);
         tv.setPassword(password);
+        tv.setSDT(sdt);
         return tvRepository.save(tv);
     }
 

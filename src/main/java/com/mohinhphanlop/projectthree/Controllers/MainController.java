@@ -4,6 +4,7 @@
  */
 package com.mohinhphanlop.projectthree.Controllers;
 
+import com.mohinhphanlop.projectthree.Models.ThanhVien;
 import com.mohinhphanlop.projectthree.Models.ThietBi;
 import com.mohinhphanlop.projectthree.Models.ThongTinSD;
 import com.mohinhphanlop.projectthree.Models.XuLy;
@@ -177,8 +178,9 @@ public class MainController {
                             .toString(); // Lấy tên đăng
                                          // nhập từ
                                          // HttpSession
+                    ThanhVien tv = tvService.getByUsernameOrEmail(requestedUsername);
                     if (tvService.UpdateThanhVien(requestedUsername, // Thực hiện cập nhật mật khẩu
-                            tvService.getByUsernameOrEmail(requestedUsername).getEmail(), new_password) != null) {
+                            tv.getEmail(), new_password, tv.getSDT()) != null) {
                         model.addAttribute("success", "Thay đổi mật khẩu thành công!");
                         session.removeAttribute("email_uuid");
                         session.removeAttribute("requested_username");
@@ -228,12 +230,14 @@ public class MainController {
         String requestedUsername = formData.getFirst("username");
         String email = formData.getFirst("email");
         String fullname = formData.getFirst("fullname");
+        String sdt = formData.getFirst("sdt");
 
         Integer maTV = TryParseInt(requestedUsername);
 
         model.addAttribute("username", requestedUsername);
         model.addAttribute("email", email);
         model.addAttribute("fullname", fullname);
+        model.addAttribute("sdt", sdt);
 
         String password = formData.getFirst("password");
         String confirm_password = formData.getFirst("confirm_password");
@@ -243,6 +247,12 @@ public class MainController {
         if (tvService.CheckEmailExists(email)) {
             // Email đã được sử dụng
             model.addAttribute("error", "Email đã tồn tại trong cơ sở dữ liệu, hãy sử dụng email khác.");
+            check = false;
+        }
+
+        if (tvService.CheckSDTExists(sdt)) {
+            // SDT đã được sử dụng
+            model.addAttribute("error", "SĐT đã tồn tại trong cơ sở dữ liệu, hãy sử dụng SĐT khác.");
             check = false;
         }
 
@@ -261,7 +271,7 @@ public class MainController {
             }
 
             if (check) {
-                if (tvService.UpdateThanhVien(requestedUsername, email, password) != null) {
+                if (tvService.UpdateThanhVien(requestedUsername, email, password, sdt) != null) {
                     model.addAttribute("success", "Tạo tài khoản thành công, vui lòng đăng nhập!");
                 } else
                     model.addAttribute("error", "Lưu thông tin thất bại.");
