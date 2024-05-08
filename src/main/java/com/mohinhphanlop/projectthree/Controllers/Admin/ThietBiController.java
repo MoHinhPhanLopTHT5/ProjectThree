@@ -123,54 +123,48 @@ public class ThietBiController {
             model.addAttribute("success", "Thêm thiết bị thành công!");
         }
         return "admin/thietbi/create";
-<<<<<<< HEAD
     }
-    
+
     @GetMapping("/excel")
     public String getExcelImport() {
         return "/admin/thietbi/excel";
     }
-    
+
     @PostMapping("/excel")
     public String postExcelImport(@RequestParam("file") MultipartFile file, Model model) {
         if (file.isEmpty()) {
             model.addAttribute("error", "Vui lòng chọn file Excel để import");
             return "admin/thietbi/excel";
         }
-        
-        try (InputStream inputStream = file.getInputStream()){
+
+        try (InputStream inputStream = file.getInputStream()) {
             XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
             XSSFSheet sheet = workbook.getSheetAt(0); // sheet đầu tiên
             for (int i = 1; i <= sheet.getLastRowNum(); i++) {
                 XSSFRow row = sheet.getRow(i);
                 if (row != null) {
-                    int id = (int)row.getCell(0).getNumericCellValue();
+                    int id = (int) row.getCell(0).getNumericCellValue();
                     String name = row.getCell(1).getStringCellValue();
                     String discrip = row.getCell(2).getStringCellValue();
                     tbService.CreateThietBi(id, name, discrip);
                 }
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             model.addAttribute("error", "Import thất bại!" + e.getMessage());
         }
-        
+
         return "/admin/thietbi/index";
     }
-    
-    
-    
-    
+
     @GetMapping("/xoanhieu")
     public String getXoaNhieuThietBi() {
         return "admin/thietbi/deletemultiple";
     }
-    
+
     @PostMapping("/xoanhieu")
     public String postXoaNhieuThietBi(@RequestParam("deviceID") String deviceID, Model model) {
         Iterable<ThietBi> list = tbService.GetList();
         tbService.deleteNhieuThietBi(deviceID, list);
         return "admin/thietbi/deletemultiple";
-=======
->>>>>>> a6d6a41ddfd195f3dde5f73af8f78faa10aa153d
     }
 }

@@ -70,16 +70,13 @@ public class ThietBiService {
         else
             return false;
         return true;
-<<<<<<< HEAD
     }
-    
+
     public void deleteNhieuThietBi(String kyTu, Iterable<ThietBi> list) {
         for (ThietBi tb : list) {
-            String thietbi = tb.getMaTB().toString().substring(0,1);
+            String thietbi = tb.getMaTB().toString().substring(0, 1);
             if (kyTu.startsWith(thietbi))
                 tbRepository.delete(tb);
         }
-=======
->>>>>>> a6d6a41ddfd195f3dde5f73af8f78faa10aa153d
     }
 }
