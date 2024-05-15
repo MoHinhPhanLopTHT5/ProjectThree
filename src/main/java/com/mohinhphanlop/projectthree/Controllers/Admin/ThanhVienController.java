@@ -29,9 +29,6 @@ public class ThanhVienController {
     @Autowired
     private ThanhVienService tvService;
 
-    private ArrayList<String> listKhoa = new ArrayList<>();
-    private ArrayList<String> listNganh = new ArrayList<>();
-
     @GetMapping("")
     public String getIndex(Model model) {
         Iterable<ThanhVien> list = tvService.GetList();

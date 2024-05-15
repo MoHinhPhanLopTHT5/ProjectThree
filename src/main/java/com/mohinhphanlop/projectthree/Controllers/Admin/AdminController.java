@@ -15,16 +15,12 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.mohinhphanlop.projectthree.Models.ThongTinSD;
 import com.mohinhphanlop.projectthree.Services.ExcelExportService;
 import com.mohinhphanlop.projectthree.Services.ThanhVienService;
 import com.mohinhphanlop.projectthree.Services.ThietBiService;
 import com.mohinhphanlop.projectthree.Services.ThongTinSDService;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import jakarta.websocket.server.PathParam;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -33,7 +29,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -137,26 +132,6 @@ public class AdminController {
 
     @Autowired
     private ThietBiService tbSerive;
-
-    @PostMapping("/path")
-    public String postTenHam(@RequestBody MultiValueMap<String, String> formData, Model model,
-            HttpServletRequest request, HttpSession session) {
-
-        // Lấy dữ liệu từ form
-        String email = formData.getFirst("email");
-        String password = formData.getFirst("password");
-        String new_password = formData.getFirst("new_password");
-
-        // Lấy tên đăng nhập của người dùng
-        String username = session.getAttribute("username").toString();
-
-        // Kiểm tra đủ điều kiện để cập nhật
-        boolean check = true;
-
-        // Hiển thị thông tin thành viên vừa cập nhật
-        model.addAttribute("ThanhVien", tvService.getByUsernameOrEmail(username));
-        return "user";
-    }
 
     @PostMapping("/vaokhuhoctap")
     public ResponseEntity<?> VaoKhuHocTap(@RequestBody MultiValueMap<String, String> maTV_JSON) {

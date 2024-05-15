@@ -1,8 +1,5 @@
 package com.mohinhphanlop.projectthree.Controllers.Admin;
 
-import br.com.objectos.way.xls.Workbook;
-import br.com.objectos.way.xls.pojo.Row;
-import br.com.objectos.way.xls.pojo.Sheet;
 import static com.mohinhphanlop.projectthree.Controllers.MainController.TryParseInt;
 import com.mohinhphanlop.projectthree.Models.ThietBi;
 import com.mohinhphanlop.projectthree.Services.ThietBiService;
@@ -78,29 +75,13 @@ public class ThietBiController {
         return "admin/thietbi/delete";
     }
 
-    private int tongSoLuongTBThem;
-
     @GetMapping("/soLuongTB") // thêm thiết bị
     public String getSoLuongThietBi() {
         return "admin/thietbi/soluongthietbi";
     }
 
-    @PostMapping("/requestSoLuongTB")
-    public String postSoLuongThietBi(@RequestParam("quantity") int quantity) {
-        tongSoLuongTBThem = quantity;
-        return "admin/thietbi/create";
-    }
-
     @GetMapping("/taomoi")
     public String getCreateThietBi(Model model) {
-        // if (tongSoLuongTBThem > 0) {
-        // ThietBi thietBi = new ThietBi();
-        // model.addAttribute("thietBi", thietBi);
-        // tongSoLuongTBThem--;
-        // return "/quantri/thietbi/create";
-        // } else
-        // return "/quantri/thietbi/index";
-
         return "admin/thietbi/create";
     }
 
@@ -118,7 +99,6 @@ public class ThietBiController {
 
         if (tbService.isExistMaThietBi(requestedId)) {
             model.addAttribute("error", "Mã Thiết bị đã tồn tại không thể thêm!");
-            tongSoLuongTBThem += 1;
         } else {
             tbService.CreateThietBi(id, name, discription);
             model.addAttribute("success", "Thêm thiết bị thành công!");

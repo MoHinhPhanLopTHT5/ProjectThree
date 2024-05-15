@@ -13,12 +13,9 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 
-import com.mohinhphanlop.projectthree.Controllers.MainController;
 import com.mohinhphanlop.projectthree.Models.ThietBi;
 import com.mohinhphanlop.projectthree.Models.ThongTinSD;
 import com.mohinhphanlop.projectthree.Repositories.ThongTinSDRepository;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
